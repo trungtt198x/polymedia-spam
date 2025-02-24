@@ -1,7 +1,7 @@
 #[test_only]
 module spam::spam_tests {
 
-    use sui::coin;
+    use iota::coin;
 
     use spam::test_runner;
     use spam::assert_user_counter;

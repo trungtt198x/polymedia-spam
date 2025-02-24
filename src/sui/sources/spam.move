@@ -2,8 +2,8 @@ module spam::spam
 {
     // === Imports ===
 
-    use sui::coin::{create_currency, Coin, TreasuryCap};
-    use sui::table::{Self, Table};
+    use iota::coin::{create_currency, Coin, TreasuryCap};
+    use iota::table::{Self, Table};
     use spam::icon::{get_icon_url};
 
     // === Errors ===
@@ -271,7 +271,7 @@ module spam::spam
             treasury,
             epoch_counters: table::new(ctx),
             tx_count: 0,
-            paused: true,
+            paused: false,
         };
         transfer::share_object(director);
 

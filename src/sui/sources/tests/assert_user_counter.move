@@ -1,7 +1,7 @@
 #[test_only]
 module spam::assert_user_counter {
 
-    use sui::test_utils::{Self, assert_eq};
+    use iota::test_utils::{Self, assert_eq};
 
     use spam::spam::UserCounter;
 

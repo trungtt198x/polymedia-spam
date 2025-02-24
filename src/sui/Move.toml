@@ -6,9 +6,7 @@ license = "Apache-2.0"
 published-at = "0x0"
 
 [dependencies]
-# Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }
-Sui = { local = "../../../sui/crates/sui-framework/packages/sui-framework" }
+Iota = { git = "https://github.com/iotaledger/iota.git", subdir = "crates/iota-framework/packages/iota-framework", rev = "develop" }
 
 [addresses]
 spam = "0x0"
-sui = "0x2"

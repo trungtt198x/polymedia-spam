@@ -11,8 +11,8 @@ export const SPAM_IDS: Record<NetworkName, NetworkConfig> = {
         directorId: "0x71d2211afbb63a83efc9050ded5c5bb7e58882b17d872e32e632a978ab7b5700",
     },
     testnet: {
-        packageId: "0xb0783634bd4aeb2c97d3e707fce338c94d135d72e1cb701ca220b34f7b18b877",
-        directorId: "0x6f0919d420bcfd5156534e864f0ec99ef8f1137ba59f44d4a39edca73e7ae464",
+        packageId: "0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745",
+        directorId: "0xc7dc8c06d28f77770bc4e84ac6fb14c82b4ac0cccd8198a59e71069dc1c3e418",
     },
     devnet: {
         packageId: "",
