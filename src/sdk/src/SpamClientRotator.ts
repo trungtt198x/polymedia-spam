@@ -64,7 +64,7 @@ export class SpamClientRotator
     }
 
     public getSuiClient(): IotaClient  {
-        return this.spamClients[this.activeIndex].spamClient.suiClient;
+        return this.spamClients[this.activeIndex].spamClient.iotaClient;
     }
 
     // The minimum is inclusive and the maximum is exclusive

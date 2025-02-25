@@ -198,7 +198,7 @@ export const PageStats: React.FC = () =>
                 <p>FDV: ${formatNumber(price.usd * claimableSupply)} (${formatNumber(price.usd * claimedSupply)} claimed)</p>
                 <br/>
                 <p>SPAM/USD: {price.usd}</p>
-                <p>SPAM/SUI: {price.sui}</p>
+                <p>SPAM/SUI: {price.iota}</p>
             </>
             }
             {/* <p>Current epoch: {stats.epoch}</p> */}

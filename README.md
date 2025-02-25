@@ -2,7 +2,7 @@
 
 "Spam to Earn" a.k.a. "Proof of Spam" on Sui.
 
-![Polymedia SPAM](https://spamsui.com/img/open-graph.webp)
+![Polymedia SPAM](https://spamiota.com/img/open-graph.webp)
 
 ## ELI5
 
@@ -18,7 +18,7 @@ There is no proof of work, only proof of spam.
 
 The SPAM system has two components:
 
-1\) An onchain mechanism to track user transactions, calculate rewards per user, and let users mint SPAM in proportion to the number of txs they sent: [src/sui](./src/sui).
+1\) An onchain mechanism to track user transactions, calculate rewards per user, and let users mint SPAM in proportion to the number of txs they sent: [src/iota](./src/iota).
 
 2\) A web miner for users to easily send lots of txs, as well as mint and claim SPAM coins: [src/web](./src/web). The web miner is built on top of the TypeScript SDK: [src/sdk](./src/sdk).
 

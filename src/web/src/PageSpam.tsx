@@ -16,7 +16,7 @@ export const PageSpam: React.FC = () =>
     const [ currEpoch, setCurrEpoch ] = useState<EpochData>();
     const isDisabled = false;
 
-    const isLoading = spamView.counters.epoch === -1 || balances.sui === -1 || !currEpoch;
+    const isLoading = spamView.counters.epoch === -1 || balances.iota === -1 || !currEpoch;
 
     /* Functions */
 
@@ -69,7 +69,7 @@ export const PageSpam: React.FC = () =>
         return <PageDisclaimer />;
     }
 
-    const isLowSuiBalance = balances.sui < 0.003;
+    const isLowSuiBalance = balances.iota < 0.003;
 
     const counters = spamView.counters;
     const hasCounters = Boolean(
@@ -96,7 +96,7 @@ export const PageSpam: React.FC = () =>
             return null;
         }
         return <>
-            <p>SUI balance: {isLoading ? "loading..." : formatNumber(balances.sui, "compact")}</p>
+            <p>SUI balance: {isLoading ? "loading..." : formatNumber(balances.iota, "compact")}</p>
             <p>SPAM balance: {isLoading ? "loading..." : formatNumber(balances.spam, "compact")}</p>
         </>;
     };
@@ -107,7 +107,7 @@ export const PageSpam: React.FC = () =>
         }
         return <div className="tight">
             <h2>Current RPC</h2>
-            <span className="sui-address">{spammer.current.getSpamClient().rpcUrl}</span>
+            <span className="iota-address">{spammer.current.getSpamClient().rpcUrl}</span>
             <br/><br/>
         </div>;
     };

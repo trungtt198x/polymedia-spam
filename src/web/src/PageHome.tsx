@@ -20,7 +20,7 @@ export const PageHome: React.FC = () =>
 
         <h3>COIN TYPE</h3>
         <p>
-            <span className="sui-address">
+            <span className="iota-address">
                 {spamPackageId}::spam::SPAM
             </span>
         </p>

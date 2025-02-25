@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 type SpamPrice = {
-    sui: number;
+    iota: number;
     usd: number;
 };
 
@@ -16,12 +16,12 @@ export const usePrice = () => {
 
     const fetchPrice = async () => {
         try {
-            const resp = await fetch(`https://api.dexscreener.com/latest/dex/pairs/sui/${turbosPoolId}`);
+            const resp = await fetch(`https://api.dexscreener.com/latest/dex/pairs/iota/${turbosPoolId}`);
             if (resp.ok) {
                 /* eslint-disable */
                 const data = await resp.json();
                 setPrice({
-                    sui: data.pair.priceNative,
+                    iota: data.pair.priceNative,
                     usd: data.pair.priceUsd,
                 });
                 /* eslint-enable */

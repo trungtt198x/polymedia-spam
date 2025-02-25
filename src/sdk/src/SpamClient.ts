@@ -24,7 +24,7 @@ export class SpamClient
     public readonly signer: Signer;
     public readonly network: NetworkName;
     public readonly rpcUrl: string;
-    public readonly suiClient: IotaClient;
+    public readonly iotaClient: IotaClient;
     public readonly packageId: string;
     public readonly directorId: string;
     protected gasCoin: IotaObjectRef|undefined;
@@ -38,7 +38,7 @@ export class SpamClient
         this.signer = keypair;
         this.network = network;
         this.rpcUrl = rpcUrl;
-        this.suiClient = new IotaClient({ url: rpcUrl });
+        this.iotaClient = new IotaClient({ url: rpcUrl });
         this.packageId = SPAM_IDS[network].packageId;
         this.directorId = SPAM_IDS[network].directorId;
         this.gasCoin = undefined;
@@ -51,7 +51,7 @@ export class SpamClient
     ): Promise<UserCounter[]>
     {
         const StructType = `${this.packageId}::${SPAM_MODULE}::UserCounter`;
-        const pageObjResp = await this.suiClient.getOwnedObjects({
+        const pageObjResp = await this.iotaClient.getOwnedObjects({
             owner: this.signer.toIotaAddress(),
             cursor: null, // doesn't handle pagination, but it's unlikely that it will ever be needed
             options: { showContent: true },
@@ -67,7 +67,7 @@ export class SpamClient
         const userCountersArray = await this.fetchUserCounters();
 
         // fetch Sui epoch
-        const suiState = await this.suiClient.getLatestIotaSystemState();
+        const suiState = await this.iotaClient.getLatestIotaSystemState();
         const currEpoch = Number(suiState.epoch);
 
         // categorize user counters
@@ -128,7 +128,7 @@ export class SpamClient
     }
 
     public async fetchGasCostOfIncrementTx(): Promise<number> {
-        const resp = await this.suiClient.queryTransactionBlocks({
+        const resp = await this.iotaClient.queryTransactionBlocks({
             filter: {
                 MoveFunction: {
                     package: this.packageId,
@@ -256,8 +256,8 @@ export class SpamClient
         txb: Transaction,
     ): Promise<Stats>
     {
-        // const blockResults = await devInspectAndGetExecutionResults(this.suiClient, txb);
-        const { results: blockResults } = await this.suiClient.devInspectTransactionBlock({
+        // const blockResults = await devInspectAndGetExecutionResults(this.iotaClient, txb);
+        const { results: blockResults } = await this.iotaClient.devInspectTransactionBlock({
             sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
             transactionBlock: txb
         });
@@ -299,13 +299,13 @@ export class SpamClient
 
         const { bytes, signature } = await txb.sign({
             signer: this.signer,
-            client: this.suiClient,
+            client: this.iotaClient,
         });
 
         let resp: IotaTransactionBlockResponse | null = null;
         while (!resp) {
             try {
-                resp = await this.suiClient.executeTransactionBlock({
+                resp = await this.iotaClient.executeTransactionBlock({
                     signature,
                     transactionBlock: bytes,
                     options: { showEffects: true },
@@ -335,7 +335,7 @@ export class SpamClient
 
     protected async fetchAndSetGasPrice(): Promise<void> {
         try {
-            this.gasPrice = await this.suiClient.getReferenceGasPrice();
+            this.gasPrice = await this.iotaClient.getReferenceGasPrice();
         } catch (err) {
             console.warn(`Failed to fetch gas price: ${err}`);
         }

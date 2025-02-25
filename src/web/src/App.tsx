@@ -87,7 +87,7 @@ const emptySpamView = (): SpamView => {
 };
 
 const emptyBalances = (): UserBalances => {
-    return { sui: -1, spam: -1 };
+    return { iota: -1, spam: -1 };
 };
 
 const loadedPair = loadKeypairFromStorage();
@@ -157,7 +157,7 @@ const App: React.FC = () =>
             });
             setBalances({
                 spam: Number(balanceSpam.totalBalance) / 10**SPAM_DECIMALS,
-                sui: Number(balanceSui.totalBalance) / 10**SUI_DECIMALS,
+                iota: Number(balanceSui.totalBalance) / 10**SUI_DECIMALS,
             });
             // console.info("balance updated");
         } catch (_err) {

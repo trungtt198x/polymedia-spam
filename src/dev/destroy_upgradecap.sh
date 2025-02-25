@@ -14,7 +14,7 @@ fi
 
 UPGRADE_CAP="$1"
 
-sui client call \
+iota client call \
  --gas-budget 300300300 \
  --package 0x2 \
  --module package \

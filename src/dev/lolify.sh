@@ -6,9 +6,9 @@ set -o pipefail     # Prevent errors in a pipeline from being masked
 set -o xtrace       # Print each command to the terminal before execution
 
 script_dir=$(cd "$(dirname "$0")" && pwd)
-sui_path="$script_dir/../../src/sui";
+iota_path="$script_dir/../../src/iota";
 
-cd "$sui_path"
+cd "$iota_path"
 
 sed -i '' 's/SPAM/LOL/g' Move.toml
 sed -i '' 's/Spam/Lol/g' Move.toml

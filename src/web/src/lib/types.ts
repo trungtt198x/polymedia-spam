@@ -6,6 +6,6 @@ export type SpamView = {
 };
 
 export type UserBalances = {
-    sui: number;
+    iota: number;
     spam: number;
 };

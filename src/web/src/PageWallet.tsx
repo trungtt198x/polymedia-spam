@@ -55,14 +55,14 @@ export const PageWallet: React.FC = () =>
             <div className="wallet-section">
                 <h4>Sui address:</h4>
                 <p>Send SUI to this address to fund your miner wallet.</p>
-                <span className="sui-address">
+                <span className="iota-address">
                     {spammer.current.getSpamClient().signer.toIotaAddress()}
                 </span>
             </div>
             <div className="wallet-section">
                 <h4>Secret key:</h4>
                 <p>It allows you to restore your wallet. Copy it somewhere safe!</p>
-                <span className="sui-address">
+                <span className="iota-address">
                     {(spammer.current.getSpamClient().signer as Ed25519Keypair).getSecretKey()}
                 </span>
                 <div className="dont-share-secret-key">Don't share your secret key with anyone</div>

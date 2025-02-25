@@ -11,7 +11,7 @@ async function main()
     const spamClient = new SpamClient(
         new Ed25519Keypair(),
         "mainnet",
-        "https://fullnode.mainnet.sui.io:443"
+        "https://fullnode.mainnet.iota.io:443"
     );
     const stats = await spamClient.fetchStatsForRecentEpochs(3);
 
