@@ -52,11 +52,11 @@ export const PageSpam: React.FC = () =>
 
     const updateCurrEpoch = async () => {
         try {
-            const suiState = await spammer.current.getSuiClient().getLatestIotaSystemState();
+            const iotaState = await spammer.current.getSuiClient().getLatestIotaSystemState();
             setCurrEpoch({
-                epochNumber: Number(suiState.epoch),
-                durationMs: Number(suiState.epochDurationMs),
-                startTimeMs: Number(suiState.epochStartTimestampMs),
+                epochNumber: Number(iotaState.epoch),
+                durationMs: Number(iotaState.epochDurationMs),
+                startTimeMs: Number(iotaState.epochStartTimestampMs),
             });
         } catch (_err) {
             console.warn("epoch update failed");

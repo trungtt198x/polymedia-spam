@@ -67,8 +67,8 @@ export class SpamClient
         const userCountersArray = await this.fetchUserCounters();
 
         // fetch Sui epoch
-        const suiState = await this.iotaClient.getLatestIotaSystemState();
-        const currEpoch = Number(suiState.epoch);
+        const iotaState = await this.iotaClient.getLatestIotaSystemState();
+        const currEpoch = Number(iotaState.epoch);
 
         // categorize user counters
         const counters: UserCounters = {
@@ -144,17 +144,17 @@ export class SpamClient
         });
 
         // default to the usual cost of a SPAM tx on mainnet with a gas price of 750 MIST
-        let suiAmount = 0.000774244;
+        let iotaAmount = 0.000774244;
         for (const tx of resp.data) {
             if (tx.balanceChanges?.length !== 1) {
                 // A regular SPAM tx only has 1 balance change, so this is likely a
                 // dual-mining tx for SPAM and MINE, or some other mining technique.
                 continue;
             }
-            suiAmount = Number(tx.balanceChanges[0].amount) / -1_000_000_000;
+            iotaAmount = Number(tx.balanceChanges[0].amount) / -1_000_000_000;
             break;
         }
-        return suiAmount;
+        return iotaAmount;
     }
 
     /* Package functions */

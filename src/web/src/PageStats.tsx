@@ -58,11 +58,11 @@ export const PageStats: React.FC = () =>
     const fetchCurrEpoch = async () => {
         try {
             setCurrEpoch(undefined);
-            const suiState = await spammer.current.getSuiClient().getLatestIotaSystemState();
+            const iotaState = await spammer.current.getSuiClient().getLatestIotaSystemState();
             setCurrEpoch({
-                epochNumber: Number(suiState.epoch),
-                durationMs: Number(suiState.epochDurationMs),
-                startTimeMs: Number(suiState.epochStartTimestampMs),
+                epochNumber: Number(iotaState.epoch),
+                durationMs: Number(iotaState.epochDurationMs),
+                startTimeMs: Number(iotaState.epochStartTimestampMs),
             });
         } catch (err) {
             console.warn(`[fetchCurrEpoch] ${err}`);
@@ -95,7 +95,7 @@ export const PageStats: React.FC = () =>
         const epochTxs = Number(epoch.tx_count);
         const epochGas = epochTxs * gasPerTx;
         const spamPerTx = newSupplyPerEpoch / epochTxs;
-        const suiPerSpam = epochGas / newSupplyPerEpoch;
+        const iotaPerSpam = epochGas / newSupplyPerEpoch;
 
         let epochType: "current" | "register" | "claim";
         if (epochNumber === currentEpoch) {
@@ -158,7 +158,7 @@ export const PageStats: React.FC = () =>
             </div>
             }
 
-            {suiPerSpam > 0 &&
+            {iotaPerSpam > 0 &&
             <div>
                 <div>
                     Gas cost per SPAM: {suiPerSpam.toFixed(8)} SUI
