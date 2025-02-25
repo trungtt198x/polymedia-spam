@@ -3,7 +3,7 @@ import {
     SPAM_DECIMALS,
     SPAM_MODULE,
     SPAM_SYMBOL,
-    SUI_DECIMALS,
+    IOTA_DECIMALS,
     DEFAULT_NETWORK,
     SpamEvent,
     Spammer,
@@ -148,16 +148,16 @@ const App: React.FC = () =>
 
     const updateBalances = async () => {
         try {
-            const balanceSui = await spammer.current.getSuiClient().getBalance({
+            const balanceIOTA = await spammer.current.getIotaClient().getBalance({
                 owner: spammer.current.getSpamClient().signer.toIotaAddress(),
             });
-            const balanceSpam = await spammer.current.getSuiClient().getBalance({
+            const balanceSpam = await spammer.current.getIotaClient().getBalance({
                 owner: spammer.current.getSpamClient().signer.toIotaAddress(),
                 coinType: `${spammer.current.getSpamClient().packageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
             });
             setBalances({
                 spam: Number(balanceSpam.totalBalance) / 10**SPAM_DECIMALS,
-                iota: Number(balanceSui.totalBalance) / 10**SUI_DECIMALS,
+                iota: Number(balanceIOTA.totalBalance) / 10**IOTA_DECIMALS,
             });
             // console.info("balance updated");
         } catch (_err) {

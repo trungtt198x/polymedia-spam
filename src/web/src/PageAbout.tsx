@@ -8,7 +8,7 @@ export const PageAbout: React.FC = () =>
     <div id="home-content">
         <h1><span className="rainbow">About</span></h1>
 
-        <h2>"Spam to Earn" a.k.a. "Proof of Spam" on Sui</h2>
+        <h2>"Spam to Earn" a.k.a. "Proof of Spam" on IOTA</h2>
 
         <p>
             The more transactions you send, the more SPAM you earn.
@@ -29,7 +29,7 @@ export const PageAbout: React.FC = () =>
         <h3>ELI5</h3>
         <div className="tight">
             <p>▸ One billion SPAM coins are minted every day.</p>
-            <p>▸ You earn SPAM simply by sending Sui transactions.</p>
+            <p>▸ You earn SPAM simply by sending IOTA transactions.</p>
             <p>▸ The more txs you send, the more SPAM you receive.</p>
             <p>▸ There is no proof of work, only proof of spam.</p>
         </div>

@@ -1,6 +1,6 @@
 # SPAM
 
-"Spam to Earn" a.k.a. "Proof of Spam" on Sui.
+"Spam to Earn" a.k.a. "Proof of Spam" on Iota.
 
 ![Polymedia SPAM](https://spamiota.com/img/open-graph.webp)
 
@@ -8,7 +8,7 @@
 
 One billion SPAM coins are minted every day.
 
-Users earn SPAM simply by sending Sui transactions.
+Users earn SPAM simply by sending Iota transactions.
 
 The more txs you send, the more SPAM you receive.
 
@@ -24,7 +24,7 @@ The SPAM system has two components:
 
 ## Mining mechanism
 
-A Sui "epoch" is roughly equivalent to 1 day.
+An Iota "epoch" is roughly equivalent to 1 day.
 
 Users send txs to increase their tx counters during epoch `N`, register their tx counters during epoch `N+1`, and mint SPAM anytime from epoch `N+2` based on the spamming they did in epoch `N`:
 
@@ -34,7 +34,7 @@ Users send txs to increase their tx counters during epoch `N`, register their tx
 - Epoch 3: user spams UC.3, registers UC.2, claims UC.1
 - And so on
 
-## Sui implementation
+## Iota implementation
 
 Single-writer `UserCounter` objects are used to track the number of txs sent by each user within one epoch.
 

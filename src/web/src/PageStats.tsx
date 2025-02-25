@@ -58,7 +58,7 @@ export const PageStats: React.FC = () =>
     const fetchCurrEpoch = async () => {
         try {
             setCurrEpoch(undefined);
-            const iotaState = await spammer.current.getSuiClient().getLatestIotaSystemState();
+            const iotaState = await spammer.current.getIotaClient().getLatestIotaSystemState();
             setCurrEpoch({
                 epochNumber: Number(iotaState.epoch),
                 durationMs: Number(iotaState.epochDurationMs),
@@ -153,7 +153,7 @@ export const PageStats: React.FC = () =>
             {epochGas > 0 &&
             <div>
                 <div>
-                    Gas paid in epoch: {formatNumber(epochGas)} SUI
+                    Gas paid in epoch: {formatNumber(epochGas)} IOTA
                 </div>
             </div>
             }
@@ -161,7 +161,7 @@ export const PageStats: React.FC = () =>
             {iotaPerSpam > 0 &&
             <div>
                 <div>
-                    Gas cost per SPAM: {suiPerSpam.toFixed(8)} SUI
+                    Gas cost per SPAM: {iotaPerSpam.toFixed(8)} IOTA
                 </div>
             </div>
             }
@@ -188,7 +188,7 @@ export const PageStats: React.FC = () =>
         {heading}
         <div className="tight">
             <p>Total transactions: {formatNumber(totalTxs)}</p>
-            <p>Total gas paid: {formatNumber(totalGas, "compact")} SUI</p>
+            <p>Total gas paid: {formatNumber(totalGas, "compact")} IOTA</p>
             {network !== "mainnet" &&
                 <p>Daily inflation: {dailyInflation.toFixed(2)}%</p>
             }
@@ -198,7 +198,7 @@ export const PageStats: React.FC = () =>
                 <p>FDV: ${formatNumber(price.usd * claimableSupply)} (${formatNumber(price.usd * claimedSupply)} claimed)</p>
                 <br/>
                 <p>SPAM/USD: {price.usd}</p>
-                <p>SPAM/SUI: {price.iota}</p>
+                <p>SPAM/IOTA: {price.iota}</p>
             </>
             }
             {/* <p>Current epoch: {stats.epoch}</p> */}

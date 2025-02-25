@@ -27,7 +27,7 @@ export const SPAM_IDS: Record<NetworkName, NetworkConfig> = {
 export const SPAM_MODULE = "spam";
 export const SPAM_SYMBOL = "SPAM";
 export const SPAM_DECIMALS = 4;
-export const SUI_DECIMALS = 9;
+export const IOTA_DECIMALS = 9;
 
 // "stopped" | "running" | "stopping"
 export const SPAM_STATUS = "running";

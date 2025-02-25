@@ -53,8 +53,8 @@ export const PageWallet: React.FC = () =>
         <h2>Miner wallet</h2>
         <div id="wallet-content">
             <div className="wallet-section">
-                <h4>Sui address:</h4>
-                <p>Send SUI to this address to fund your miner wallet.</p>
+                <h4>IOTA address:</h4>
+                <p>Send IOTA to this address to fund your miner wallet.</p>
                 <span className="iota-address">
                     {spammer.current.getSpamClient().signer.toIotaAddress()}
                 </span>

@@ -1,7 +1,7 @@
 import { bcs } from "@iota/bcs";
 import { IotaObjectRef } from "@iota/iota-sdk/client";
 
-/* 1:1 representations of Sui structs */
+/* 1:1 representations of Move contract structs */
 
 export type Director = {
     id: string;

@@ -81,8 +81,8 @@ export class Spammer
         return this.rotator.getSpamClient();
     }
 
-    public getSuiClient(): IotaClient  {
-        return this.rotator.getSuiClient();
+    public getIotaClient(): IotaClient  {
+        return this.rotator.getIotaClient();
     }
 
     public getClaimAddress(): string {
@@ -256,7 +256,7 @@ export class Spammer
 
         if (this.lastTxDigest) {
             this.event({ type: "debug", msg: `Waiting for tx: ${this.lastTxDigest}` });
-            await this.getSuiClient().waitForTransaction({
+            await this.getIotaClient().waitForTransaction({
                 digest: this.lastTxDigest,
                 pollInterval: 500,
             });

@@ -16,7 +16,7 @@ import { SPAM_IDS, SPAM_MODULE } from "./config.js";
 import * as pkg from "./package.js";
 import { BcsStats, Stats, UserCounter, UserCounters } from "./types.js";
 
-const INCREMENT_TX_GAS_BUDGET = 3000000; // 0.003 SUI
+const INCREMENT_TX_GAS_BUDGET = 3000000; // 0.003 IOTA
 const SLEEP_MS_AFTER_FINALITY_ERROR = 10000;
 
 export class SpamClient
@@ -66,7 +66,7 @@ export class SpamClient
         // fetch user counters
         const userCountersArray = await this.fetchUserCounters();
 
-        // fetch Sui epoch
+        // fetch IOTA epoch
         const iotaState = await this.iotaClient.getLatestIotaSystemState();
         const currEpoch = Number(iotaState.epoch);
 

@@ -3,8 +3,8 @@ module spam_art::spam_diptych;
 // === imports ===
 
 use std::string::{utf8, String};
-use sui::display::{Self};
-use sui::package::{Self};
+use iota::display::{Self};
+use iota::package::{Self};
 
 // === structs ===
 

@@ -52,7 +52,7 @@ export const PageSpam: React.FC = () =>
 
     const updateCurrEpoch = async () => {
         try {
-            const iotaState = await spammer.current.getSuiClient().getLatestIotaSystemState();
+            const iotaState = await spammer.current.getIotaClient().getLatestIotaSystemState();
             setCurrEpoch({
                 epochNumber: Number(iotaState.epoch),
                 durationMs: Number(iotaState.epochDurationMs),
@@ -69,7 +69,7 @@ export const PageSpam: React.FC = () =>
         return <PageDisclaimer />;
     }
 
-    const isLowSuiBalance = balances.iota < 0.003;
+    const isLowIOTABalance = balances.iota < 0.003;
 
     const counters = spamView.counters;
     const hasCounters = Boolean(
@@ -96,13 +96,13 @@ export const PageSpam: React.FC = () =>
             return null;
         }
         return <>
-            <p>SUI balance: {isLoading ? "loading..." : formatNumber(balances.iota, "compact")}</p>
+            <p>IOTA balance: {isLoading ? "loading..." : formatNumber(balances.iota, "compact")}</p>
             <p>SPAM balance: {isLoading ? "loading..." : formatNumber(balances.spam, "compact")}</p>
         </>;
     };
 
     const CurrentRPC: React.FC = () => {
-        if (isLoading || isLowSuiBalance || isDisabled) {
+        if (isLoading || isLowIOTABalance || isDisabled) {
             return null;
         }
         return <div className="tight">
@@ -113,14 +113,14 @@ export const PageSpam: React.FC = () =>
     };
 
     const TopUp: React.FC = () => {
-        if (isLoading || !isLowSuiBalance || isDisabled) {
+        if (isLoading || !isLowIOTABalance || isDisabled) {
             return null;
         }
         let message: React.ReactNode;
         if (counters.register?.registered === false) {
-            message = <p className="text-orange">🚨 Send SUI to your wallet to register the counter!</p>;
+            message = <p className="text-orange">🚨 Send IOTA to your wallet to register the counter!</p>;
         } else if (counters.claim.length) {
-            message = <p className="text-orange">Send SUI to your wallet to claim the counter{counters.claim.length > 1 ? "s" : ""}</p>;
+            message = <p className="text-orange">Send IOTA to your wallet to claim the counter{counters.claim.length > 1 ? "s" : ""}</p>;
         } else {
             message = network === "mainnet"
                 ? <p className="text-orange">Mining has ended</p>
@@ -135,7 +135,7 @@ export const PageSpam: React.FC = () =>
     };
 
     const SpamOrStopButton: React.FC = () => {
-        if (isLoading || isLowSuiBalance || isDisabled) {
+        if (isLoading || isLowIOTABalance || isDisabled) {
             return null;
         }
         if (spammer.current.status === "stopped") {
@@ -173,7 +173,7 @@ export const PageSpam: React.FC = () =>
                 status = "Spamming...";
                 txClass = "blink";
             } else {
-                status = isLowSuiBalance
+                status = isLowIOTABalance
                     ? "Top up your wallet to spam this counter"
                     : `Ready to spam. Can be registered on epoch ${counter.epoch+1}.`;
                 }

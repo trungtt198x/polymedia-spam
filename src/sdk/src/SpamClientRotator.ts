@@ -63,7 +63,7 @@ export class SpamClientRotator
         return this.spamClients[this.activeIndex].spamClient;
     }
 
-    public getSuiClient(): IotaClient  {
+    public getIotaClient(): IotaClient  {
         return this.spamClients[this.activeIndex].spamClient.iotaClient;
     }
 

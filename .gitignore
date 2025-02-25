@@ -9,7 +9,7 @@
 dist
 node_modules
 
-# Sui
+# Move contracts
 .coverage_map.mvcov
 .trace
 build
