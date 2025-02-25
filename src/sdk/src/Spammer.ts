@@ -1,10 +1,11 @@
-import { SuiClient, SuiObjectRef } from "@mysten/sui/client";
-import { Signer } from "@mysten/sui/cryptography";
+import { IotaClient, IotaObjectRef } from "@iota/iota-sdk/client";
+import { Signer } from "@iota/iota-sdk/cryptography";
 import { NetworkName, shortenAddress, sleep, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { SpamClient } from "./SpamClient.js";
 import { SpamClientRotator } from "./SpamClientRotator.js";
 import { SpamError, parseSpamError } from "./errors.js";
 import { UserCounters, emptyUserCounters } from "./types.js";
+import { SPAM_STATUS } from "./config.js";
 
 export type SpamStatus = "stopped" | "running" | "stopping";
 
@@ -41,13 +42,13 @@ export class Spammer
         eventHandler?: SpamEventHandler,
         claimAddress?: string,
     ) {
-        this.status = "stopped";
+        this.status = SPAM_STATUS; // "stopped";'
         this.userCounters = emptyUserCounters();
         this.requestRefetch = true; // so when it starts it pulls fresh data
         this.lastTxDigest = null;
         this.eventHandler = eventHandler;
         if (!claimAddress) {
-            this.claimAddress = keypair.toSuiAddress();
+            this.claimAddress = keypair.toIotaAddress();
         } else {
             this.setClaimAddress(claimAddress); // throws error if invalid
         }
@@ -80,7 +81,7 @@ export class Spammer
         return this.rotator.getSpamClient();
     }
 
-    public getSuiClient(): SuiClient  {
+    public getSuiClient(): IotaClient  {
         return this.rotator.getSuiClient();
     }
 
@@ -318,7 +319,7 @@ export class Spammer
         }
     }
 
-    protected async incrementUserCounter(counterRef: SuiObjectRef): Promise<void>
+    protected async incrementUserCounter(counterRef: IotaObjectRef): Promise<void>
     {
         this.event({ type: "debug", msg: "Incrementing counter" });
         if (!this.userCounters.current) {
@@ -333,7 +334,7 @@ export class Spammer
         this.lastTxDigest = resp.digest;
         // We don't `requestRefetch` here, unlike create/register/claim/delete txs.
         // Instead, we increment current.tx_count manually,
-        // and set current.ref to the SuiObjectRef found in the tx effects.
+        // and set current.ref to the IotaObjectRef found in the tx effects.
         this.userCounters.current.tx_count++;
         this.userCounters.current.ref = resp.effects.mutated!.find(mutatedObj =>
             mutatedObj.reference.objectId == counterRef.objectId

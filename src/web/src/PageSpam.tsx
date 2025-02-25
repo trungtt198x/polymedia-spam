@@ -52,7 +52,7 @@ export const PageSpam: React.FC = () =>
 
     const updateCurrEpoch = async () => {
         try {
-            const suiState = await spammer.current.getSuiClient().getLatestSuiSystemState();
+            const suiState = await spammer.current.getSuiClient().getLatestIotaSystemState();
             setCurrEpoch({
                 epochNumber: Number(suiState.epoch),
                 durationMs: Number(suiState.epochDurationMs),
@@ -261,7 +261,7 @@ export const PageSpam: React.FC = () =>
     };
 
     const claimAddress = spammer.current.getClaimAddress();
-    const signerAddress = spammer.current.getSpamClient().signer.toSuiAddress();
+    const signerAddress = spammer.current.getSpamClient().signer.toIotaAddress();
     const claimAddrInfo = claimAddress === signerAddress
         ? <>
             <span>miner address</span>

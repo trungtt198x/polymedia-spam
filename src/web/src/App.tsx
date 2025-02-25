@@ -1,15 +1,16 @@
-import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import {
     SPAM_DECIMALS,
     SPAM_MODULE,
     SPAM_SYMBOL,
     SUI_DECIMALS,
+    DEFAULT_NETWORK,
     SpamEvent,
     Spammer,
     emptyUserCounters,
 } from "@polymedia/spam-sdk";
 import { sleep } from "@polymedia/suitcase-core";
-import { LinkExternal, NetworkDropdownSelector, isLocalhost, loadNetwork } from "@polymedia/suitcase-react";
+import { LinkExternal, NetworkDropdownSelector, isLocalhost } from "@polymedia/suitcase-react";
 import { useEffect, useRef, useState } from "react";
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { PageAbout } from "./PageAbout";
@@ -60,8 +61,8 @@ const supportedNetworks = isLocalhost()
     ? ["mainnet", "testnet", "devnet", "localnet"] as const
     : ["mainnet", "testnet"] as const;
 type NetworkName = typeof supportedNetworks[number];
-const defaultNetwork = "mainnet";
-const loadedNetwork = loadNetwork(supportedNetworks, defaultNetwork);
+// const defaultNetwork = DEFAULT_NETWORK;
+const loadedNetwork = DEFAULT_NETWORK;// loadNetwork(supportedNetworks, defaultNetwork);
 
 /* App */
 
@@ -148,10 +149,10 @@ const App: React.FC = () =>
     const updateBalances = async () => {
         try {
             const balanceSui = await spammer.current.getSuiClient().getBalance({
-                owner: spammer.current.getSpamClient().signer.toSuiAddress(),
+                owner: spammer.current.getSpamClient().signer.toIotaAddress(),
             });
             const balanceSpam = await spammer.current.getSuiClient().getBalance({
-                owner: spammer.current.getSpamClient().signer.toSuiAddress(),
+                owner: spammer.current.getSpamClient().signer.toIotaAddress(),
                 coinType: `${spammer.current.getSpamClient().packageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
             });
             setBalances({

@@ -1,15 +1,15 @@
 import {
-    SuiClient,
-    SuiObjectRef,
-    SuiObjectResponse,
-    SuiTransactionBlockResponse,
-} from "@mysten/sui/client";
-import { Signer } from "@mysten/sui/cryptography";
-import { Transaction } from "@mysten/sui/transactions";
+    IotaClient,
+    IotaObjectRef,
+    IotaObjectResponse,
+    IotaTransactionBlockResponse,
+} from "@iota/iota-sdk/client";
+import { Signer } from "@iota/iota-sdk/cryptography";
+import { Transaction } from "@iota/iota-sdk/transactions";
 import {
     NetworkName,
-    devInspectAndGetExecutionResults,
-    objResToFields,
+    // devInspectAndGetExecutionResults,
+    // objResToFields,
     sleep,
 } from "@polymedia/suitcase-core";
 import { SPAM_IDS, SPAM_MODULE } from "./config.js";
@@ -24,10 +24,10 @@ export class SpamClient
     public readonly signer: Signer;
     public readonly network: NetworkName;
     public readonly rpcUrl: string;
-    public readonly suiClient: SuiClient;
+    public readonly suiClient: IotaClient;
     public readonly packageId: string;
     public readonly directorId: string;
-    protected gasCoin: SuiObjectRef|undefined;
+    protected gasCoin: IotaObjectRef|undefined;
     protected gasPrice: bigint|undefined;
 
     constructor(
@@ -38,7 +38,7 @@ export class SpamClient
         this.signer = keypair;
         this.network = network;
         this.rpcUrl = rpcUrl;
-        this.suiClient = new SuiClient({ url: rpcUrl });
+        this.suiClient = new IotaClient({ url: rpcUrl });
         this.packageId = SPAM_IDS[network].packageId;
         this.directorId = SPAM_IDS[network].directorId;
         this.gasCoin = undefined;
@@ -52,7 +52,7 @@ export class SpamClient
     {
         const StructType = `${this.packageId}::${SPAM_MODULE}::UserCounter`;
         const pageObjResp = await this.suiClient.getOwnedObjects({
-            owner: this.signer.toSuiAddress(),
+            owner: this.signer.toIotaAddress(),
             cursor: null, // doesn't handle pagination, but it's unlikely that it will ever be needed
             options: { showContent: true },
             filter: { StructType },
@@ -67,7 +67,7 @@ export class SpamClient
         const userCountersArray = await this.fetchUserCounters();
 
         // fetch Sui epoch
-        const suiState = await this.suiClient.getLatestSuiSystemState();
+        const suiState = await this.suiClient.getLatestIotaSystemState();
         const currEpoch = Number(suiState.epoch);
 
         // categorize user counters
@@ -160,7 +160,7 @@ export class SpamClient
     /* Package functions */
 
     public async newUserCounter(
-    ): Promise<SuiTransactionBlockResponse>
+    ): Promise<IotaTransactionBlockResponse>
     {
         const txb = new Transaction();
         pkg.new_user_counter(txb, this.packageId, this.directorId);
@@ -168,8 +168,8 @@ export class SpamClient
     }
 
     public async incrementUserCounter(
-        userCounterRef: SuiObjectRef,
-    ): Promise<SuiTransactionBlockResponse>
+        userCounterRef: IotaObjectRef,
+    ): Promise<IotaTransactionBlockResponse>
     {
         const txb = new Transaction();
         txb.setGasBudget(INCREMENT_TX_GAS_BUDGET);
@@ -179,7 +179,7 @@ export class SpamClient
 
     public async destroyUserCounters(
         userCounterIds: string[],
-    ): Promise<SuiTransactionBlockResponse>
+    ): Promise<IotaTransactionBlockResponse>
     {
         const txb = new Transaction();
         for (const counterId of userCounterIds) {
@@ -190,7 +190,7 @@ export class SpamClient
 
     public async registerUserCounter(
         userCounterId: string,
-    ): Promise<SuiTransactionBlockResponse>
+    ): Promise<IotaTransactionBlockResponse>
     {
         const txb = new Transaction();
         pkg.register_user_counter(txb, this.packageId, this.directorId, userCounterId);
@@ -200,9 +200,9 @@ export class SpamClient
     public async claimUserCounters(
         userCounterIds: string[],
         recipientAddress?: string,
-    ): Promise<SuiTransactionBlockResponse>
+    ): Promise<IotaTransactionBlockResponse>
     {
-        const recipient = recipientAddress ?? this.signer.toSuiAddress();
+        const recipient = recipientAddress ?? this.signer.toIotaAddress();
         const txb = new Transaction();
         for (const counterId of userCounterIds) {
             const [coin] = pkg.claim_user_counter(txb, this.packageId, this.directorId, counterId);
@@ -231,14 +231,14 @@ export class SpamClient
 
     /* Gas management */
 
-    public getGasCoin(): SuiObjectRef|undefined {
+    public getGasCoin(): IotaObjectRef|undefined {
         if (!this.gasCoin) {
             return undefined;
         }
         return {...this.gasCoin};
     }
 
-    public setGasCoin(gasCoin: SuiObjectRef|undefined): void {
+    public setGasCoin(gasCoin: IotaObjectRef|undefined): void {
         this.gasCoin = gasCoin;
     }
 
@@ -256,10 +256,19 @@ export class SpamClient
         txb: Transaction,
     ): Promise<Stats>
     {
-        const blockResults = await devInspectAndGetExecutionResults(this.suiClient, txb);
+        // const blockResults = await devInspectAndGetExecutionResults(this.suiClient, txb);
+        const { results: blockResults } = await this.suiClient.devInspectTransactionBlock({
+            sender: "0x7777777777777777777777777777777777777777777777777777777777777777",
+            transactionBlock: txb
+        });
 
-        const txResults = blockResults[0];
-        if (!txResults.returnValues?.length) {
+        if (blockResults?.length === 0) {
+            throw Error("transaction didn't return any results");
+        }
+
+        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+        const txResults = blockResults && blockResults[0];
+        if (!txResults?.returnValues?.length) {
             throw Error(`transaction didn't return any values: ${JSON.stringify(txResults, null, 2)}`);
         }
 
@@ -272,9 +281,9 @@ export class SpamClient
 
     protected async signAndExecute(
         txb: Transaction,
-    ): Promise<SuiTransactionBlockResponse>
+    ): Promise<IotaTransactionBlockResponse>
     {
-        txb.setSender(this.signer.toSuiAddress());
+        txb.setSender(this.signer.toIotaAddress());
 
         if (this.gasCoin) {
             txb.setGasPayment([this.gasCoin]);
@@ -293,7 +302,7 @@ export class SpamClient
             client: this.suiClient,
         });
 
-        let resp: SuiTransactionBlockResponse | null = null;
+        let resp: IotaTransactionBlockResponse | null = null;
         while (!resp) {
             try {
                 resp = await this.suiClient.executeTransactionBlock({
@@ -332,12 +341,22 @@ export class SpamClient
         }
     }
 
+    private objResToFields (resp: IotaObjectResponse): Record<string, any> { // eslint-disable-line @typescript-eslint/no-explicit-any  
+        if (resp.error) {
+            throw Error(`response error: ${JSON.stringify(resp, null, 2)}`);
+        }
+        if (resp.data?.content?.dataType !== "moveObject") {
+            throw Error(`response content missing: ${JSON.stringify(resp, null, 2)}`);
+        }
+        return resp.data.content.fields as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+    }
+
     /* eslint-disable */
     protected parseUserCounter(
-        resp: SuiObjectResponse,
+        resp: IotaObjectResponse,
     ): UserCounter {
-        const fields = objResToFields(resp);
-        const ref: SuiObjectRef = {
+        const fields = this.objResToFields(resp);
+        const ref: IotaObjectRef = {
             objectId: resp.data!.objectId,
             version: resp.data!.version,
             digest: resp.data!.digest,

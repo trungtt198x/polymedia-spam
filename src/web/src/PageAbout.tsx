@@ -1,4 +1,6 @@
 import { LinkExternal } from "@polymedia/suitcase-react";
+import { Link } from "react-router-dom";
+import { SPAM_STATUS } from "@polymedia/spam-sdk";
 
 export const PageAbout: React.FC = () =>
 {
@@ -12,11 +14,14 @@ export const PageAbout: React.FC = () =>
             The more transactions you send, the more SPAM you earn.
         </p>
 
-        {/* <Link className="btn" to="/spam">
-            START
-        </Link> */}
+        {SPAM_STATUS === "running" ?
+            <Link className="btn" to="/spam">
+                START
+            </Link>
+            :
+            <h3 className="text-orange">MINING HAS ENDED!</h3>
+        }
 
-        <h3 className="text-orange">MINING HAS ENDED!</h3>
         <p>
             This was the original landing page for SPAM. The functionality is kept around so miners can claim their counters.
         </p>

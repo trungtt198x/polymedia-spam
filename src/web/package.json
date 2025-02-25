@@ -23,7 +23,7 @@
         "tunnel": "lt --port 1234"
     },
     "dependencies": {
-        "@mysten/sui": "^1.11.0",
+        "@iota/iota-sdk": "^0.3.1",
         "@polymedia/spam-sdk": "workspace:*",
         "@polymedia/suitcase-core": "^0.0.32",
         "@polymedia/suitcase-react": "^0.0.32",

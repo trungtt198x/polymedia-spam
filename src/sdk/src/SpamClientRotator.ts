@@ -1,5 +1,5 @@
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
-import { Signer } from "@mysten/sui/cryptography";
+import { IotaClient, getFullnodeUrl } from "@iota/iota-sdk/client";
+import { Signer } from "@iota/iota-sdk/cryptography";
 import { NetworkName } from "@polymedia/suitcase-core";
 import { SpamClient } from "./SpamClient.js";
 
@@ -63,7 +63,7 @@ export class SpamClientRotator
         return this.spamClients[this.activeIndex].spamClient;
     }
 
-    public getSuiClient(): SuiClient  {
+    public getSuiClient(): IotaClient  {
         return this.spamClients[this.activeIndex].spamClient.suiClient;
     }
 
@@ -78,28 +78,12 @@ export class SpamClientRotator
 export const RPC_ENDPOINTS: Record<NetworkName, string[]> = {
     "mainnet": [
         getFullnodeUrl("mainnet"),
-        "https://mainnet.suiet.app",
-        "https://rpc-mainnet.suiscan.xyz",
-        "https://mainnet.sui.rpcpool.com",
-        "https://sui-mainnet.nodeinfra.com",
-        "https://sui-mainnet.public.blastapi.io",
-        "https://mainnet-rpc.sui.chainbase.online",
-        "https://sui-mainnet-ca-2.cosmostation.io",
-        "https://sui-mainnet-us-1.cosmostation.io",
-        "https://sui-mainnet-us-2.cosmostation.io",
     ],
     "testnet": [
         getFullnodeUrl("testnet"),
-        "https://rpc-testnet.suiscan.xyz",
-        "https://sui-testnet-endpoint.blockvision.org",
-        "https://sui-testnet.public.blastapi.io",
-        "https://testnet.suiet.app",
-        "https://sui-testnet.nodeinfra.com",
-        "https://testnet.sui.rpcpool.com",
     ],
     "devnet": [
         getFullnodeUrl("devnet"),
-        // "https://devnet.suiet.app",
     ],
     "localnet": [
         // to simulate multiple RPC endpoints locally

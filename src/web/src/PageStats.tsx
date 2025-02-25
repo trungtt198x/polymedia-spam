@@ -58,7 +58,7 @@ export const PageStats: React.FC = () =>
     const fetchCurrEpoch = async () => {
         try {
             setCurrEpoch(undefined);
-            const suiState = await spammer.current.getSuiClient().getLatestSuiSystemState();
+            const suiState = await spammer.current.getSuiClient().getLatestIotaSystemState();
             setCurrEpoch({
                 epochNumber: Number(suiState.epoch),
                 durationMs: Number(suiState.epochDurationMs),

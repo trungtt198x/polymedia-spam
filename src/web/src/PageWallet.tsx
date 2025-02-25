@@ -1,4 +1,4 @@
-import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { useEffect, useState } from "react";
 import { useLocation, useOutletContext } from "react-router-dom";
@@ -56,7 +56,7 @@ export const PageWallet: React.FC = () =>
                 <h4>Sui address:</h4>
                 <p>Send SUI to this address to fund your miner wallet.</p>
                 <span className="sui-address">
-                    {spammer.current.getSpamClient().signer.toSuiAddress()}
+                    {spammer.current.getSpamClient().signer.toIotaAddress()}
                 </span>
             </div>
             <div className="wallet-section">

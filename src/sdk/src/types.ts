@@ -1,5 +1,5 @@
-import { bcs } from "@mysten/bcs";
-import { SuiObjectRef } from "@mysten/sui/client";
+import { bcs } from "@iota/bcs";
+import { IotaObjectRef } from "@iota/iota-sdk/client";
 
 /* 1:1 representations of Sui structs */
 
@@ -19,7 +19,7 @@ export type EpochCounter = {
 
 export type UserCounter = {
     id: string;
-    ref:  SuiObjectRef;
+    ref:  IotaObjectRef;
     epoch: number;
     tx_count: number;
     registered: boolean;

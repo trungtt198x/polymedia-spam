@@ -1,9 +1,9 @@
-import { bcs } from "@mysten/sui/bcs";
-import { SuiObjectRef } from "@mysten/sui/client";
+import { bcs } from "@iota/bcs";
+import { IotaObjectRef } from "@iota/iota-sdk/client";
 import {
     Transaction,
     TransactionResult,
-} from "@mysten/sui/transactions";
+} from "@iota/iota-sdk/transactions";
 import { SPAM_MODULE } from "./config.js";
 
 export function new_user_counter(
@@ -22,7 +22,7 @@ export function new_user_counter(
 export function increment_user_counter(
     tx: Transaction,
     packageId: string,
-    userCounterRef: SuiObjectRef,
+    userCounterRef: IotaObjectRef,
 ): TransactionResult {
     return tx.moveCall({
         target: `${packageId}::${SPAM_MODULE}::increment_user_counter`,
@@ -85,7 +85,7 @@ export function stats_for_specific_epochs(
         target: `${packageId}::${SPAM_MODULE}::stats_for_specific_epochs`,
         arguments: [
             tx.object(directorId),
-            tx.pure(bcs.vector(bcs.U64).serialize(epochNumbers)),
+            tx.pure(bcs.vector(bcs.u64()).serialize(epochNumbers)),
         ],
     });
 }

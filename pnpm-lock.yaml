@@ -38,21 +38,21 @@ importers:
 
   src/sdk:
     dependencies:
-      '@mysten/bcs':
-        specifier: ^1.1.0
-        version: 1.1.0
-      '@mysten/sui':
-        specifier: ^1.11.0
-        version: 1.11.0(typescript@5.6.2)
+      '@iota/bcs':
+        specifier: ^0.2.1
+        version: 0.2.1
+      '@iota/iota-sdk':
+        specifier: ^0.3.1
+        version: 0.3.1(typescript@5.6.2)
       '@polymedia/suitcase-core':
         specifier: ^0.0.32
         version: 0.0.32(@mysten/sui@1.11.0(typescript@5.6.2))
 
   src/web:
     dependencies:
-      '@mysten/sui':
-        specifier: ^1.11.0
-        version: 1.11.0(typescript@5.6.2)
+      '@iota/iota-sdk':
+        specifier: ^0.3.1
+        version: 0.3.1(typescript@5.6.2)
       '@polymedia/spam-sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -99,9 +99,9 @@ importers:
 
   src/your-fork:
     dependencies:
-      '@mysten/sui':
-        specifier: ^1.11.0
-        version: 1.11.0(typescript@5.6.2)
+      '@iota/iota-sdk':
+        specifier: ^0.3.1
+        version: 0.3.1(typescript@5.6.2)
       '@polymedia/spam-sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -525,6 +525,13 @@ packages:
   '@humanwhocodes/retry@0.3.0':
     resolution: {integrity: sha512-d2CGZR2o7fS6sWB7DG/3a95bGKQyHMACZ5aW8qGkkqQpUoZV6C0X7Pc7l4ZNMZkfNBf4VWNe9E1jRsf0G146Ew==}
     engines: {node: '>=18.18'}
+
+  '@iota/bcs@0.2.1':
+    resolution: {integrity: sha512-T+iv5gZhUZP7BiDY7+Ir4MA2rYmyGNZA2b+nxjv219Fp8klFt+l38OWA+1RgJXrCmzuZ+M4hbMAeHhHziURX6Q==}
+
+  '@iota/iota-sdk@0.3.1':
+    resolution: {integrity: sha512-YncuQm1wVBDNW6WDFTz6Qk/0zOEyAREXk9udU11VHZrzSn/HS/dcamRjLmv4Ls6FW04q/Y6pSRPDiJoWwJ16Zg==}
+    engines: {node: '>=20'}
 
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
@@ -2388,6 +2395,29 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/retry@0.3.0': {}
+
+  '@iota/bcs@0.2.1':
+    dependencies:
+      bs58: 6.0.0
+
+  '@iota/iota-sdk@0.3.1(typescript@5.6.2)':
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
+      '@iota/bcs': 0.2.1
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      '@suchipi/femver': 1.0.0
+      bech32: 2.0.0
+      gql.tada: 1.8.9(graphql@16.9.0)(typescript@5.6.2)
+      graphql: 16.9.0
+      tweetnacl: 1.0.3
+      valibot: 0.36.0
+    transitivePeerDependencies:
+      - '@gql.tada/svelte-support'
+      - '@gql.tada/vue-support'
+      - typescript
 
   '@jridgewell/resolve-uri@3.1.2': {}
 

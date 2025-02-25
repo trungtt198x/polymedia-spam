@@ -1,5 +1,5 @@
-import { decodeSuiPrivateKey } from "@mysten/sui/cryptography";
-import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
+import { decodeIotaPrivateKey } from "@iota/iota-sdk/cryptography";
+import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { RPC_ENDPOINTS } from "@polymedia/spam-sdk";
 import { NetworkName, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 
@@ -24,7 +24,7 @@ export function saveKeypairToStorage(pair: Ed25519Keypair): void {
 }
 
 export function pairFromSecretKey(secretKey: string): Ed25519Keypair {
-    const parsedPair = decodeSuiPrivateKey(secretKey);
+    const parsedPair = decodeIotaPrivateKey(secretKey);
     return Ed25519Keypair.fromSecretKey(parsedPair.secretKey);
 }
 

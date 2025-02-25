@@ -7,8 +7,8 @@ export type NetworkConfig = {
 
 export const SPAM_IDS: Record<NetworkName, NetworkConfig> = {
     mainnet: {
-        packageId: "0x30a644c3485ee9b604f52165668895092191fcaf5489a846afa7fc11cdb9b24a",
-        directorId: "0x71d2211afbb63a83efc9050ded5c5bb7e58882b17d872e32e632a978ab7b5700",
+        packageId: "",
+        directorId: "",
     },
     testnet: {
         packageId: "0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745",
@@ -28,3 +28,9 @@ export const SPAM_MODULE = "spam";
 export const SPAM_SYMBOL = "SPAM";
 export const SPAM_DECIMALS = 4;
 export const SUI_DECIMALS = 9;
+
+// "stopped" | "running" | "stopping"
+export const SPAM_STATUS = "running";
+
+// "testnet" and "mainnet"
+export const DEFAULT_NETWORK = "testnet";
