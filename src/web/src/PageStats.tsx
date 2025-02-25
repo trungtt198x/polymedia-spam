@@ -1,4 +1,4 @@
-import { SPAM_DECIMALS, Stats } from "@polymedia/spam-sdk";
+import { SPAM_DECIMALS, Stats, SPAM_IDS, TOTAL_EPOCH_REWARD } from "@polymedia/spam-sdk";
 import { NetworkName, formatNumber } from "@polymedia/suitcase-core";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
@@ -6,10 +6,10 @@ import { AppContext } from "./App";
 import { usePrice } from "./hooks/usePrice";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 
-const newSupplyPerEpoch = 1_000_000_000;
+const newSupplyPerEpoch = TOTAL_EPOCH_REWARD;
 const firstEpoch: Record<NetworkName, number> = {
-    mainnet: 386,
-    testnet: 357,
+    mainnet: SPAM_IDS.mainnet.epoch,
+    testnet: SPAM_IDS.testnet.epoch,
     devnet: 0,
     localnet: 0,
 };

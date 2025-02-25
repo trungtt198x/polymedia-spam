@@ -62,10 +62,10 @@ export const PageRPCs: React.FC = () =>
 
         <div id="page-rpc" className="tight">
             <p>
-                You can choose which RPCs to use for spamming transactions.
+                You can choose what RPCs to use for spamming transactions.
             </p>
             <p>
-                The app rotates between enabled RPCs to avoid hitting rate limits.
+                The app rotates between the enabled RPCs to avoid rate limits.
             </p>
 
             <div id="rpc-selector">

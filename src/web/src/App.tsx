@@ -10,7 +10,7 @@ import {
     emptyUserCounters,
 } from "@polymedia/spam-sdk";
 import { sleep } from "@polymedia/suitcase-core";
-import { LinkExternal, NetworkDropdownSelector, isLocalhost } from "@polymedia/suitcase-react";
+import { LinkExternal, NetworkDropdownSelector } from "@polymedia/suitcase-react";
 import { useEffect, useRef, useState } from "react";
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { PageAbout } from "./PageAbout";
@@ -57,9 +57,7 @@ export const AppRouter: React.FC = () => {
 
 /* Network config */
 
-const supportedNetworks = isLocalhost()
-    ? ["mainnet", "testnet", "devnet", "localnet"] as const
-    : ["mainnet", "testnet"] as const;
+const supportedNetworks = ["mainnet", "testnet"] as const;
 type NetworkName = typeof supportedNetworks[number];
 // const defaultNetwork = DEFAULT_NETWORK;
 const loadedNetwork = DEFAULT_NETWORK;// loadNetwork(supportedNetworks, defaultNetwork);

@@ -12,7 +12,7 @@ import {
     // objResToFields,
     sleep,
 } from "@polymedia/suitcase-core";
-import { SPAM_IDS, SPAM_MODULE } from "./config.js";
+import { SPAM_IDS, SPAM_MODULE, SPAM_TX_FEE_INCREMENT_USER_COUNTER } from "./config.js";
 import * as pkg from "./package.js";
 import { BcsStats, Stats, UserCounter, UserCounters } from "./types.js";
 
@@ -144,7 +144,7 @@ export class SpamClient
         });
 
         // default to the usual cost of a SPAM tx on mainnet with a gas price of 750 MIST
-        let iotaAmount = 0.000774244;
+        let iotaAmount = Number(SPAM_TX_FEE_INCREMENT_USER_COUNTER); // 0.000774244;
         for (const tx of resp.data) {
             if (tx.balanceChanges?.length !== 1) {
                 // A regular SPAM tx only has 1 balance change, so this is likely a

@@ -1,6 +1,6 @@
-import { UserCounter } from "@polymedia/spam-sdk";
+import { UserCounter, EXPLORER } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
-import { LinkToPolymedia } from "@polymedia/suitcase-react";
+// import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import { AppContext } from "./App";
@@ -210,7 +210,14 @@ export const PageSpam: React.FC = () =>
                     Epoch {counter.epoch}
                 </div>
                 <div>
-                    <LinkToPolymedia network={network} kind="object" addr={counter.id} />
+                    {/* <LinkToPolymedia network={network} kind="object" addr={counter.id} /> */}
+                    <a 
+                        href={EXPLORER[network] + "/object/" + counter.id} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                    >
+                        Explorer
+                    </a>
                 </div>
             </div>
 
