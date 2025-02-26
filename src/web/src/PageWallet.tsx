@@ -53,14 +53,14 @@ export const PageWallet: React.FC = () =>
         <h2>Miner wallet</h2>
         <div id="wallet-content">
             <div className="wallet-section">
-                <h4>IOTA address:</h4>
-                <p>Send IOTA to this address to fund your miner wallet.</p>
+                <h4>IOTA address</h4>
+                <p>Send IOTA to this address to fund your miner wallet used to perform spam transactions.</p>
                 <span className="iota-address">
                     {spammer.current.getSpamClient().signer.toIotaAddress()}
                 </span>
             </div>
             <div className="wallet-section">
-                <h4>Secret key:</h4>
+                <h4>Secret key</h4>
                 <p>It allows you to restore your wallet. Copy it somewhere safe!</p>
                 <span className="iota-address">
                     {(spammer.current.getSpamClient().signer as Ed25519Keypair).getSecretKey()}

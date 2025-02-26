@@ -168,7 +168,7 @@ export const PageHome: React.FC = () =>
         <h3>SOURCE CODE</h3>
         <div className="tight">
             <p>
-                <LinkExternal href="https://github.com/juzybits/polymedia-spam" follow={true}>
+                <LinkExternal href="https://github.com/trungtt198x/polymedia-spam" follow={true}>
                     <i>SPAM repo on GitHub</i>
                 </LinkExternal>
             </p>

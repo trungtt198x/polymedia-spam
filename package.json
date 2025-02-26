@@ -3,12 +3,12 @@
     "version": "0.0.0",
     "name": "polymedia-spam-monorepo",
     "author": "@juzybits (https://polymedia.app)",
-    "homepage": "https://github.com/juzybits/polymedia-spam",
+    "homepage": "https://github.com/trungtt198x/polymedia-spam",
     "description": "The original Proof of Spam coin",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/juzybits/polymedia-spam"
+        "url": "https://github.com/trungtt198x/polymedia-spam"
     },
     "keywords": [],
     "scripts": {

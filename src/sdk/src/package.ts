@@ -19,6 +19,7 @@ export function new_user_counter(
     });
 }
 
+// This is the spam tx
 export function increment_user_counter(
     tx: Transaction,
     packageId: string,

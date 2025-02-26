@@ -45,7 +45,7 @@ export const PageAbout: React.FC = () =>
 
         <br/>
         <p>
-            <LinkExternal follow={true} href="https://github.com/juzybits/polymedia-spam/blob/main/README.md" >
+            <LinkExternal follow={true} href="https://github.com/trungtt198x/polymedia-spam/blob/main/README.md" >
                 Read the docs
             </LinkExternal>
         </p>

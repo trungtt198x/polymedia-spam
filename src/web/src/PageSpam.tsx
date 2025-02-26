@@ -1,8 +1,8 @@
-import { UserCounter, EXPLORER } from "@polymedia/spam-sdk";
+import { UserCounter, EXPLORER, SPAM_TX_FEE_INCREMENT_USER_COUNTER } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 // import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { AppContext } from "./App";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
@@ -65,12 +65,25 @@ export const PageSpam: React.FC = () =>
 
     /* HTML */
 
+    const HrefLink: React.FC<
+        {network: string; isOnlyExplorer: boolean; isAddress: boolean; hrefEndValue: string; hrefDisplay: string}
+    > = ({network, isOnlyExplorer, isAddress, hrefEndValue, hrefDisplay}) => {
+        let href: string = EXPLORER[network] as string;
+
+        if (!isOnlyExplorer) {
+            href += isAddress ? "/address/" : "/object/";
+            href += hrefEndValue;
+        }
+
+        return  <a href={href} style={{ textDecoration: "none" }} target="_blank" rel="noopener noreferrer"> {hrefDisplay} </a>;
+    };
+
     if (!disclaimerAccepted) {
         return <PageDisclaimer />;
     }
 
-    const isLowIOTABalance = balances.iota < 0.003;
-
+    const isLowIOTABalance = balances.iota < SPAM_TX_FEE_INCREMENT_USER_COUNTER;
+    
     const counters = spamView.counters;
     const hasCounters = Boolean(
         counters.current || counters.register || counters.claim.length > 0 || counters.delete.length > 0
@@ -180,7 +193,7 @@ export const PageSpam: React.FC = () =>
         }
         else if (type === "register") {
             if (counter.registered) {
-                status = `✅ Registered, can mint SPAM from epoch ${counter.epoch+2}`;
+                status = `✅ Registered, possible to mint SPAM from epoch ${counter.epoch+2}`;
             } else if (spammer.current.status === "running") {
                 status = "⏳ Registering counter...";
             } else {
@@ -211,13 +224,8 @@ export const PageSpam: React.FC = () =>
                 </div>
                 <div>
                     {/* <LinkToPolymedia network={network} kind="object" addr={counter.id} /> */}
-                    <a 
-                        href={EXPLORER[network] + "/object/" + counter.id} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                    >
-                        Explorer
-                    </a>
+                    Counter:
+                    <HrefLink network={network} isOnlyExplorer={false} isAddress={false} hrefEndValue={counter.id} hrefDisplay={shortenAddress(counter.id)} />
                 </div>
             </div>
 
@@ -267,24 +275,26 @@ export const PageSpam: React.FC = () =>
         </>;
     };
 
-    const claimAddress = spammer.current.getClaimAddress();
     const signerAddress = spammer.current.getSpamClient().signer.toIotaAddress();
-    const claimAddrInfo = claimAddress === signerAddress
-        ? <>
-            <span>miner address</span>
-            <br/>
-            <Link to="/wallet#set-claim-address">not recommended</Link>
-        </>
-        : shortenAddress(claimAddress);
+    const claimAddress = spammer.current.getClaimAddress() || signerAddress;
+    
     return <>
         <h1><span className="rainbow">Spam</span></h1>
         <div>
 
             <div className="tight">
                 <p>Status: <StatusSpan status={spammer.current.status} /></p>
-                <p>Current epoch: {isLoading ? "loading... " : counters.epoch}</p>
+                <p>Current epoch: 
+                    {   isLoading ? "loading... " 
+                            :  
+                            <HrefLink network={network} isOnlyExplorer={true} isAddress={false} hrefEndValue="" hrefDisplay={counters.epoch} />
+                    }
+                </p>
                 <Balances />
-                <p>Claim address: {claimAddrInfo}</p>
+                <p>
+                    Claim address:
+                    <HrefLink network={network} isOnlyExplorer={false} isAddress={true} hrefEndValue={claimAddress} hrefDisplay={shortenAddress(claimAddress)} />
+                </p>
             </div>
 
             <TopUp />
