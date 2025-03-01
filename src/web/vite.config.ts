@@ -9,9 +9,9 @@ export default defineConfig({
         chunkSizeWarningLimit: 1000,
     },
     preview: {
-        port: 1234,
+        port: 8080,
     },
     server: {
-        port: 1234,
+        port: 8080,
     },
 });
