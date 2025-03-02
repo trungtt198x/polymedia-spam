@@ -14,6 +14,7 @@ import { LinkExternal, NetworkDropdownSelector } from "@polymedia/suitcase-react
 import { useEffect, useRef, useState } from "react";
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { PageAbout } from "./PageAbout";
+import { PageNFT } from "./PageNFT";
 import { PageHome } from "./PageHome";
 import { PageNotFound } from "./PageNotFound";
 import { PageRPCs } from "./PageRPCs";
@@ -45,6 +46,7 @@ export const AppRouter: React.FC = () => {
                 <Route index element={<PageHome />} />
                 <Route path="/about" element={<PageAbout />} />
                 <Route path="/spam" element={<PageSpam />} />
+                <Route path="/nft" element={<PageNFT />} />
                 <Route path="/wallet" element={<PageWallet />} />
                 <Route path="/rpcs" element={<PageRPCs />} />
                 <Route path="/stats" element={<PageStats />} />
@@ -310,6 +312,9 @@ const App: React.FC = () =>
             </Link>
             <Link to="/spam" className={selected("/spam")} onClick={onClick}>
                 Spam
+            </Link>
+            <Link to="/nft" className={selected("/nft")} onClick={onClick}>
+                NFT
             </Link>
             <Link to="/wallet" className={selected("/wallet")} onClick={onClick}>
                 Wallet
