@@ -1,8 +1,8 @@
-import { UserCounter, EXPLORER, SPAM_TX_FEE_INCREMENT_USER_COUNTER, IS_DISABLED, UPDATE_INTERVAL_MS } from "@polymedia/spam-sdk";
+import { UserCounter, EXPLORER, SPAM_TX_LOW_BALANCE, IS_DISABLED, UPDATE_INTERVAL_MS } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 // import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, Link } from "react-router-dom";
 import { AppContext } from "./App";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
@@ -14,7 +14,6 @@ export const PageSpam: React.FC = () =>
 
     const { network, balances, spammer, spamView, disclaimerAccepted } = useOutletContext<AppContext>();
     const [ currEpoch, setCurrEpoch ] = useState<EpochData>();
-    const isDisabled = IS_DISABLED;
 
     const isLoading = spamView.counters.epoch === -1 || balances.iota === -1 || !currEpoch;
 
@@ -83,8 +82,6 @@ export const PageSpam: React.FC = () =>
         return <PageDisclaimer />;
     }
 
-    const isLowIOTABalance = balances.iota < SPAM_TX_FEE_INCREMENT_USER_COUNTER;
-    
     const counters = spamView.counters;
     const hasCounters = Boolean(
         counters.current || counters.register || counters.claim.length > 0 || counters.delete.length > 0
@@ -116,7 +113,7 @@ export const PageSpam: React.FC = () =>
     };
 
     const CurrentRPC: React.FC = () => {
-        if (isLoading || isLowIOTABalance || isDisabled) {
+        if (isLoading || (balances.iota < SPAM_TX_LOW_BALANCE) || IS_DISABLED) {
             return null;
         }
         return <div className="tight">
@@ -127,7 +124,7 @@ export const PageSpam: React.FC = () =>
     };
 
     const TopUp: React.FC = () => {
-        if (isLoading || !isLowIOTABalance || isDisabled) {
+        if (isLoading || !(balances.iota < SPAM_TX_LOW_BALANCE) || IS_DISABLED) {
             return null;
         }
         let message: React.ReactNode;
@@ -136,20 +133,18 @@ export const PageSpam: React.FC = () =>
         } else if (counters.claim.length) {
             message = <p className="text-orange">Send IOTA to your wallet to claim the counter{counters.claim.length > 1 ? "s" : ""}</p>;
         } else {
-            message = network === "mainnet"
-                ? <p className="text-orange">Mining has ended</p>
-                : <p>Top up your wallet to start.</p>;
+            message = <p>Top up your wallet to start.</p>;
         }
         return <>
             {message}
-            {/* <Link className="btn" to="/wallet">
+            <Link className="btn" to="/wallet">
                 TOP UP
-            </Link> */}
+            </Link>
         </>;
     };
 
     const SpamOrStopButton: React.FC = () => {
-        if (isLoading || isLowIOTABalance || isDisabled) {
+        if (isLoading || (balances.iota < SPAM_TX_LOW_BALANCE) || IS_DISABLED) {
             return null;
         }
         if (spammer.current.status === "stopped") {
@@ -182,7 +177,7 @@ export const PageSpam: React.FC = () =>
                 status = "Spamming...";
                 txClass = "blink";
             } else {
-                status = isLowIOTABalance
+                status = (balances.iota < SPAM_TX_LOW_BALANCE)
                     ? "Top up your wallet to spam this counter"
                     : `Ready to spam. Can be registered on epoch ${counter.epoch+1}.`;
                 }

@@ -50,6 +50,7 @@ export const IOTA_DECIMALS = 9;
 export const SPAM_STATUS = "stopped";
 
 export const SPAM_TX_FEE_INCREMENT_USER_COUNTER = 0.001;
+export const SPAM_TX_LOW_BALANCE = 5 * SPAM_TX_FEE_INCREMENT_USER_COUNTER;
 
 // "testnet" and "mainnet"
 export const DEFAULT_NETWORK = "testnet";
