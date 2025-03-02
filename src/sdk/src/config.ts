@@ -53,3 +53,9 @@ export const SPAM_TX_FEE_INCREMENT_USER_COUNTER = 0.001;
 
 // "testnet" and "mainnet"
 export const DEFAULT_NETWORK = "testnet";
+
+// Disable all buttons
+export const IS_DISABLED = false;
+
+// On Spam page, updating interval of the user's current counter
+export const UPDATE_INTERVAL_MS = 10_000; 

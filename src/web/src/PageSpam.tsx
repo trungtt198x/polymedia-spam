@@ -1,4 +1,4 @@
-import { UserCounter, EXPLORER, SPAM_TX_FEE_INCREMENT_USER_COUNTER } from "@polymedia/spam-sdk";
+import { UserCounter, EXPLORER, SPAM_TX_FEE_INCREMENT_USER_COUNTER, IS_DISABLED, UPDATE_INTERVAL_MS } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 // import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ export const PageSpam: React.FC = () =>
 
     const { network, balances, spammer, spamView, disclaimerAccepted } = useOutletContext<AppContext>();
     const [ currEpoch, setCurrEpoch ] = useState<EpochData>();
-    const isDisabled = false;
+    const isDisabled = IS_DISABLED;
 
     const isLoading = spamView.counters.epoch === -1 || balances.iota === -1 || !currEpoch;
 
@@ -24,21 +24,22 @@ export const PageSpam: React.FC = () =>
         setCurrEpoch(undefined);
         updateCurrEpoch();
 
-        const updateFrequency = ["localnet", "devnet"].includes(network) ? 5_000 : 45_000;
-        const updatePeriodically = setInterval(updateCurrEpoch, updateFrequency);
+        const updatePeriodically = setInterval(updateCurrEpoch, UPDATE_INTERVAL_MS);
 
         return () => {
             clearInterval(updatePeriodically);
         };
     }, [spammer.current, network]);
 
-    const startLoop = () => {
+    const startLoop = (evt: Event) => {
+        evt.preventDefault();
         if (spammer.current.status === "stopped") {
             spammer.current.start(true);
         }
     };
 
-    const startOnce = () => {
+    const startOnce = (evt: Event) => {
+        evt.preventDefault();
         if (spammer.current.status === "stopped") {
             spammer.current.start(false);
         }
@@ -153,12 +154,7 @@ export const PageSpam: React.FC = () =>
         }
         if (spammer.current.status === "stopped") {
             return <>
-                {network === "mainnet"
-                ?
-                    <p className="text-orange">Mining has ended</p>
-                :
-                    <button className="btn" onClick={startLoop}>SPAM</button>
-                }
+                <button className="btn" onClick={startLoop}>SPAM</button>
                 {showProcessCountersButton && <>
                     <br/>
                     <button className="btn break-all" onClick={startOnce}>
@@ -167,7 +163,7 @@ export const PageSpam: React.FC = () =>
             </>;
         }
         if (spammer.current.status === "running") {
-            return <button className="btn" onClick={stop}>STOP</button>;
+            return <button className="btn" onClick={stop} onMouseDown={stop}>STOP</button>;
         }
         return <button className="btn" disabled>STOPPING</button>;
     };

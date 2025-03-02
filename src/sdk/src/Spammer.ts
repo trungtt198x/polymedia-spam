@@ -230,11 +230,11 @@ export class Spammer
         finally {
             // regular spam loop
             if (loop) {
-                this.spam(loop);
+                await this.spam(loop);
             }
             // one-off, but still has old counters to process
             else if (hasToDelete || hasToClaim || hasToRegister) {
-                this.spam(loop);
+                await this.spam(loop);
             }
             // one-off, done processing old counters
             else {
