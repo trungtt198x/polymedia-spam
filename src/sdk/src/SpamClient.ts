@@ -143,8 +143,7 @@ export class SpamClient
             limit: 50,
         });
 
-        // default to the usual cost of a SPAM tx on mainnet with a gas price of 750 MIST
-        let iotaAmount = Number(SPAM_TX_FEE_INCREMENT_USER_COUNTER); // 0.000774244;
+        let iotaAmount = Number(SPAM_TX_FEE_INCREMENT_USER_COUNTER);
         for (const tx of resp.data) {
             if (tx.balanceChanges?.length !== 1) {
                 // A regular SPAM tx only has 1 balance change, so this is likely a

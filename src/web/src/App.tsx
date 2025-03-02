@@ -59,8 +59,7 @@ export const AppRouter: React.FC = () => {
 
 const supportedNetworks = ["mainnet", "testnet"] as const;
 type NetworkName = typeof supportedNetworks[number];
-// const defaultNetwork = DEFAULT_NETWORK;
-const loadedNetwork = DEFAULT_NETWORK;// loadNetwork(supportedNetworks, defaultNetwork);
+const loadedNetwork = DEFAULT_NETWORK;
 
 /* App */
 

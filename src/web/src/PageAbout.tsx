@@ -1,6 +1,4 @@
 import { LinkExternal } from "@polymedia/suitcase-react";
-import { Link } from "react-router-dom";
-import { SPAM_STATUS } from "@polymedia/spam-sdk";
 
 export const PageAbout: React.FC = () =>
 {

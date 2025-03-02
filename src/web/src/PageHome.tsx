@@ -1,16 +1,17 @@
-import { SPAM_IDS } from "@polymedia/spam-sdk";
-import { formatNumber } from "@polymedia/suitcase-core";
+import { SPAM_IDS, EXPLORER } from "@polymedia/spam-sdk";
 import { LinkExternal } from "@polymedia/suitcase-react";
 import { useOutletContext } from "react-router-dom";
 import { AppContext } from "./App";
-import { usePrice } from "./hooks/usePrice";
+// import { usePrice } from "./hooks/usePrice";
 
 export const PageHome: React.FC = () =>
 {
     const { network } = useOutletContext<AppContext>();
-    const { price } = usePrice();
+    // const { price } = usePrice();
     const spamPackageId = SPAM_IDS[network].packageId;
-    const mainnetMaxSupply = 37_000_000_000;
+    // const mainnetMaxSupply = 37_000_000_000;
+
+    const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
 
     return <div id="page-home">
     <div id="home-content">
@@ -21,11 +22,13 @@ export const PageHome: React.FC = () =>
         <h3>COIN TYPE</h3>
         <p>
             <span className="iota-address">
-                {spamPackageId}::spam::SPAM
+                <LinkExternal href={explorerCoin} follow={true}>
+                    spam::SPAM
+                </LinkExternal>
             </span>
         </p>
 
-        {network === "mainnet" && <>
+        {/* {network === "mainnet" && <>
         <h3>MARKET DATA</h3>
             <div className="tight">
                 <p>
@@ -39,9 +42,9 @@ export const PageHome: React.FC = () =>
                     </span>
                 </p>
             </div>
-        </>}
+        </>} */}
 
-        <h3>CHART</h3>
+        {/* <h3>CHART</h3>
         <div className="tight">
             <p>
                 <LinkExternal href="https://birdeye.so/token/0x30a644c3485ee9b604f52165668895092191fcaf5489a846afa7fc11cdb9b24a::spam::SPAM?chain=sui">
@@ -87,7 +90,7 @@ export const PageHome: React.FC = () =>
                     FlowX Finance
                 </LinkExternal>
             </p>
-        </div>
+        </div> */}
 
         <h3>SOCIALS</h3>
         <p style={{paddingBottom: 0}}>
@@ -120,7 +123,7 @@ export const PageHome: React.FC = () =>
             </p>
         </div>
 
-        <h3>IN THE MEDIA</h3>
+        {/* <h3>IN THE MEDIA</h3>
         <div className="link-list">
             <p>
                 <b>BINANCE</b>: <LinkExternal href="https://binance.com/en/square/post/2024-05-07-sui-s-on-chain-transactions-surge-due-to-spam-project-7762208634042" follow={true}>
@@ -163,17 +166,8 @@ export const PageHome: React.FC = () =>
                     <i>Sui crypto transactions surge – Will its price see growth?</i>
                 </LinkExternal><br/>
             </p>
-        </div>
-
-        <h3>SOURCE CODE</h3>
-        <div className="tight">
-            <p>
-                <LinkExternal href="https://github.com/trungtt198x/polymedia-spam" follow={true}>
-                    <i>SPAM repo on GitHub</i>
-                </LinkExternal>
-            </p>
-        </div>
-
+        </div> */}
+        
     </div>
     </div>;
 };
