@@ -20,7 +20,9 @@ export class SpamClientRotator
         rpcUrls: string[],
     ) {
         if (rpcUrls.length === 0) {
-            throw new Error("rpcUrls can't be empty");
+            // throw new Error("rpcUrls can't be empty");
+            // Do not throw an error, just use the default fullnode URL
+            rpcUrls = [getFullnodeUrl(network)];
         }
         this.spamClients = [];
         for (const url of rpcUrls) {
