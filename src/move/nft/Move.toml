@@ -1,5 +1,5 @@
 [package]
-name = "Spam"
+name = "SpamNFT"
 version = "1.0.0"
 edition = "2024.beta"
 license = "Apache-2.0"
@@ -7,6 +7,9 @@ published-at = "0x0"
 
 [dependencies]
 Iota = { git = "https://github.com/iotaledger/iota.git", subdir = "crates/iota-framework/packages/iota-framework", rev = "develop" }
+Spam = { local = "../spam" }
 
 [addresses]
-spam = "_"
+nft = "0x0"
+spam = "0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745"
+
