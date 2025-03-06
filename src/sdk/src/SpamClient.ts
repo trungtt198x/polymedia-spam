@@ -12,8 +12,9 @@ import {
     // objResToFields,
     sleep,
 } from "@polymedia/suitcase-core";
-import { SPAM_IDS, SPAM_MODULE, SPAM_TX_FEE_INCREMENT_USER_COUNTER } from "./config.js";
-import * as pkg from "./package.js";
+import { SPAM_IDS, SPAM_MODULE, SPAM_NFT_IDS, SPAM_TX_FEE_INCREMENT_USER_COUNTER } from "./config.js";
+import * as pkgSpam from "./packageSpam.js";
+import * as pkgNft from "./packageNft.js";
 import { BcsStats, Stats, UserCounter, UserCounters } from "./types.js";
 
 const INCREMENT_TX_GAS_BUDGET = 3000000; // 0.003 IOTA
@@ -25,8 +26,13 @@ export class SpamClient
     public readonly network: NetworkName;
     public readonly rpcUrl: string;
     public readonly iotaClient: IotaClient;
-    public readonly packageId: string;
-    public readonly directorId: string;
+    
+    public readonly spamPackageId: string;
+    public readonly spamDirectorId: string;
+
+    public readonly nftPackageId: string;
+    public readonly nftManagerId: string;
+
     protected gasCoin: IotaObjectRef|undefined;
     protected gasPrice: bigint|undefined;
 
@@ -39,8 +45,13 @@ export class SpamClient
         this.network = network;
         this.rpcUrl = rpcUrl;
         this.iotaClient = new IotaClient({ url: rpcUrl });
-        this.packageId = SPAM_IDS[network].packageId;
-        this.directorId = SPAM_IDS[network].directorId;
+
+        this.spamPackageId = SPAM_IDS[network].packageId;
+        this.spamDirectorId = SPAM_IDS[network].directorId;
+        
+        this.nftPackageId = SPAM_NFT_IDS[network].packageId;
+        this.nftManagerId = SPAM_NFT_IDS[network].nftManagerId;
+
         this.gasCoin = undefined;
         this.gasPrice = undefined;
     }
@@ -50,7 +61,7 @@ export class SpamClient
     public async fetchUserCounters(
     ): Promise<UserCounter[]>
     {
-        const StructType = `${this.packageId}::${SPAM_MODULE}::UserCounter`;
+        const StructType = `${this.spamPackageId}::${SPAM_MODULE}::UserCounter`;
         const pageObjResp = await this.iotaClient.getOwnedObjects({
             owner: this.signer.toIotaAddress(),
             cursor: null, // doesn't handle pagination, but it's unlikely that it will ever be needed
@@ -131,7 +142,7 @@ export class SpamClient
         const resp = await this.iotaClient.queryTransactionBlocks({
             filter: {
                 MoveFunction: {
-                    package: this.packageId,
+                    package: this.spamPackageId,
                     module: "spam",
                     function: "increment_user_counter",
                 },
@@ -156,13 +167,27 @@ export class SpamClient
         return iotaAmount;
     }
 
-    /* Package functions */
+    /* SpamNft functions */
+
+    public async mint(
+        spamCoinId: string,
+        to: string,
+    ): Promise<IotaTransactionBlockResponse>
+    {
+        const txb = new Transaction();
+        pkgNft.mint(txb, this.nftPackageId, spamCoinId, this.nftManagerId, to);
+        return this.signAndExecute(txb);
+    }
+
+    /* ************************************************ */
+
+    /* Spam coin functions */
 
     public async newUserCounter(
     ): Promise<IotaTransactionBlockResponse>
     {
         const txb = new Transaction();
-        pkg.new_user_counter(txb, this.packageId, this.directorId);
+        pkgSpam.new_user_counter(txb, this.spamPackageId, this.spamDirectorId);
         return this.signAndExecute(txb);
     }
 
@@ -172,7 +197,7 @@ export class SpamClient
     {
         const txb = new Transaction();
         txb.setGasBudget(INCREMENT_TX_GAS_BUDGET);
-        pkg.increment_user_counter(txb, this.packageId, userCounterRef);
+        pkgSpam.increment_user_counter(txb, this.spamPackageId, userCounterRef);
         return this.signAndExecute(txb);
     }
 
@@ -182,7 +207,7 @@ export class SpamClient
     {
         const txb = new Transaction();
         for (const counterId of userCounterIds) {
-            pkg.destroy_user_counter(txb, this.packageId, counterId);
+            pkgSpam.destroy_user_counter(txb, this.spamPackageId, counterId);
         }
         return this.signAndExecute(txb);
     }
@@ -192,7 +217,7 @@ export class SpamClient
     ): Promise<IotaTransactionBlockResponse>
     {
         const txb = new Transaction();
-        pkg.register_user_counter(txb, this.packageId, this.directorId, userCounterId);
+        pkgSpam.register_user_counter(txb, this.spamPackageId, this.spamDirectorId, userCounterId);
         return this.signAndExecute(txb);
     }
 
@@ -204,7 +229,7 @@ export class SpamClient
         const recipient = recipientAddress ?? this.signer.toIotaAddress();
         const txb = new Transaction();
         for (const counterId of userCounterIds) {
-            const [coin] = pkg.claim_user_counter(txb, this.packageId, this.directorId, counterId);
+            const [coin] = pkgSpam.claim_user_counter(txb, this.spamPackageId, this.spamDirectorId, counterId);
             txb.transferObjects([coin], recipient);
         }
         return this.signAndExecute(txb);
@@ -215,7 +240,7 @@ export class SpamClient
     ): Promise<Stats>
     {
         const txb = new Transaction();
-        pkg.stats_for_specific_epochs(txb, this.packageId, this.directorId, epochNumbers);
+        pkgSpam.stats_for_specific_epochs(txb, this.spamPackageId, this.spamDirectorId, epochNumbers);
         return this.deserializeStats(txb);
     }
 
@@ -224,7 +249,7 @@ export class SpamClient
     ): Promise<Stats>
     {
         const txb = new Transaction();
-        pkg.stats_for_recent_epochs(txb, this.packageId, this.directorId, epochCount);
+        pkgSpam.stats_for_recent_epochs(txb, this.spamPackageId, this.spamDirectorId, epochCount);
         return this.deserializeStats(txb);
     }
 

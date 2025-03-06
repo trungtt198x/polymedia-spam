@@ -152,7 +152,7 @@ const App: React.FC = () =>
             });
             const balanceSpam = await spammer.current.getIotaClient().getBalance({
                 owner: spammer.current.getSpamClient().signer.toIotaAddress(),
-                coinType: `${spammer.current.getSpamClient().packageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
+                coinType: `${spammer.current.getSpamClient().spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
             });
             setBalances({
                 spam: Number(balanceSpam.totalBalance) / 10**SPAM_DECIMALS,
@@ -160,7 +160,7 @@ const App: React.FC = () =>
             });
             // console.info("balance updated");
         } catch (_err) {
-            console.warn("balance update failed");
+            console.warn("balance update failed:", _err?.message);
         }
     };
 

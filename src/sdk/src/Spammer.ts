@@ -267,6 +267,8 @@ export class Spammer
         this.requestRefetch = false;
     }
 
+    /* Spam coin functions */
+
     protected async registerUserCounter(counterId: string): Promise<void>
     {
         this.event({ type: "info", msg: "Registering counter: " + shortenAddress(counterId) });
@@ -339,5 +341,22 @@ export class Spammer
         this.userCounters.current.ref = resp.effects.mutated!.find(mutatedObj =>
             mutatedObj.reference.objectId == counterRef.objectId
         )!.reference;
+    }
+
+    /* ************************************************ */
+
+    /* SpamNft functions */
+
+    protected async mint(spamCoinId: string, to: string): Promise<void>
+    {
+        this.event({ type: "info", msg: "Minting NFT" });
+        await this.simulateLatencyOnLocalnet();
+        const resp = await this.getSpamClient().mint(spamCoinId, to);
+        this.requestRefetch = true;
+        this.lastTxDigest = resp.digest;
+        this.event({ type: "debug", msg: `Minting NFT: ${resp.effects?.status.status}: ${resp.digest}` });
+        if (resp.effects?.status.status !== "success") {
+            throw new Error(resp.effects?.status.error);
+        }
     }
 }
