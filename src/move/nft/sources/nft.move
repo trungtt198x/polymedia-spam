@@ -21,6 +21,9 @@ const EAlreadyPaused: u64 = 2;
 /// Redeem is disabled.
 const ERedeemDisabled: u64 = 3;
 
+/// Max supply reached.
+const EMaxSupplyReached: u64 = 4;
+
 // === structs ===
 
 public struct SpamNFT has key, store {
@@ -32,8 +35,10 @@ public struct SpamNFT has key, store {
 
 public struct SpamNFTManager has key {
     id: UID,
-    current_supply: u64,
+    total_supply: u64,
     max_supply: u64,
+    current_token_id: u64,
+    burnt_tokens: vector<u64>, // holds the token IDs of the burnt NFTs
     mint_price: u64, // price in SPAM with 4 decimals
     redeem_percentage: u64, // percentage of the mint price to redeem
     base_image_url: String, // base image URL for different NFT token images
@@ -51,10 +56,23 @@ public struct AdminCap has key {
 
 // === Events  ===
 
-/// Event containing information about a newly minted NFT.
 public struct EventMint has copy, drop {
     token_id: u64,
     mint_price: u64
+}
+
+public struct EventRedeem has copy, drop {
+    token_id: u64,
+    redeem_price: u64
+}
+
+public struct EventBurn has copy, drop {
+    token_id: u64,
+}
+
+public struct EventWithdraw has copy, drop {
+    to: address,
+    amount: u64
 }
 
 // === initialization ===
@@ -94,8 +112,10 @@ fun init(otw: NFT, ctx: &mut TxContext)
 
     let nft_manager = SpamNFTManager {
         id: object::new(ctx),
-        current_supply: 0,
+        total_supply: 0,
         max_supply: 0, // zero means no max limit
+        current_token_id: 0,
+        burnt_tokens: vector[],
         mint_price: 1_000 * 10_000, // price in SPAM with 4 decimals
         redeem_percentage: 80, // 80%
         base_image_url: utf8(b""),
@@ -114,9 +134,9 @@ fun mint_and_transfer(
     ctx: &mut TxContext
 ) {
     assert!(nftManager.paused == false, EAlreadyPaused);
-    assert!(nftManager.max_supply == 0 || nftManager.max_supply > nftManager.current_supply, EAlreadyPaused);
+    assert!(nftManager.max_supply == 0 || nftManager.max_supply > nftManager.total_supply, EMaxSupplyReached);
 
-    let token_id = nftManager.current_supply + 1;
+    let token_id = nftManager.current_token_id + 1;
 
     let nft = SpamNFT {
         id: object::new(ctx),
@@ -128,7 +148,8 @@ fun mint_and_transfer(
     // Transfer NFT to the sender
     transfer::public_transfer(nft, to);
 
-    nftManager.current_supply = nftManager.current_supply + 1;
+    nftManager.total_supply = nftManager.total_supply + 1;
+    nftManager.current_token_id = nftManager.current_token_id + 1;
 
     event::emit(EventMint {
         token_id: token_id,
@@ -174,6 +195,20 @@ public entry fun mint(
     mint_and_transfer(nftManager, mint_price, to, ctx);
 }
 
+fun burn(
+    self: SpamNFT,
+    nftManager: &mut SpamNFTManager,
+) {
+    let SpamNFT { id, token_id, .. } = self;
+    object::delete(id);
+    vector::push_back(&mut nftManager.burnt_tokens, token_id);
+    nftManager.total_supply = nftManager.total_supply - 1;
+
+    event::emit(EventBurn {
+        token_id: token_id,
+    });
+}
+
 /// User can burn his own NFT to redeem the SPAM coins.
 public entry fun redeem(
     self: SpamNFT,
@@ -183,14 +218,20 @@ public entry fun redeem(
 ) {
     assert!(nftManager.redeem_percentage > 0, ERedeemDisabled);
 
+    let token_id = self.token_id;
+
     // Burn NFT
-    let SpamNFT { id, .. } = self;
-    object::delete(id);
+    burn(self, nftManager);
 
-    let redeem_amount = nftManager.mint_price * nftManager.redeem_percentage / 100;
+    let redeem_price = nftManager.mint_price * nftManager.redeem_percentage / 100;
 
-    let coin = coin::take(&mut nftManager.balance, redeem_amount, ctx);
+    let coin = coin::take(&mut nftManager.balance, redeem_price, ctx);
     transfer::public_transfer(coin, to);
+
+    event::emit(EventRedeem {
+        token_id: token_id,
+        redeem_price: redeem_price,
+    });
 }
 
 // === Admin control panel ===
@@ -253,6 +294,11 @@ public entry fun withdraw(
 ) {
     let coin = coin::take(&mut nftManager.balance, amount, ctx);
     transfer::public_transfer(coin, to);
+
+    event::emit(EventWithdraw {
+        to: to,
+        amount: amount,
+    });
 }
 
 /// Withdraw SPAM coins for the given amount
@@ -265,4 +311,9 @@ public entry fun withdraw_all(
     let amount = balance::value(&nftManager.balance);
     let coin = coin::take(&mut nftManager.balance, amount, ctx);
     transfer::public_transfer(coin, to);
+
+    event::emit(EventWithdraw {
+        to: to,
+        amount: amount,
+    });
 }
