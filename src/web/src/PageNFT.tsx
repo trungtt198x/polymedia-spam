@@ -1,4 +1,8 @@
-import { UserCounter, EXPLORER, SPAM_TX_LOW_BALANCE, IS_DISABLED, UPDATE_INTERVAL_MS } from "@polymedia/spam-sdk";
+/* eslint-disable */
+
+import { UserCounter, EXPLORER, SPAM_TX_LOW_BALANCE, IS_DISABLED, UPDATE_INTERVAL_MS, SPAM_DECIMALS,
+    SPAM_MODULE,
+    SPAM_SYMBOL, } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 // import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
@@ -25,10 +29,29 @@ export const PageNFT: React.FC = () =>
         evt.preventDefault();
         setmintTx(null);
 
-        const spamCoinId = "0xc0439a5c7119e86550e5069cff68c3c5abb075018be13f759decd61df86447aa";
-        const to = "0xcd1ee6ea1011666c16c043b64caabc2fea7e9dd37ac3667613cfbfb129f97574";
+        // const spamCoinId = "0xc0439a5c7119e86550e5069cff68c3c5abb075018be13f759decd61df86447aa";
+        // const to = "0xcd1ee6ea1011666c16c043b64caabc2fea7e9dd37ac3667613cfbfb129f97574";
+
+        const to = spammer.current.getSpamClient().signer.toIotaAddress();
+        const coinResp = await spammer.current.getIotaClient().getCoins({
+            owner: spammer.current.getSpamClient().signer.toIotaAddress(),
+            coinType: `${spammer.current.getSpamClient().spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
+        });
+
+        console.log("coinResp:", coinResp);
+        if (coinResp.data.length === 0) {
+            toast.error("No SPAM coins available");
+            return;
+        }
+        const coinFound = coinResp.data.find((coin) => Number(coin.balance) >= (1000 * 10**SPAM_DECIMALS));
+        if (coinFound.length === 0) {
+            toast.error("No SPAM coins available");
+            return;
+        }
+
+        console.log("coinFound:", coinFound);
         
-        const resp = await spammer.current.mint(spamCoinId, to);
+        const resp = await spammer.current.mint(coinFound.coinObjectId, to);
         // toast.success("Success");
         console.log(resp);
         
