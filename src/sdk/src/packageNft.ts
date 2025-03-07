@@ -15,6 +15,7 @@ export function mint(
 ): TransactionResult {
     return tx.moveCall({
         target: `${packageId}::${SPAM_NFT_MODULE}::mint`,
+        typeArguments: [],
         arguments: [
             tx.object(spamCoinId),
             tx.object(nftManagerId),

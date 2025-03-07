@@ -1,4 +1,4 @@
-import { IotaClient, IotaObjectRef } from "@iota/iota-sdk/client";
+import { IotaClient, IotaObjectRef, IotaTransactionBlockResponse } from "@iota/iota-sdk/client";
 import { Signer } from "@iota/iota-sdk/cryptography";
 import { NetworkName, shortenAddress, sleep, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { SpamClient } from "./SpamClient.js";
@@ -347,7 +347,7 @@ export class Spammer
 
     /* SpamNft functions */
 
-    protected async mint(spamCoinId: string, to: string): Promise<void>
+    protected async mint(spamCoinId: string, to: string): Promise<IotaTransactionBlockResponse>
     {
         this.event({ type: "info", msg: "Minting NFT" });
         await this.simulateLatencyOnLocalnet();
@@ -358,5 +358,6 @@ export class Spammer
         if (resp.effects?.status.status !== "success") {
             throw new Error(resp.effects?.status.error);
         }
+        return resp;
     }
 }

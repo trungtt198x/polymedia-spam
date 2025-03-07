@@ -1,16 +1,226 @@
-// import { LinkExternal } from "@polymedia/suitcase-react";
+import { UserCounter, EXPLORER, SPAM_TX_LOW_BALANCE, IS_DISABLED, UPDATE_INTERVAL_MS } from "@polymedia/spam-sdk";
+import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
+// import { LinkToPolymedia } from "@polymedia/suitcase-react";
+import { useEffect, useState } from "react";
+import { useOutletContext, Link } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
+import { AppContext } from "./App";
+import { PageDisclaimer } from "./PageDisclaimer";
+import { StatusSpan } from "./components/StatusSpan";
+import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 
 export const PageNFT: React.FC = () =>
 {
-    return <div id="page-about">
-    <div id="home-content">
+    /* State */
+
+    const { network, balances, spammer, spamView, disclaimerAccepted } = useOutletContext<AppContext>();
+
+    const [ mintTx, setmintTx ] = useState(null);
+
+    const isLoading = !balances || balances.iota === -1 || balances.spam === -1;
+
+    /* Functions */
+
+    const startMint = async (evt: Event) => {
+        evt.preventDefault();
+        setmintTx(null);
+
+        const spamCoinId = "0xc0439a5c7119e86550e5069cff68c3c5abb075018be13f759decd61df86447aa";
+        const to = "0xcd1ee6ea1011666c16c043b64caabc2fea7e9dd37ac3667613cfbfb129f97574";
+        
+        const resp = await spammer.current.mint(spamCoinId, to);
+        // toast.success("Success");
+        console.log(resp);
+        
+        toast.success(`NFT minted`);
+        setmintTx(resp.digest);
+        // onSuccess(resp.digest);
+    };
+
+    /* HTML */
+
+    const HrefLink: React.FC<
+        {network: string; isOnlyExplorer: boolean; isAddress: boolean; hrefEndValue: string; hrefDisplay: string}
+    > = ({network, isOnlyExplorer, isAddress, hrefEndValue, hrefDisplay}) => {
+        let href: string = EXPLORER[network] as string;
+
+        if (!isOnlyExplorer) {
+            href += isAddress ? "/address/" : "/object/";
+            href += hrefEndValue;
+        }
+
+        return  <a href={href} style={{ textDecoration: "none" }} target="_blank" rel="noopener noreferrer"> {hrefDisplay} </a>;
+    };
+
+    const HrefLinkTx: React.FC<
+        {network: string; hrefEndValue: string; hrefDisplay: string}
+    > = ({network, isAddress, hrefEndValue, hrefDisplay}) => {
+        let href: string = EXPLORER[network] as string;
+        href += "/tx/";
+        href += hrefEndValue;
+        // href += `?network=${network}`;
+
+        return  <a href={href} style={{ textDecoration: "none" }} target="_blank" rel="noopener noreferrer"> {hrefDisplay} </a>;
+    };
+
+    if (!disclaimerAccepted) {
+        return <PageDisclaimer />;
+    }
+
+    const counters = spamView.counters;
+    const hasCounters = Boolean(
+        counters.current || counters.register || counters.claim.length > 0 || counters.delete.length > 0
+    );
+
+    let showProcessCountersButton = false;
+    const actionableCounters: string[] = [];
+    if (hasCounters && spammer.current.status === "stopped") {
+        if (counters.register?.registered === false) {
+            actionableCounters.push("REGISTER");
+        }
+        if (counters.claim.length > 0) {
+            actionableCounters.push("CLAIM");
+        }
+        if (counters.delete.length > 0) {
+            actionableCounters.push("DELETE");
+        }
+        showProcessCountersButton = actionableCounters.length > 0;
+    }
+
+    const Balances: React.FC = () => {
+        if (!balances) {
+            return null;
+        }
+        return <>
+            <p>IOTA balance: {isLoading ? "loading..." : formatNumber(balances.iota, "compact")}</p>
+            <p>SPAM balance: {isLoading ? "loading..." : formatNumber(balances.spam, "compact")}</p>
+        </>;
+    };
+
+    const MintTx: React.FC = () => {
+        if (!mintTx) {
+            return null;
+        }
+        return <>
+            <h2>Mint transaction</h2>
+            <HrefLinkTx network={network} hrefEndValue={mintTx} hrefDisplay={shortenAddress(mintTx)} />
+        </>;
+    };
+
+    const SpamUp: React.FC = () => {
+        if (isLoading || !(balances.iota < SPAM_TX_LOW_BALANCE) || !(balances.spam === 0) || IS_DISABLED) {
+            return null;
+        }
+        let message: React.ReactNode = <p>Top up your wallet to start.</p>;
+        // if (counters.register?.registered === false) {
+        //     message = <p className="text-orange">🚨 Send IOTA to your wallet to register the counter!</p>;
+        // } else if (counters.claim.length) {
+        //     message = <p className="text-orange">Send IOTA to your wallet to claim the counter{counters.claim.length > 1 ? "s" : ""}</p>;
+        // } else {
+        //     message = <p>Top up your wallet to start.</p>;
+        // }
+        return <>
+            {message}
+            <Link className="btn" to="/spam">
+                Spam up
+            </Link>
+        </>;
+    };
+
+    const MintButton: React.FC = () => {
+        if (isLoading || (balances.iota < SPAM_TX_LOW_BALANCE) || IS_DISABLED) {
+            return null;
+        }
+        
+        return <button className="btn" onClick={startMint}>MINT</button>;
+    };
+
+    const CounterCard: React.FC<{
+        type: "current" | "register" | "claim" | "delete";
+        counter: UserCounter;
+    }> = ({
+        type,
+        counter,
+    }) => {
+        let txClass = "";
+        let status: React.ReactNode;
+        if (type === "current") {
+            if (spammer.current.status === "running") {
+                status = "Spamming...";
+                txClass = "blink";
+            } else {
+                status = (balances.iota < SPAM_TX_LOW_BALANCE)
+                    ? "Top up your wallet to spam this counter"
+                    : `Ready to spam. Can be registered on epoch ${counter.epoch+1}.`;
+                }
+        }
+        else if (type === "register") {
+            if (counter.registered) {
+                status = `✅ Registered, possible to mint SPAM from epoch ${counter.epoch+2}`;
+            } else if (spammer.current.status === "running") {
+                status = "⏳ Registering counter...";
+            } else {
+                status = <span className="blink-loop">🚨 MUST BE REGISTERED before epoch {counter.epoch+1} ends</span>;
+            }
+        }
+        else if (type === "claim") {
+            if (spammer.current.status === "running") {
+                status = "💰 Minting SPAM...";
+            } else {
+                status = "✅ Can mint SPAM at any time";
+            }
+        }
+        else {
+            if (spammer.current.status === "running") {
+                status = "🧹 Deleting counter...";
+            } else {
+                status = "Unusable. Will be deleted.";
+            }
+        }
+
+        return <div className={`counter-card ${type}`}>
+            <div>
+                <div className="counter-epoch">
+                    Epoch {counter.epoch}
+                </div>
+                <div>
+                    {/* <LinkToPolymedia network={network} kind="object" addr={counter.id} /> */}
+                    Counter:
+                    <HrefLink network={network} isOnlyExplorer={false} isAddress={false} hrefEndValue={counter.id} hrefDisplay={shortenAddress(counter.id)} />
+                </div>
+            </div>
+
+            <div>
+                <div className={txClass}>
+                    You sent {counter.tx_count} transactions
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    {status}
+                </div>
+            </div>
+        </div>;
+    };
+
+    const signerAddress = spammer.current.getSpamClient().signer.toIotaAddress();
+    const claimAddress = spammer.current.getClaimAddress() || signerAddress;
+    
+    return <>
         <h1><span className="rainbow">NFT</span></h1>
+        <div>
 
-        <h2>Mint NFT with SPAM coins</h2>
+            <div className="tight">
+                <Balances />
+            </div>
 
-        <p>
-            Coming soon...
-        </p>
-    </div>
-    </div>;
+            <SpamUp />
+
+            <MintButton />
+
+            <MintTx />
+        </div>
+        <Toaster />
+    </>;
 };
