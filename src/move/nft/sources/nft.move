@@ -317,3 +317,8 @@ public entry fun withdraw_all(
         amount: amount,
     });
 }
+
+#[test_only]
+public fun init_for_testing(ctx: &mut TxContext) {
+    init(NFT {}, ctx)
+}

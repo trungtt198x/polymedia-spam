@@ -343,4 +343,14 @@ module spam::spam
     public fun epoch_user_counts(director: &Director, epoch: u64, user: address): u64 {
         *director.epoch_counters.borrow(epoch).user_counts.borrow(user)
     }
+
+    #[test_only]
+    public fun mint_for_testing(
+        director: &mut Director,
+        amount: u64,
+        ctx: &mut TxContext,
+    ): Coin<SPAM> {
+        let coin = director.treasury.mint(amount, ctx);
+        coin
+    }
 }
