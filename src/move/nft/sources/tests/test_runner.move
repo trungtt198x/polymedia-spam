@@ -16,13 +16,21 @@ module nft::test_runner {
     const USER_1: address = @0x23;
     const COIN_AMOUNT: u64 = 1_000_000 * 10_000;
 
-    public struct TestRunner {
-        scenario: Scenario,
+    public struct SpamCoinData {
         publisher: Publisher,
         display: Display<SpamNFT>,
+        director: Director
+    }
+
+    public struct SpamNFTData {
         admin: AdminCap,
         nftManager: SpamNFTManager,
-        director: Director
+    }
+
+    public struct TestRunner {
+        scenario: Scenario,
+        spam_coin_data: SpamCoinData,
+        spam_nft_data: SpamNFTData
     }
 
     /// Module one-time witness
@@ -64,11 +72,15 @@ module nft::test_runner {
 
         TestRunner {
             scenario,
-            publisher,
-            display,
-            admin,
-            nftManager,
-            director
+            spam_coin_data: SpamCoinData {
+                publisher,
+                display,
+                director
+            },
+            spam_nft_data: SpamNFTData {
+                admin,
+                nftManager
+            }
         }
     }
 
@@ -77,7 +89,7 @@ module nft::test_runner {
     ) {
         self.scenario.next_tx(USER_1);
         let mut spam_coin = self.scenario.take_from_sender<Coin<SPAM>>();
-        nft::nft::mint(&mut spam_coin, &mut self.nftManager, USER_1, self.scenario.ctx());
+        nft::nft::mint(&mut spam_coin, &mut self.spam_nft_data.nftManager, USER_1, self.scenario.ctx());
         self.scenario.return_to_sender(spam_coin);
     }
 
