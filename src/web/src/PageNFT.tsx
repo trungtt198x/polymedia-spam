@@ -6,8 +6,7 @@ import {
     SPAM_SYMBOL,
 } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
-// import { LinkToPolymedia } from "@polymedia/suitcase-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import { AppContext } from "./App";
@@ -16,24 +15,33 @@ import { StatusSpan } from "./components/StatusSpan";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 
 export const PageNFT: React.FC = () => {
-    /* State */
-
     const { network, balances, spammer, spamView, disclaimerAccepted } = useOutletContext<AppContext>();
 
-    const [mintTx, setmintTx] = useState(null);
+    const [mintTxResult, setMintTxResult] = useState(null);
 
     const isLoading = !balances || balances.iota === -1 || balances.spam === -1;
 
-    /* Functions */
+    const spamClient = spammer.current.getSpamClient();
+    const minerAddress = spamClient.signer.toIotaAddress();
+    const spamPackageId = spamClient.spamPackageId;
+
+    function shortenTx(tx) {
+        if (tx.length <= 8) {
+            return tx; // No need to format if the string is too short
+        }
+        
+        const firstPart = tx.slice(0, 4);
+        const lastPart = tx.slice(-4);
+        return `${firstPart}...${lastPart}`;
+    }
 
     const startMint = async (evt: Event, receivingAddress = null) => {
         evt.preventDefault();
-        setmintTx(null);
+        setMintTxResult(null);
 
-        const to = receivingAddress || spammer.current.getSpamClient().signer.toIotaAddress();
         const coinResp = await spammer.current.getIotaClient().getCoins({
-            owner: spammer.current.getSpamClient().signer.toIotaAddress(),
-            coinType: `${spammer.current.getSpamClient().spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
+            owner: spamClient.signer.toIotaAddress(),
+            coinType: `${spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
         });
 
         if (coinResp.data.length === 0) {
@@ -46,10 +54,12 @@ export const PageNFT: React.FC = () => {
             return;
         }
 
+        const to = receivingAddress;
+
         const resp = await spammer.current.mint(coinFound.coinObjectId, to);
 
         toast.success(`NFT minted`);
-        setmintTx(resp.digest);
+        setMintTxResult(`${resp.digest},${to}`);
     };
 
     /* HTML */
@@ -82,26 +92,6 @@ export const PageNFT: React.FC = () => {
         return <PageDisclaimer />;
     }
 
-    const counters = spamView.counters;
-    const hasCounters = Boolean(
-        counters.current || counters.register || counters.claim.length > 0 || counters.delete.length > 0
-    );
-
-    let showProcessCountersButton = false;
-    const actionableCounters: string[] = [];
-    if (hasCounters && spammer.current.status === "stopped") {
-        if (counters.register?.registered === false) {
-            actionableCounters.push("REGISTER");
-        }
-        if (counters.claim.length > 0) {
-            actionableCounters.push("CLAIM");
-        }
-        if (counters.delete.length > 0) {
-            actionableCounters.push("DELETE");
-        }
-        showProcessCountersButton = actionableCounters.length > 0;
-    }
-
     const Balances: React.FC = () => {
         if (!balances) {
             return null;
@@ -112,14 +102,16 @@ export const PageNFT: React.FC = () => {
         </>;
     };
 
-    const MintTx: React.FC = () => {
-        if (!mintTx) {
+    const MintTxResult: React.FC = () => {
+        if (!mintTxResult) {
             return null;
         }
+        const [digest, to] = mintTxResult.split(",");
+        const txDisplay = `Transaction: ${shortenTx(digest)}`;
         return <>
-            <p>Mint transaction</p>
-            <HrefLinkTx network={network} hrefEndValue={mintTx} hrefDisplay={shortenAddress(mintTx)} />
-        </>;
+                <p>NFT minted to {shortenAddress(to)}</p>
+                <HrefLinkTx network={network} hrefEndValue={digest} hrefDisplay={txDisplay} />
+            </>;
     };
 
     const SpamUp: React.FC = () => {
@@ -137,14 +129,8 @@ export const PageNFT: React.FC = () => {
     };
 
     const MintFromMinerWallet: React.FC = () => {
-        const [receivingAddress, setReceivingAddress] = useState();
+        const [receivingAddress, setReceivingAddress] = useState(null);
         const [msg, setMsg] = useState<{ type: "okay" | "error"; text: string }>();
-        const disableButton = msg?.type === "error" || !receivingAddress;
-
-        useEffect(() => {
-            const minerAddress = spammer.current.getSpamClient().signer.toIotaAddress();
-            // setReceivingAddress(minerAddress);
-        });
 
         const onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>): void => {
             evt.preventDefault();
@@ -190,21 +176,20 @@ export const PageNFT: React.FC = () => {
 
         return <div>
             <h2>Mint from miner wallet</h2>
-            <p>
-                Receiving address
-            </p>
             <input
                 type="text"
                 value={receivingAddress}
+                placeholder="Enter receiving address"
                 onChange={onInputChange}
                 // onKeyDown={onKeyDown}
                 style={{ width: "100%", wordBreak: "break-all" }}
             />
             <br />
             
-            <button className="btn" onClick={(evt: Event, receivingAddress) => startMint(evt, receivingAddress)}>MINT</button>
+            <button className="btn" disabled={!receivingAddress} onClick={(evt: Event) => startMint(evt, receivingAddress)}>MINT</button>
 
-            <MintTx />
+            <MintTxResult />
+
             {msg && <div className={`${msg.type}-box`}>
                 <div>{msg.text}</div>
             </div>}
@@ -280,7 +265,7 @@ export const PageNFT: React.FC = () => {
             </div>;
         };
 
-    const signerAddress = spammer.current.getSpamClient().signer.toIotaAddress();
+    const signerAddress = spamClient.signer.toIotaAddress();
     // const claimAddress = spammer.current.getClaimAddress() || signerAddress;
 
     return <>
