@@ -35,9 +35,19 @@ export const PageNFT: React.FC = () => {
         return `${firstPart}...${lastPart}`;
     }
 
-    const startMint = async (evt: Event, receivingAddress = null) => {
+    const isValidIotaAddress = (address) => {
+        const suiAddressPattern = /^0x[a-fA-F0-9]{64}$/;
+        return suiAddressPattern.test(address);
+    }
+
+    const startMint = async (evt: Event, receivingAddress) => {
         evt.preventDefault();
         setMintTxResult(null);
+
+        if (!isValidIotaAddress(receivingAddress)) {
+            toast.error("Invalid receiving address");
+            return;
+        }
 
         const coinResp = await spammer.current.getIotaClient().getCoins({
             owner: spamClient.signer.toIotaAddress(),
@@ -128,163 +138,68 @@ export const PageNFT: React.FC = () => {
         </>;
     };
 
-    const MintFromMinerWallet: React.FC = () => {
+    const MintFromMinerWallet: React.FC<{isFromMinerWallet: boolean}> = ({isFromMinerWallet}) => {
         const [receivingAddress, setReceivingAddress] = useState(null);
-        const [msg, setMsg] = useState<{ type: "okay" | "error"; text: string }>();
-
         const onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>): void => {
             evt.preventDefault();
             const newReceivingAddress = evt.currentTarget.value;
-
-            // if (newReceivingAddress.length === 0) {
-            //     setMsg(undefined);
-            //     return;
-            // }
-
-            const cleanAddress = newReceivingAddress; // validateAndNormalizeAddress(newReceivingAddress);
-            // if (!cleanAddress) {
-            //     setMsg({ type: "error", text: "Invalid address" });
-            //     return;
-            // }
-
-            setReceivingAddress(cleanAddress);
-            setMsg(undefined);
-            console.log("cleanAddress:", cleanAddress);
+            setReceivingAddress(newReceivingAddress);
         };
-
-        // const onKeyDown = (evt: React.KeyboardEvent<HTMLTextAreaElement>): void => {
-        //     if (evt.key === "Enter" && !disableButton) {
-        //         evt.preventDefault();
-        //         onSubmit();
-        //     }
-        // };
-
-        // const onSubmit = (): void => {
-        //     if (receivingAddress) {
-        //         try {
-        //             updateReceivingAddress(receivingAddress);
-        //             setMsg({ type: "okay", text: "Success!" });
-        //         } catch (err) {
-        //             setMsg({ type: "error", text: String(err) });
-        //         }
-        //     }
-        // };
 
         if (isLoading || IS_DISABLED) {
             return null;
         }
 
         return <div>
-            <h2>Mint from miner wallet</h2>
+            {isFromMinerWallet ? <h2>Use miner wallet</h2> : <h2>Use 3rd party wallet</h2>}
             <input
                 type="text"
                 value={receivingAddress}
                 placeholder="Enter receiving address"
                 onChange={onInputChange}
-                // onKeyDown={onKeyDown}
                 style={{ width: "100%", wordBreak: "break-all" }}
             />
             <br />
             
-            <button className="btn" disabled={!receivingAddress} onClick={(evt: Event) => startMint(evt, receivingAddress)}>MINT</button>
+            { isFromMinerWallet &&
+                <button className="btn" disabled={!receivingAddress} onClick={(evt: Event) => startMint(evt, receivingAddress)}>
+                    MINT
+                </button>
+            }
+
+            { !isFromMinerWallet &&
+                <>
+                    <button className="btn" disabled={!receivingAddress} onClick={(evt: Event) => startMint(evt, receivingAddress)}>
+                        MINT
+                    </button>
+                </>
+            }
 
             <MintTxResult />
-
-            {msg && <div className={`${msg.type}-box`}>
-                <div>{msg.text}</div>
-            </div>}
         </div>;
     };
 
-    const CounterCard: React.FC<{
-        type: "current" | "register" | "claim" | "delete";
-        counter: UserCounter;
-    }> = ({
-        type,
-        counter,
-    }) => {
-            let txClass = "";
-            let status: React.ReactNode;
-            if (type === "current") {
-                if (spammer.current.status === "running") {
-                    status = "Spamming...";
-                    txClass = "blink";
-                } else {
-                    status = (balances.iota < SPAM_TX_LOW_BALANCE)
-                        ? "Top up your wallet to spam this counter"
-                        : `Ready to spam. Can be registered on epoch ${counter.epoch + 1}.`;
-                }
-            }
-            else if (type === "register") {
-                if (counter.registered) {
-                    status = `✅ Registered, possible to mint SPAM from epoch ${counter.epoch + 2}`;
-                } else if (spammer.current.status === "running") {
-                    status = "⏳ Registering counter...";
-                } else {
-                    status = <span className="blink-loop">🚨 MUST BE REGISTERED before epoch {counter.epoch + 1} ends</span>;
-                }
-            }
-            else if (type === "claim") {
-                if (spammer.current.status === "running") {
-                    status = "💰 Minting SPAM...";
-                } else {
-                    status = "✅ Can mint SPAM at any time";
-                }
-            }
-            else {
-                if (spammer.current.status === "running") {
-                    status = "🧹 Deleting counter...";
-                } else {
-                    status = "Unusable. Will be deleted.";
-                }
-            }
+    return (
+        <>
+            <h1><span className="rainbow">NFT</span></h1>
+            <div>
 
-            return <div className={`counter-card ${type}`}>
-                <div>
-                    <div className="counter-epoch">
-                        Epoch {counter.epoch}
-                    </div>
-                    <div>
-                        {/* <LinkToPolymedia network={network} kind="object" addr={counter.id} /> */}
-                        Counter:
-                        <HrefLink network={network} isOnlyExplorer={false} isAddress={false} hrefEndValue={counter.id} hrefDisplay={shortenAddress(counter.id)} />
-                    </div>
+                <div className="tight">
+                    <Balances />
                 </div>
+                { balances?.spam === 0 ?
+                    <SpamUp />
+                    :
+                    <div id="page-wallet">
+                        <div id="page-wallet-sections">
+                            <MintFromMinerWallet isFromMinerWallet={true} />
 
-                <div>
-                    <div className={txClass}>
-                        You sent {counter.tx_count} transactions
+                            <MintFromMinerWallet isFromMinerWallet={false} />
+                        </div>
                     </div>
-                </div>
-
-                <div>
-                    <div>
-                        {status}
-                    </div>
-                </div>
-            </div>;
-        };
-
-    const signerAddress = spamClient.signer.toIotaAddress();
-    // const claimAddress = spammer.current.getClaimAddress() || signerAddress;
-
-    return <>
-        <h1><span className="rainbow">NFT</span></h1>
-        <div>
-
-            <div className="tight">
-                <Balances />
+                }
             </div>
-            { balances?.spam === 0 ?
-                <SpamUp />
-                :   
-                <div id="page-wallet">
-                    <div id="page-wallet-sections">
-                        <MintFromMinerWallet />
-                    </div>
-                </div>
-            }
-        </div>
-        <Toaster />
-    </>;
+            <Toaster />
+        </>
+    );
 };
