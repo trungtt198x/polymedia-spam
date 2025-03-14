@@ -247,6 +247,51 @@ nav {
             color: @color-muted;
         }
     }
+    .btn-outlined {
+        display: inline-block;
+        background-color: transparent;
+        border-radius: @radius;
+        color: @color-blue-2;
+        font-weight: 400;
+        margin-top: @space;
+        margin-bottom: @space;
+        padding: 0.7em 1.2em;
+        text-decoration: none;
+        user-select: none;
+        white-space: nowrap;
+        &:hover {
+            background-color: @color-blue-5;
+            cursor: pointer;
+        }
+        &:disabled {
+            cursor: default;
+            background-color: grey;
+            color: @color-muted;
+        }
+    }
+    .btn-double {
+        display: inline-block;
+        background-color: transparent;
+        border: 0.5px double @color-blue-1;
+        border-radius: @radius;
+        color: @color-blue-2;
+        font-weight: 700;
+        margin-top: @space;
+        margin-bottom: @space;
+        padding: 0.7em 1.2em;
+        text-decoration: none;
+        user-select: none;
+        white-space: nowrap;
+        &:hover {
+            background-color: @color-blue-5;
+            cursor: pointer;
+        }
+        &:disabled {
+            cursor: default;
+            background-color: grey;
+            color: @color-muted;
+        }
+    }
     .txt-btn {
         color: @color-blue-2;
         background-color: transparent;

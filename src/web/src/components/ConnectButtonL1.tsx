@@ -9,15 +9,15 @@ export function ConnectButtonL1() {
         <ConnectModal
             trigger={
                 <div>
-                    <button className="btn">
-                        Connect Wallet
+                    <button className="btn-outlined">
+                        Connect wallet
                     </button>
                 </div>
             }
         />
     ) : (
         <div>
-            <button className="btn" onClick={() => disconnectWallet()}>
+            <button className="btn-outlined" onClick={() => disconnectWallet()}>
                 Disconnect
             </button>
         </div>

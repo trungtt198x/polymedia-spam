@@ -13,6 +13,7 @@ import { AppContext } from "./App";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
 import { ConnectButtonL1 } from "./components/ConnectButtonL1";
+import { useCurrentAccount } from '@iota/dapp-kit';
 import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 
 export const PageNFT: React.FC = () => {
@@ -141,6 +142,7 @@ export const PageNFT: React.FC = () => {
 
     const MintFromMinerWallet: React.FC<{ isFromMinerWallet: boolean }> = ({ isFromMinerWallet }) => {
         const [receivingAddress, setReceivingAddress] = useState(null);
+        const account = useCurrentAccount();
         const onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>): void => {
             evt.preventDefault();
             const newReceivingAddress = evt.currentTarget.value;
@@ -152,30 +154,30 @@ export const PageNFT: React.FC = () => {
         }
 
         return <div>
-            {isFromMinerWallet ? <h2>Use miner wallet</h2> : <h2>Use 3rd party wallet</h2>}
-            <input
-                type="text"
-                value={receivingAddress}
-                placeholder="Enter receiving address"
-                onChange={onInputChange}
-                style={{ width: "100%", wordBreak: "break-all" }}
-            />
-            <br />
-
-            {isFromMinerWallet &&
-                <button className="btn" disabled={!receivingAddress} onClick={(evt: Event) => startMint(evt, receivingAddress)}>
-                    MINT
-                </button>
-            }
-
-            {!isFromMinerWallet &&
+            {isFromMinerWallet ?
                 <>
-                    <button className="btn" disabled={!receivingAddress} onClick={(evt: Event) => startMint(evt, receivingAddress)}>
-                        MINT
+                    <button className="btn-double" onClick={(evt: Event) => startMint(evt, receivingAddress)}>
+                        Mint from miner wallet
+                    </button>
+                    <br />
+                </>
+                :
+                <>
+                    <button className="btn-double" disabled={!account} onClick={(evt: Event) => startMint(evt, receivingAddress)}>
+                        Mint from connected wallet
                     </button>
                     <ConnectButtonL1 />
                 </>
             }
+
+            <input
+                type="text"
+                value={receivingAddress}
+                placeholder="Receiving address"
+                onChange={onInputChange}
+                style={{ width: "100%", wordBreak: "break-all" }}
+            />
+
 
             <MintTxResult />
         </div>;
