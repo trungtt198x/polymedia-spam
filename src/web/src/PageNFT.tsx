@@ -19,7 +19,8 @@ import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 export const PageNFT: React.FC = () => {
     const { network, balances, spammer, spamView, disclaimerAccepted } = useOutletContext<AppContext>();
 
-    const [mintTxResult, setMintTxResult] = useState(null);
+    const [mintFromMinerTxResult, setMintFromMinerTxResult] = useState(null);
+    const [mintFromConnectedWalletTxResult, setMintFromConnectedWalletTxResult] = useState(null);
 
     const isLoading = !balances || balances.iota === -1 || balances.spam === -1;
 
@@ -42,9 +43,14 @@ export const PageNFT: React.FC = () => {
         return suiAddressPattern.test(address);
     }
 
-    const startMint = async (evt: Event, receivingAddress) => {
+    const startMint = async (evt: Event, receivingAddress: string, isFromMinerWallet: boolean) => {
         evt.preventDefault();
-        setMintTxResult(null);
+        
+        if (isFromMinerWallet) {
+            setMintFromMinerTxResult(null);
+        } else {
+            setMintFromConnectedWalletTxResult(null);
+        }
 
         if (!isValidIotaAddress(receivingAddress)) {
             toast.error("Invalid receiving address");
@@ -71,7 +77,12 @@ export const PageNFT: React.FC = () => {
         const resp = await spammer.current.mint(coinFound.coinObjectId, to);
 
         toast.success(`NFT minted`);
-        setMintTxResult(`${resp.digest},${to}`);
+
+        if (isFromMinerWallet) {
+            setMintFromMinerTxResult(`${resp.digest},${to}`);
+        } else {
+            setMintFromConnectedWalletTxResult(`${resp.digest},${to}`);
+        }
     };
 
     /* HTML */
@@ -114,10 +125,20 @@ export const PageNFT: React.FC = () => {
         </>;
     };
 
-    const MintTxResult: React.FC = () => {
-        if (!mintTxResult) {
-            return null;
+    const MintTxResult: React.FC<{ isFromMinerWallet: boolean }> = ({ isFromMinerWallet }) => {
+        let mintTxResult;
+        if (isFromMinerWallet) {
+            if (!mintFromMinerTxResult) {
+                return null;
+            }
+            mintTxResult = mintFromMinerTxResult;
+        } else {
+            if (!mintFromConnectedWalletTxResult) {
+                return null;
+            }
+            mintTxResult = mintFromConnectedWalletTxResult;
         }
+
         const [digest, to] = mintTxResult.split(",");
         const txDisplay = `Transaction: ${shortenTx(digest)}`;
         return <>
@@ -140,7 +161,7 @@ export const PageNFT: React.FC = () => {
         </>;
     };
 
-    const MintFromMinerWallet: React.FC<{ isFromMinerWallet: boolean }> = ({ isFromMinerWallet }) => {
+    const MintForm: React.FC<{ isFromMinerWallet: boolean }> = ({ isFromMinerWallet }) => {
         const [receivingAddress, setReceivingAddress] = useState(null);
         const account = useCurrentAccount();
         const onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -156,14 +177,14 @@ export const PageNFT: React.FC = () => {
         return <div>
             {isFromMinerWallet ?
                 <>
-                    <button className="btn-double" onClick={(evt: Event) => startMint(evt, receivingAddress)}>
+                    <button className="btn-double" onClick={(evt: Event) => startMint(evt, receivingAddress, isFromMinerWallet)}>
                         Mint from miner wallet
                     </button>
                     <br />
                 </>
                 :
                 <>
-                    <button className="btn-double" disabled={!account} onClick={(evt: Event) => startMint(evt, receivingAddress)}>
+                    <button className="btn-double" disabled={!account} onClick={(evt: Event) => startMint(evt, receivingAddress, isFromMinerWallet)}>
                         Mint from connected wallet
                     </button>
                     <ConnectButtonL1 />
@@ -179,7 +200,7 @@ export const PageNFT: React.FC = () => {
             />
 
 
-            <MintTxResult />
+            <MintTxResult isFromMinerWallet={isFromMinerWallet} />
         </div>;
     };
 
@@ -196,9 +217,9 @@ export const PageNFT: React.FC = () => {
                     :
                     <div id="page-wallet">
                         <div id="page-wallet-sections">
-                            <MintFromMinerWallet isFromMinerWallet={true} />
+                            <MintForm isFromMinerWallet={true} />
 
-                            <MintFromMinerWallet isFromMinerWallet={false} />
+                            <MintForm isFromMinerWallet={false} />
                         </div>
                     </div>
                 }
