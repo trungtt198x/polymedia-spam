@@ -12,6 +12,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { AppContext } from "./App";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
+import { ConnectButtonL1 } from "./components/ConnectButtonL1";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 
 export const PageNFT: React.FC = () => {
@@ -29,7 +30,7 @@ export const PageNFT: React.FC = () => {
         if (tx.length <= 8) {
             return tx; // No need to format if the string is too short
         }
-        
+
         const firstPart = tx.slice(0, 4);
         const lastPart = tx.slice(-4);
         return `${firstPart}...${lastPart}`;
@@ -119,9 +120,9 @@ export const PageNFT: React.FC = () => {
         const [digest, to] = mintTxResult.split(",");
         const txDisplay = `Transaction: ${shortenTx(digest)}`;
         return <>
-                <p>NFT minted to {shortenAddress(to)}</p>
-                <HrefLinkTx network={network} hrefEndValue={digest} hrefDisplay={txDisplay} />
-            </>;
+            <p>NFT minted to {shortenAddress(to)}</p>
+            <HrefLinkTx network={network} hrefEndValue={digest} hrefDisplay={txDisplay} />
+        </>;
     };
 
     const SpamUp: React.FC = () => {
@@ -138,7 +139,7 @@ export const PageNFT: React.FC = () => {
         </>;
     };
 
-    const MintFromMinerWallet: React.FC<{isFromMinerWallet: boolean}> = ({isFromMinerWallet}) => {
+    const MintFromMinerWallet: React.FC<{ isFromMinerWallet: boolean }> = ({ isFromMinerWallet }) => {
         const [receivingAddress, setReceivingAddress] = useState(null);
         const onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>): void => {
             evt.preventDefault();
@@ -160,18 +161,19 @@ export const PageNFT: React.FC = () => {
                 style={{ width: "100%", wordBreak: "break-all" }}
             />
             <br />
-            
-            { isFromMinerWallet &&
+
+            {isFromMinerWallet &&
                 <button className="btn" disabled={!receivingAddress} onClick={(evt: Event) => startMint(evt, receivingAddress)}>
                     MINT
                 </button>
             }
 
-            { !isFromMinerWallet &&
+            {!isFromMinerWallet &&
                 <>
                     <button className="btn" disabled={!receivingAddress} onClick={(evt: Event) => startMint(evt, receivingAddress)}>
                         MINT
                     </button>
+                    <ConnectButtonL1 />
                 </>
             }
 
@@ -187,7 +189,7 @@ export const PageNFT: React.FC = () => {
                 <div className="tight">
                     <Balances />
                 </div>
-                { balances?.spam === 0 ?
+                {balances?.spam === 0 ?
                     <SpamUp />
                     :
                     <div id="page-wallet">
