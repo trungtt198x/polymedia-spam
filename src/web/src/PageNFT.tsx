@@ -43,33 +43,36 @@ export const PageNFT: React.FC = () => {
         return suiAddressPattern.test(address);
     }
 
-    const startMint = async (evt: Event, receivingAddress: string, isFromMinerWallet: boolean) => {
+    const startMint = async (evt: Event, receivingAddress: string, isFromMinerWallet: boolean, currentAccount = null) => {
         evt.preventDefault();
 
         let _iotaClient;
         let coinOwner;
-        
+        let signer;
+
         if (isFromMinerWallet) {
             setMintFromMinerTxResult(null);
             _iotaClient = spammer.current.getIotaClient();
-            coinOwner = spamClient.signer.toIotaAddress();
+            signer = spamClient.signer;
+            coinOwner = signer.toIotaAddress();
         } else {
             setMintFromConnectedWalletTxResult(null);
             _iotaClient = iotaWalletClient.iotaClient;
 
             if (!_iotaClient) {
                 toast.error("IOTA wallet client not available");
-                return;    
+                return;
             }
 
-            coinOwner = _iotaClient.signTx.toIotaAddress();
+            signer = _iotaClient.signTx;
+            coinOwner = currentAccount.address;
         }
 
         if (!isValidIotaAddress(receivingAddress)) {
             toast.error("Invalid receiving address");
             return;
         }
-        
+
         const coinResp = await _iotaClient.getCoins({
             owner: coinOwner,
             coinType: `${spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
@@ -178,7 +181,7 @@ export const PageNFT: React.FC = () => {
     };
 
     const MintForm: React.FC<{ isFromMinerWallet: boolean }> = ({ isFromMinerWallet }) => {
-        const [receivingAddress, setReceivingAddress] = useState(null);
+        const [receivingAddress, setReceivingAddress] = useState("");
         const account = useCurrentAccount();
         const onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>): void => {
             evt.preventDefault();
@@ -200,7 +203,7 @@ export const PageNFT: React.FC = () => {
                 </>
                 :
                 <>
-                    <button className="btn-double" disabled={!account} onClick={(evt: Event) => startMint(evt, receivingAddress, isFromMinerWallet)}>
+                    <button className="btn-double" disabled={!account} onClick={(evt: Event) => startMint(evt, receivingAddress, isFromMinerWallet, account)}>
                         Mint from connected wallet
                     </button>
                     <ConnectButtonL1 />
