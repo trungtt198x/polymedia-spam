@@ -6,13 +6,13 @@ import {
 } from "@iota/iota-sdk/transactions";
 import { SPAM_NFT_MODULE } from "./config.js";
 
-export function mint(
+export const mint = (
     tx: Transaction,
     packageId: string,
     spamCoinId: string,
     nftManagerId: string,
     to: string,
-): TransactionResult {
+): TransactionResult => {
     return tx.moveCall({
         target: `${packageId}::${SPAM_NFT_MODULE}::mint`,
         typeArguments: [],
@@ -23,3 +23,17 @@ export function mint(
         ],
     });
 }
+
+// export const fetchOwnedNfts = async (sender: string): Promise<Nft[]> => {
+//     const resp = await this.iotaClient.getOwnedObjects({
+//         owner: sender,
+//         filter: {
+//             StructType: `${this.nftPackageId}::nft::Nft`,
+//         },
+//         options: {
+//             showContent: true,
+//             showDisplay: true,
+//         },
+//     });
+//     return resp.data.map(objResToNft);
+// }

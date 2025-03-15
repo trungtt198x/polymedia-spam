@@ -17,7 +17,7 @@ import { useCurrentAccount } from '@iota/dapp-kit';
 import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 
 export const PageNFT: React.FC = () => {
-    const { network, balances, spammer, spamView, disclaimerAccepted } = useOutletContext<AppContext>();
+    const { network, balances, spammer, iotaWalletClient, spamView, disclaimerAccepted } = useOutletContext<AppContext>();
 
     const [mintFromMinerTxResult, setMintFromMinerTxResult] = useState(null);
     const [mintFromConnectedWalletTxResult, setMintFromConnectedWalletTxResult] = useState(null);
@@ -45,20 +45,33 @@ export const PageNFT: React.FC = () => {
 
     const startMint = async (evt: Event, receivingAddress: string, isFromMinerWallet: boolean) => {
         evt.preventDefault();
+
+        let _iotaClient;
+        let coinOwner;
         
         if (isFromMinerWallet) {
             setMintFromMinerTxResult(null);
+            _iotaClient = spammer.current.getIotaClient();
+            coinOwner = spamClient.signer.toIotaAddress();
         } else {
             setMintFromConnectedWalletTxResult(null);
+            _iotaClient = iotaWalletClient.iotaClient;
+
+            if (!_iotaClient) {
+                toast.error("IOTA wallet client not available");
+                return;    
+            }
+
+            coinOwner = _iotaClient.signTx.toIotaAddress();
         }
 
         if (!isValidIotaAddress(receivingAddress)) {
             toast.error("Invalid receiving address");
             return;
         }
-
-        const coinResp = await spammer.current.getIotaClient().getCoins({
-            owner: spamClient.signer.toIotaAddress(),
+        
+        const coinResp = await _iotaClient.getCoins({
+            owner: coinOwner,
             coinType: `${spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
         });
 
@@ -72,16 +85,19 @@ export const PageNFT: React.FC = () => {
             return;
         }
 
-        const to = receivingAddress;
-
-        const resp = await spammer.current.mint(coinFound.coinObjectId, to);
+        let resp;
+        if (isFromMinerWallet) {
+            resp = await spammer.current.mint(coinFound.coinObjectId, receivingAddress);
+        } else {
+            resp = await iotaWalletClient.mint(coinFound.coinObjectId, receivingAddress, coinOwner, false);
+        }
 
         toast.success(`NFT minted`);
 
         if (isFromMinerWallet) {
-            setMintFromMinerTxResult(`${resp.digest},${to}`);
+            setMintFromMinerTxResult(`${resp.digest},${receivingAddress}`);
         } else {
-            setMintFromConnectedWalletTxResult(`${resp.digest},${to}`);
+            setMintFromConnectedWalletTxResult(`${resp.digest},${receivingAddress}`);
         }
     };
 

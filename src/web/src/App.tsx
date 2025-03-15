@@ -8,10 +8,11 @@ import {
     SpamEvent,
     Spammer,
     emptyUserCounters,
+    IotaWalletClient,
 } from "@polymedia/spam-sdk";
 import { sleep } from "@polymedia/suitcase-core";
 import { LinkExternal, NetworkDropdownSelector } from "@polymedia/suitcase-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { PageAbout } from "./PageAbout";
 import { PageNFT } from "./PageNFT";
@@ -77,6 +78,7 @@ export type AppContext = {
     rpcUrls: RpcUrl[]; updateRpcUrls: (newRpcs: RpcUrl[]) => Promise<void>;
     balances: UserBalances;
     spammer: React.MutableRefObject<Spammer>;
+    iotaWalletClient: IotaWalletClient;
     spamView: SpamView;
     replaceKeypair: (keypair: Ed25519Keypair) => void;
     updateClaimAddress: (claimAddress: string) => void;
@@ -129,6 +131,19 @@ const App: React.FC = () => {
     ));
     const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean>(true);
 
+    ////////////
+    const iotaClient = useIotaClient();
+    const { mutateAsync: walletSignTx } = useSignTransaction();
+
+    const iotaWalletClient = useMemo(() => {
+        return new IotaWalletClient(
+            iotaClient,
+            (transaction) => walletSignTx({ transaction }),
+            loadedNetwork,
+        );
+    }, [iotaClient, walletSignTx, network]);
+    ///////////
+
     const appContext: AppContext = {
         network,
         rpcUrls, updateRpcUrls,
@@ -138,7 +153,7 @@ const App: React.FC = () => {
         replaceKeypair: updateKeypair,
         updateClaimAddress,
         disclaimerAccepted, acceptDisclaimer,
-
+        iotaWalletClient
     };
 
     /* Functions */
