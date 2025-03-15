@@ -12,7 +12,7 @@ export const PageHome: React.FC = () =>
 
     return <div id="page-home">
     <div id="home-content">
-        <h1><span className="rainbow" style={{fontSize: "3rem"}}>SPAM</span></h1>
+        <h1><span className="rainbow" style={{fontSize: "3rem"}}>Spam Club</span></h1>
 
         <img id="img-cult" src="img/spam-home.png" alt="cult" />
 

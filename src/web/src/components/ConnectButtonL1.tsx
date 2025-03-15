@@ -1,7 +1,7 @@
 import { ConnectModal, useCurrentAccount, useDisconnectWallet } from '@iota/dapp-kit';
 import '@iota/dapp-kit/dist/index.css';
 
-export function ConnectButtonL1() {
+export const ConnectButtonL1: React.FC = () => {
     const account = useCurrentAccount();
     const { mutate: disconnectWallet } = useDisconnectWallet();
 
