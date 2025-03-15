@@ -1,7 +1,7 @@
 import { SPAM_IDS, EXPLORER } from "@polymedia/spam-sdk";
 import { LinkExternal } from "@polymedia/suitcase-react";
 import { useOutletContext } from "react-router-dom";
-import { AppContext } from "./App";
+import { AppContext } from "../lib/types";
 
 export const PageHome: React.FC = () =>
 {

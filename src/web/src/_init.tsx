@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import { AppRouter } from "./App";
+import { AppRouter } from "./AppRouter";
 
 ReactDOM
     .createRoot( document.getElementById("app") as Element )

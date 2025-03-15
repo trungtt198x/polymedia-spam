@@ -14,15 +14,7 @@ import { sleep } from "@polymedia/suitcase-core";
 import { LinkExternal, NetworkDropdownSelector } from "@polymedia/suitcase-react";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
-import { PageAbout } from "./PageAbout";
-import { PageNFT } from "./PageNFT";
-import { PageHome } from "./PageHome";
-import { PageNotFound } from "./PageNotFound";
-import { PageRPCs } from "./PageRPCs";
-import { PageSpam } from "./PageSpam";
-import { PageStats } from "./PageStats";
-import { PageWallet } from "./PageWallet";
-
+import { useIotaClient } from "@iota/dapp-kit";
 import {
     RpcUrl,
     loadClaimAddressFromStorage,
@@ -33,59 +25,21 @@ import {
     saveKeypairToStorage,
     saveRpcUrlsToStorage,
 } from "./lib/storage";
-import { SpamView, UserBalances } from "./lib/types";
+import { SpamView, UserBalances, AppContext, supportedNetworks, NetworkName } from "./lib/types";
 import "./styles/.shared.app.less";
 import "./styles/App.less";
 
-import { ConnectModal, IotaClientProvider, useIotaClient, useSignTransaction, WalletProvider } from "@iota/dapp-kit";
-import { defaultNetwork, networkConfig, packageIds, SupportedNetwork } from "./config";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import { ConnectButtonL1 } from "./components/ConnectButtonL1";
 import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
 import { Nav } from "./components/Nav";
 
 import { Toaster } from 'react-hot-toast';
 
-export const AppRouter: React.FC = () => {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<AppIotaProviders />} >
-                    <Route index element={<PageHome />} />
-                    <Route path="/about" element={<PageAbout />} />
-                    <Route path="/spam" element={<PageSpam />} />
-                    <Route path="/nft" element={<PageNFT />} />
-                    <Route path="/wallet" element={<PageWallet />} />
-                    <Route path="/rpcs" element={<PageRPCs />} />
-                    <Route path="/stats" element={<PageStats />} />
-                    <Route path="*" element={<PageNotFound />} />
-                </Route>
-            </Routes>
-        </BrowserRouter>
-    );
-};
+import useIotaWalletClient from "./hooks/useIotaWalletClient";
 
-
-const supportedNetworks = ["mainnet", "testnet"] as const;
-type NetworkName = typeof supportedNetworks[number];
 const loadedNetwork = DEFAULT_NETWORK;
 
-/* App */
-
 export type ReactSetter<T> = React.Dispatch<React.SetStateAction<T>>;
-
-export type AppContext = {
-    network: NetworkName;
-    rpcUrls: RpcUrl[]; updateRpcUrls: (newRpcs: RpcUrl[]) => Promise<void>;
-    balances: UserBalances;
-    spammer: React.MutableRefObject<Spammer>;
-    iotaWalletClient: IotaWalletClient;
-    spamView: SpamView;
-    replaceKeypair: (keypair: Ed25519Keypair) => void;
-    updateClaimAddress: (claimAddress: string) => void;
-    disclaimerAccepted: boolean; acceptDisclaimer: () => void;
-};
 
 const emptySpamView = (): SpamView => {
     return {
@@ -101,22 +55,7 @@ const emptyBalances = (): UserBalances => {
 const loadedPair = loadKeypairFromStorage();
 const loadedRpcs = loadRpcUrlsFromStorage(loadedNetwork);
 
-const queryClient = new QueryClient();
-const AppIotaProviders = () => {
-    const [network, setNetwork] = useState<SupportedNetwork>(defaultNetwork);
-    return (
-        <QueryClientProvider client={queryClient}>
-            <IotaClientProvider networks={networkConfig} network={network}>
-                <WalletProvider autoConnect={true}>
-                    {/* <App network={network} setNetwork={setNetwork} /> */}
-                    <App />
-                </WalletProvider>
-            </IotaClientProvider>
-        </QueryClientProvider>
-    );
-};
-
-const App: React.FC = () => {
+export const App: React.FC = () => {
     const inProgress = false;
     const [showMobileNav, setShowMobileNav] = useState(false);
     const [network, setNetwork] = useState(loadedNetwork);
@@ -133,18 +72,7 @@ const App: React.FC = () => {
     ));
     const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean>(true);
 
-    ////////////
-    const iotaClient = useIotaClient();
-    const { mutateAsync: walletSignTx } = useSignTransaction();
-
-    const iotaWalletClient = useMemo(() => {
-        return new IotaWalletClient(
-            iotaClient,
-            (transaction) => walletSignTx({ transaction }),
-            loadedNetwork,
-        );
-    }, [iotaClient, walletSignTx, network]);
-    ///////////
+    const { iotaWalletClient } = useIotaWalletClient(network, loadedNetwork);
 
     const appContext: AppContext = {
         network,

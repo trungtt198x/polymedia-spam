@@ -9,10 +9,10 @@ import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 import { useEffect, useState, useRef } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
-import { AppContext } from "./App";
+import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
-import { ConnectButtonL1 } from "./components/ConnectButtonL1";
+import { ConnectButtonL1 } from "../components/ConnectButtonL1";
 import { useCurrentAccount } from '@iota/dapp-kit';
 import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 

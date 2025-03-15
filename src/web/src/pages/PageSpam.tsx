@@ -3,10 +3,10 @@ import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 // import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { useOutletContext, Link } from "react-router-dom";
-import { AppContext } from "./App";
+import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
-import { StatusSpan } from "./components/StatusSpan";
-import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
+import { StatusSpan } from "../components/StatusSpan";
+import { EpochData, formatEpochPeriod, getEpochTimes } from "../lib/epochs";
 
 export const PageSpam: React.FC = () =>
 {

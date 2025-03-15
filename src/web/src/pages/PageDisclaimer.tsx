@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { AppContext } from "./App";
+import { AppContext } from "../lib/types";
 
 export const PageDisclaimer: React.FC = () =>
 {
