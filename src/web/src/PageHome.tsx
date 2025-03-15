@@ -2,14 +2,11 @@ import { SPAM_IDS, EXPLORER } from "@polymedia/spam-sdk";
 import { LinkExternal } from "@polymedia/suitcase-react";
 import { useOutletContext } from "react-router-dom";
 import { AppContext } from "./App";
-// import { usePrice } from "./hooks/usePrice";
 
 export const PageHome: React.FC = () =>
 {
     const { network } = useOutletContext<AppContext>();
-    // const { price } = usePrice();
     const spamPackageId = SPAM_IDS[network].packageId;
-    // const mainnetMaxSupply = 37_000_000_000;
 
     const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
 
@@ -17,7 +14,7 @@ export const PageHome: React.FC = () =>
     <div id="home-content">
         <h1><span className="rainbow" style={{fontSize: "3rem"}}>SPAM</span></h1>
 
-        <img id="img-cult" src="img/cult.webp" alt="cult" />
+        <img id="img-cult" src="img/spam-home.png" alt="cult" />
 
         <h3>COIN TYPE</h3>
         <p>

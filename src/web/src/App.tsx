@@ -307,7 +307,7 @@ const App: React.FC = () => {
         return <header>
             <Link to="/" onClick={e => { inProgress && e.preventDefault(); }}>
                 <h1>
-                    <span><img alt="polymedia" src="/img/spam-logo.webp" className="logo" /></span>
+                    <span><img alt="polymedia" src="/img/spam-logo.png" className="logo" /></span>
                 </h1>
             </Link>
 

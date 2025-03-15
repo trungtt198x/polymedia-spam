@@ -3,7 +3,6 @@ import { NetworkName, formatNumber } from "@polymedia/suitcase-core";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { AppContext } from "./App";
-import { usePrice } from "./hooks/usePrice";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 
 const newSupplyPerEpoch = TOTAL_EPOCH_REWARD;
@@ -22,7 +21,6 @@ export const PageStats: React.FC = () =>
     const [ stats, setStats ] = useState<Stats>();
     const [ currEpoch, setCurrEpoch ] = useState<EpochData>();
     const [ gasPerTx, setGasPerTx ] = useState<number>(0.000774244);
-    const { price } = usePrice();
 
     /* Functions */
 
@@ -191,15 +189,6 @@ export const PageStats: React.FC = () =>
             <p>Total gas paid: {formatNumber(totalGas, "compact")} IOTA</p>
             {network !== "mainnet" &&
                 <p>Daily inflation: {dailyInflation.toFixed(2)}%</p>
-            }
-            {price && <>
-                <br/>
-                <p>Max supply: {formatNumber(claimableSupply, "compact")} ({formatNumber(claimedSupply, "compact")} claimed)</p>
-                <p>FDV: ${formatNumber(price.usd * claimableSupply)} (${formatNumber(price.usd * claimedSupply)} claimed)</p>
-                <br/>
-                <p>SPAM/USD: {price.usd}</p>
-                <p>SPAM/IOTA: {price.iota}</p>
-            </>
             }
             {/* <p>Current epoch: {stats.epoch}</p> */}
             {/* <p>Epochs completed: {epochsCompleted}</p> */}
