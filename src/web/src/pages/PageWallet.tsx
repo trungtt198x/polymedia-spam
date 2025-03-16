@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { useEffect, useState } from "react";

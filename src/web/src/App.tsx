@@ -8,13 +8,10 @@ import {
     SpamEvent,
     Spammer,
     emptyUserCounters,
-    IotaWalletClient,
 } from "@polymedia/spam-sdk";
 import { sleep } from "@polymedia/suitcase-core";
-import { LinkExternal, NetworkDropdownSelector } from "@polymedia/suitcase-react";
-import { useEffect, useRef, useState, useMemo } from "react";
-import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
-import { useIotaClient } from "@iota/dapp-kit";
+import { useEffect, useRef, useState } from "react";
+import { Outlet } from "react-router-dom";
 import {
     RpcUrl,
     loadClaimAddressFromStorage,
@@ -33,13 +30,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { Nav } from "./components/Nav";
 
-import { Toaster } from 'react-hot-toast';
-
 import useIotaWalletClient from "./hooks/useIotaWalletClient";
-
-const loadedNetwork = DEFAULT_NETWORK;
-
-export type ReactSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 
 const emptySpamView = (): SpamView => {
     return {
@@ -53,26 +44,26 @@ const emptyBalances = (): UserBalances => {
 };
 
 const loadedPair = loadKeypairFromStorage();
-const loadedRpcs = loadRpcUrlsFromStorage(loadedNetwork);
+const loadedRpcs = loadRpcUrlsFromStorage(DEFAULT_NETWORK);
 
 export const App: React.FC = () => {
     const inProgress = false;
     const [showMobileNav, setShowMobileNav] = useState(false);
-    const [network, setNetwork] = useState(loadedNetwork);
+    const [network, setNetwork] = useState(DEFAULT_NETWORK);
     const [pair, setPair] = useState<Ed25519Keypair>(loadedPair);
     const [rpcUrls, setRpcUrls] = useState<RpcUrl[]>(loadedRpcs);
     const [balances, setBalances] = useState<UserBalances>(emptyBalances());
     const [spamView, setSpamView] = useState<SpamView>(emptySpamView());
     const spammer = useRef(new Spammer(
         loadedPair,
-        loadedNetwork,
+        DEFAULT_NETWORK,
         loadedRpcs.filter(rpc => rpc.enabled).map(rpc => rpc.url),
         handleSpamEvent,
         loadClaimAddressFromStorage(),
     ));
     const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean>(true);
 
-    const { iotaWalletClient } = useIotaWalletClient(network, loadedNetwork);
+    const { iotaWalletClient } = useIotaWalletClient(network, DEFAULT_NETWORK);
 
     const appContext: AppContext = {
         network,

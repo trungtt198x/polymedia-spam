@@ -5,7 +5,7 @@ export const Nav: React.FC<{
     setShowMobileNav: () => void;
     inProgress: boolean;
     network: string;
-    supportedNetworks: Array<string>;
+    supportedNetworks: string[];
     updateNetwork: (string) => void;
 }> = ({
     setShowMobileNav,

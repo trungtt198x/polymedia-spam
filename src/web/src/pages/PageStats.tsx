@@ -1,4 +1,9 @@
-import { SPAM_DECIMALS, Stats, SPAM_IDS, TOTAL_EPOCH_REWARD } from "@polymedia/spam-sdk";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+import { Stats, SPAM_IDS, TOTAL_EPOCH_REWARD } from "@polymedia/spam-sdk";
 import { NetworkName, formatNumber } from "@polymedia/suitcase-core";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
@@ -178,7 +183,6 @@ export const PageStats: React.FC = () =>
     const epochsCompleted = network === "mainnet" ? 37 : Number(stats.epoch) - 1 - firstEpoch[network];
     const totalTxs = Number(stats.tx_count);
     const totalGas = totalTxs * gasPerTx;
-    const claimedSupply = Number(stats.supply) / 10**SPAM_DECIMALS;
     const claimableSupply = epochsCompleted * newSupplyPerEpoch;
     const dailyInflation = newSupplyPerEpoch / claimableSupply * 100;
 

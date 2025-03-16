@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { UserCounter, EXPLORER, SPAM_TX_LOW_BALANCE, IS_DISABLED, UPDATE_INTERVAL_MS } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 // import { LinkToPolymedia } from "@polymedia/suitcase-react";
@@ -284,7 +289,7 @@ export const PageSpam: React.FC = () =>
                 <Balances />
                 <p>
                     Claim address:
-                    <HrefLink network={network} isOnlyExplorer={false} isAddress={true} hrefEndValue={claimAddress} hrefDisplay={shortenAddress(claimAddress)} />
+                    <HrefLink network={network as string} isOnlyExplorer={false} isAddress={true} hrefEndValue={claimAddress} hrefDisplay={shortenAddress(claimAddress)} />
                 </p>
             </div>
 

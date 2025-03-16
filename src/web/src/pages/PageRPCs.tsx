@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../lib/types";
-import { RpcUrl } from "./lib/storage";
+import { RpcUrl } from "../lib/storage";
 import { RPC_ENDPOINTS } from "@polymedia/spam-sdk";
 
 export const PageRPCs: React.FC = () =>
@@ -84,7 +86,7 @@ export const PageRPCs: React.FC = () =>
 
                 <div>
                     <button className="btn" onClick={onSubmit} disabled={!hasChanges}>
-                        {spammer.current.status === "running" ? "Save and restart" : "Save"}
+                        {spammer?.current?.status === "running" ? "Save and restart" : "Save"}
                     </button>
                     {showSavedMessage &&
                         <div style={{color: "lightgreen"}}>Done!</div>

@@ -1,5 +1,5 @@
-import { ConnectModal, useCurrentAccount, useDisconnectWallet } from '@iota/dapp-kit';
-import '@iota/dapp-kit/dist/index.css';
+import { ConnectModal, useCurrentAccount, useDisconnectWallet } from "@iota/dapp-kit";
+import "@iota/dapp-kit/dist/index.css";
 
 export const ConnectButtonL1: React.FC = () => {
     const account = useCurrentAccount();
@@ -22,4 +22,4 @@ export const ConnectButtonL1: React.FC = () => {
             </button>
         </div>
     );
-}
+};

@@ -22,7 +22,7 @@ export const mint = (
             tx.pure.address(to),
         ],
     });
-}
+};
 
 // export const fetchOwnedNfts = async (sender: string): Promise<Nft[]> => {
 //     const resp = await this.iotaClient.getOwnedObjects({
