@@ -1,27 +1,24 @@
 // import { bcs } from "@iota/bcs";
 // import { IotaObjectRef } from "@iota/iota-sdk/client";
-import {
-    Transaction,
-    TransactionResult,
-} from "@iota/iota-sdk/transactions";
+import { Transaction, TransactionResult } from "@iota/iota-sdk/transactions";
 import { SPAM_NFT_MODULE } from "./config.js";
 
 export const mint = (
-    tx: Transaction,
-    packageId: string,
-    spamCoinId: string,
-    nftManagerId: string,
-    to: string,
+  tx: Transaction,
+  packageId: string,
+  spamCoinId: string,
+  nftManagerId: string,
+  to: string,
 ): TransactionResult => {
-    return tx.moveCall({
-        target: `${packageId}::${SPAM_NFT_MODULE}::mint`,
-        typeArguments: [],
-        arguments: [
-            tx.object(spamCoinId),
-            tx.object(nftManagerId),
-            tx.pure.address(to),
-        ],
-    });
+  return tx.moveCall({
+    target: `${packageId}::${SPAM_NFT_MODULE}::mint`,
+    typeArguments: [],
+    arguments: [
+      tx.object(spamCoinId),
+      tx.object(nftManagerId),
+      tx.pure.address(to),
+    ],
+  });
 };
 
 // export const fetchOwnedNfts = async (sender: string): Promise<Nft[]> => {

@@ -9,255 +9,290 @@ import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { loadClaimAddressFromStorage, pairFromSecretKey } from "../lib/storage";
 
-export const PageWallet: React.FC = () =>
-{
-    /* State */
+export const PageWallet: React.FC = () => {
+  /* State */
 
-    const location = useLocation();
-    const { spammer, disclaimerAccepted, replaceKeypair, updateClaimAddress }
-        = useOutletContext<AppContext>();
-    const [ createSuccess, setCreateSuccess ] = useState<boolean>(false);
-    const [ importSuccess, setImportSuccess ] = useState<boolean>(false);
+  const location = useLocation();
+  const { spammer, disclaimerAccepted, replaceKeypair, updateClaimAddress } =
+    useOutletContext<AppContext>();
+  const [createSuccess, setCreateSuccess] = useState<boolean>(false);
+  const [importSuccess, setImportSuccess] = useState<boolean>(false);
 
-    /* Functions */
+  /* Functions */
 
-    useEffect(() => {
-        const handleHashNavigation = () => {
-            const hash = location.hash.replace("#", "");
-            if (hash) {
-                const element = document.getElementById(hash);
-                if (element) {
-                    element.scrollIntoView({ behavior: "smooth" });
-                }
-            }
-        };
-        handleHashNavigation();
-    }, [location.hash]);
-
-    const confirmAndReplaceWallet = (pair: Ed25519Keypair): boolean => {
-        const userAccepted = window.confirm(
-            "🚨 WARNING 🚨\n\nThis will delete and replace your current wallet.\n\nAre you sure?"
-        );
-        if (userAccepted) {
-            replaceKeypair(pair);
+  useEffect(() => {
+    const handleHashNavigation = () => {
+      const hash = location.hash.replace("#", "");
+      if (hash) {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
         }
-        return userAccepted;
+      }
     };
+    handleHashNavigation();
+  }, [location.hash]);
 
-    /* HTML */
-
-    if (!disclaimerAccepted) {
-        return <PageDisclaimer />;
+  const confirmAndReplaceWallet = (pair: Ed25519Keypair): boolean => {
+    const userAccepted = window.confirm(
+      "🚨 WARNING 🚨\n\nThis will delete and replace your current wallet.\n\nAre you sure?",
+    );
+    if (userAccepted) {
+      replaceKeypair(pair);
     }
+    return userAccepted;
+  };
 
-    const WalletInfo: React.FC = () =>
-    {
-        return <div id="wallet-info">
+  /* HTML */
+
+  if (!disclaimerAccepted) {
+    return <PageDisclaimer />;
+  }
+
+  const WalletInfo: React.FC = () => {
+    return (
+      <div id="wallet-info">
         <h2>Miner wallet</h2>
         <div id="wallet-content">
-            <div className="wallet-section">
-                <h4>IOTA address</h4>
-                <p>Send IOTA to this address to fund your miner wallet used to perform spam transactions.</p>
-                <span className="iota-address">
-                    {spammer.current.getSpamClient().signer.toIotaAddress()}
-                </span>
+          <div className="wallet-section">
+            <h4>IOTA address</h4>
+            <p>
+              Send IOTA to this address to fund your miner wallet used to
+              perform spam transactions.
+            </p>
+            <span className="iota-address">
+              {spammer.current.getSpamClient().signer.toIotaAddress()}
+            </span>
+          </div>
+          <div className="wallet-section">
+            <h4>Secret key</h4>
+            <p>It allows you to restore your wallet. Copy it somewhere safe!</p>
+            <span className="iota-address">
+              {(
+                spammer.current.getSpamClient().signer as Ed25519Keypair
+              ).getSecretKey()}
+            </span>
+            <div className="dont-share-secret-key">
+              Don't share your secret key with anyone
             </div>
-            <div className="wallet-section">
-                <h4>Secret key</h4>
-                <p>It allows you to restore your wallet. Copy it somewhere safe!</p>
-                <span className="iota-address">
-                    {(spammer.current.getSpamClient().signer as Ed25519Keypair).getSecretKey()}
-                </span>
-                <div className="dont-share-secret-key">Don't share your secret key with anyone</div>
-            </div>
+          </div>
         </div>
         <div id="set-claim-address" />
-        </div>;
+      </div>
+    );
+  };
+
+  const ClaimAddressForm: React.FC = () => {
+    const [claimAddress, setClaimAddress] = useState<string | undefined>(
+      loadClaimAddressFromStorage(),
+    );
+    const [msg, setMsg] = useState<{ type: "okay" | "error"; text: string }>();
+    const disableButton =
+      msg?.type === "error" ||
+      !claimAddress ||
+      spammer.current.status !== "stopped";
+    const disableTextarea = spammer.current.status !== "stopped";
+
+    const onInputChange = (
+      evt: React.ChangeEvent<HTMLTextAreaElement>,
+    ): void => {
+      const newClaimAddress = evt.currentTarget.value;
+      setClaimAddress(newClaimAddress);
+      if (newClaimAddress.length === 0) {
+        setMsg(undefined);
+        return;
+      }
+      const cleanAddress = validateAndNormalizeAddress(newClaimAddress);
+      if (!cleanAddress) {
+        setMsg({ type: "error", text: "Invalid address" });
+        return;
+      }
+      setMsg(undefined);
     };
 
-    const ClaimAddressForm: React.FC = () =>
-    {
-        const [ claimAddress, setClaimAddress ] = useState<string|undefined>(loadClaimAddressFromStorage());
-        const [ msg, setMsg ] = useState<{ type: "okay"|"error"; text: string }>();
-        const disableButton = msg?.type === "error" || !claimAddress || spammer.current.status !== "stopped";
-        const disableTextarea = spammer.current.status !== "stopped";
-
-        const onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>): void  => {
-            const newClaimAddress = evt.currentTarget.value;
-            setClaimAddress(newClaimAddress);
-            if (newClaimAddress.length === 0) {
-                setMsg(undefined);
-                return;
-            }
-            const cleanAddress = validateAndNormalizeAddress(newClaimAddress);
-            if (!cleanAddress) {
-                setMsg({ type: "error", text: "Invalid address" });
-                return;
-            }
-            setMsg(undefined);
-        };
-
-        const onKeyDown = (evt: React.KeyboardEvent<HTMLTextAreaElement>): void  => {
-            if (evt.key === "Enter" && !disableButton) {
-                evt.preventDefault();
-                onSubmit();
-            }
-        };
-
-        const onSubmit = (): void => {
-            if (claimAddress) {
-                try {
-                    updateClaimAddress(claimAddress);
-                    setMsg({ type: "okay", text: "Success!" });
-                } catch (err) {
-                    setMsg({ type: "error", text: String(err) });
-                }
-            }
-        };
-
-        const onStopSpammer = () => {
-            if (spammer.current.status === "running") {
-                spammer.current.stop();
-            }
-        };
-
-        return <div>
-            <h2>Set claim address</h2>
-            <p>
-                Send claimed SPAM to this address:
-            </p>
-            <textarea
-                value={claimAddress}
-                onChange={onInputChange}
-                onKeyDown={onKeyDown}
-                disabled={disableTextarea}
-                style={{width: "100%", wordBreak: "break-all"}}
-            />
-            <br/>
-            {spammer.current.status !== "stopped"
-            ?
-                <button className="btn" onClick={onStopSpammer}>
-                    STOP MINER TO SET ADDRESS
-                </button>
-            :
-                <button className="btn" onClick={onSubmit} disabled={disableButton}>
-                    SET CLAIM ADDRESS
-                </button>
-            }
-            {msg && <div className={`${msg.type}-box`}>
-                <div>{msg.text}</div>
-            </div>}
-        </div>;
+    const onKeyDown = (evt: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+      if (evt.key === "Enter" && !disableButton) {
+        evt.preventDefault();
+        onSubmit();
+      }
     };
 
-    const ImportWalletForm: React.FC = () =>
-    {
-        const [ secretKey, setSecretKey ] = useState<string>("");
-        const [ errMsg, setErrMsg ] = useState<string|null>(null);
-
-        const disableSubmit = errMsg !== null || secretKey.length === 0;
-
-        const onInputChange = (evt: React.ChangeEvent<HTMLTextAreaElement>): void  => {
-            const newSecretKey = evt.currentTarget.value;
-            setSecretKey(newSecretKey);
-            if (newSecretKey.length === 0) {
-                setErrMsg(null);
-                return;
-            }
-            try {
-                pairFromSecretKey(newSecretKey);
-                setErrMsg(null);
-            } catch (err) {
-                setErrMsg(String(err));
-            }
-        };
-
-        const onKeyDown = (evt: React.KeyboardEvent<HTMLTextAreaElement>): void  => {
-            if (evt.key === "Enter" && !disableSubmit) {
-                evt.preventDefault();
-                onSubmit();
-            }
-        };
-
-        const onSubmit = (): void => {
-            setImportSuccess(false);
-            const pair = pairFromSecretKey(secretKey);
-            const okay = confirmAndReplaceWallet(pair);
-            setImportSuccess(okay);
-        };
-
-        return <div>
-            <h2>Import existing wallet</h2>
-            <p>
-                Paste your secret key and click the import button.
-            </p>
-            <textarea
-                value={secretKey}
-                onChange={onInputChange}
-                onKeyDown={onKeyDown}
-                style={{width: "100%", wordBreak: "break-all"}}
-            />
-            <br/>
-            <button className="btn" onClick={onSubmit} disabled={disableSubmit}>
-                IMPORT
-            </button>
-            {errMsg && <div className="error-box">
-                <div>Invalid secret key:</div>
-                <div>{errMsg}</div>
-            </div>}
-            {importSuccess && <div className="okay-box">
-                <div>Success!</div>
-            </div>}
-        </div>;
+    const onSubmit = (): void => {
+      if (claimAddress) {
+        try {
+          updateClaimAddress(claimAddress);
+          setMsg({ type: "okay", text: "Success!" });
+        } catch (err) {
+          setMsg({ type: "error", text: String(err) });
+        }
+      }
     };
 
-    const CreateWalletForm: React.FC = () =>
-    {
-        const onSubmit = (): void => {
-            setCreateSuccess(false);
-            const okay = confirmAndReplaceWallet(new Ed25519Keypair());
-            setCreateSuccess(okay);
-        };
-
-        return <div>
-            <h2>Create new wallet</h2>
-            <p>Delete your current wallet and replace it with a new one.</p>
-            <div className="btn-group">
-                <button className="btn" onClick={onSubmit}>
-                    CREATE WALLET
-                </button>
-            </div>
-            {createSuccess && <div className="okay-box">
-                <div>Success!</div>
-            </div>}
-        </div>;
+    const onStopSpammer = () => {
+      if (spammer.current.status === "running") {
+        spammer.current.stop();
+      }
     };
 
-    const BackUpWarning: React.FC = () =>
-    {
-        return <div>
-            <h2>Back up your secret key!</h2>
-            <div className="tight">
-                <p>▸ Your miner wallet is stored in your browser. Only you have access to it.</p>
-                <p>▸ Clearing cookies will delete your wallet. We cannot recover it for you.</p>
-                <p>▸ You can only restore your miner wallet if you save the secret key.</p>
-            </div>
-        </div>;
+    return (
+      <div>
+        <h2>Set claim address</h2>
+        <p>Send claimed SPAM to this address:</p>
+        <textarea
+          value={claimAddress}
+          onChange={onInputChange}
+          onKeyDown={onKeyDown}
+          disabled={disableTextarea}
+          style={{ width: "100%", wordBreak: "break-all" }}
+        />
+        <br />
+        {spammer.current.status !== "stopped" ? (
+          <button className="btn" onClick={onStopSpammer}>
+            STOP MINER TO SET ADDRESS
+          </button>
+        ) : (
+          <button className="btn" onClick={onSubmit} disabled={disableButton}>
+            SET CLAIM ADDRESS
+          </button>
+        )}
+        {msg && (
+          <div className={`${msg.type}-box`}>
+            <div>{msg.text}</div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const ImportWalletForm: React.FC = () => {
+    const [secretKey, setSecretKey] = useState<string>("");
+    const [errMsg, setErrMsg] = useState<string | null>(null);
+
+    const disableSubmit = errMsg !== null || secretKey.length === 0;
+
+    const onInputChange = (
+      evt: React.ChangeEvent<HTMLTextAreaElement>,
+    ): void => {
+      const newSecretKey = evt.currentTarget.value;
+      setSecretKey(newSecretKey);
+      if (newSecretKey.length === 0) {
+        setErrMsg(null);
+        return;
+      }
+      try {
+        pairFromSecretKey(newSecretKey);
+        setErrMsg(null);
+      } catch (err) {
+        setErrMsg(String(err));
+      }
     };
 
-    return <div id="page-wallet">
-        <h1><span className="rainbow">Wallet</span></h1>
+    const onKeyDown = (evt: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+      if (evt.key === "Enter" && !disableSubmit) {
+        evt.preventDefault();
+        onSubmit();
+      }
+    };
 
-        <div id="page-wallet-sections">
-            <WalletInfo />
+    const onSubmit = (): void => {
+      setImportSuccess(false);
+      const pair = pairFromSecretKey(secretKey);
+      const okay = confirmAndReplaceWallet(pair);
+      setImportSuccess(okay);
+    };
 
-            <ClaimAddressForm />
+    return (
+      <div>
+        <h2>Import existing wallet</h2>
+        <p>Paste your secret key and click the import button.</p>
+        <textarea
+          value={secretKey}
+          onChange={onInputChange}
+          onKeyDown={onKeyDown}
+          style={{ width: "100%", wordBreak: "break-all" }}
+        />
+        <br />
+        <button className="btn" onClick={onSubmit} disabled={disableSubmit}>
+          IMPORT
+        </button>
+        {errMsg && (
+          <div className="error-box">
+            <div>Invalid secret key:</div>
+            <div>{errMsg}</div>
+          </div>
+        )}
+        {importSuccess && (
+          <div className="okay-box">
+            <div>Success!</div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
-            <ImportWalletForm />
+  const CreateWalletForm: React.FC = () => {
+    const onSubmit = (): void => {
+      setCreateSuccess(false);
+      const okay = confirmAndReplaceWallet(new Ed25519Keypair());
+      setCreateSuccess(okay);
+    };
 
-            <CreateWalletForm />
-
-            <BackUpWarning />
+    return (
+      <div>
+        <h2>Create new wallet</h2>
+        <p>Delete your current wallet and replace it with a new one.</p>
+        <div className="btn-group">
+          <button className="btn" onClick={onSubmit}>
+            CREATE WALLET
+          </button>
         </div>
-    </div>;
+        {createSuccess && (
+          <div className="okay-box">
+            <div>Success!</div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const BackUpWarning: React.FC = () => {
+    return (
+      <div>
+        <h2>Back up your secret key!</h2>
+        <div className="tight">
+          <p>
+            ▸ Your miner wallet is stored in your browser. Only you have access
+            to it.
+          </p>
+          <p>
+            ▸ Clearing cookies will delete your wallet. We cannot recover it for
+            you.
+          </p>
+          <p>
+            ▸ You can only restore your miner wallet if you save the secret key.
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div id="page-wallet">
+      <h1>
+        <span className="rainbow">Wallet</span>
+      </h1>
+
+      <div id="page-wallet-sections">
+        <WalletInfo />
+
+        <ClaimAddressForm />
+
+        <ImportWalletForm />
+
+        <CreateWalletForm />
+
+        <BackUpWarning />
+      </div>
+    </div>
+  );
 };

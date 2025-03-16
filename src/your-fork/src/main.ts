@@ -4,19 +4,21 @@ import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { SPAM_IDS, SpamClient } from "@polymedia/spam-sdk";
 import { shortenAddress } from "@polymedia/suitcase-core";
 
-async function main()
-{
-    console.log("Mainnet package ID:", shortenAddress(SPAM_IDS.mainnet.packageId));
+async function main() {
+  console.log(
+    "Mainnet package ID:",
+    shortenAddress(SPAM_IDS.mainnet.packageId),
+  );
 
-    const spamClient = new SpamClient(
-        new Ed25519Keypair(),
-        "mainnet",
-        "https://fullnode.mainnet.iota.io:443"
-    );
-    const stats = await spamClient.fetchStatsForRecentEpochs(3);
+  const spamClient = new SpamClient(
+    new Ed25519Keypair(),
+    "mainnet",
+    "https://fullnode.mainnet.iota.io:443",
+  );
+  const stats = await spamClient.fetchStatsForRecentEpochs(3);
 
-    console.log("Stats:");
-    console.log(stats);
+  console.log("Stats:");
+  console.log(stats);
 }
 
 void main();

@@ -44,7 +44,7 @@ After that next epoch (registration period) ends, users can mint SPAM coins in p
 
 Key functions in the order they get called for any given `UserCounter`:
 
-1) `new_user_counter`: user creates a `UserCounter` owned object for the current epoch (epoch N)
-2) `increment_user_counter`: user sends txs to increase `UserCounter.tx_count`, until epoch N ends
-3) `register_user_counter`: during epoch N+1, user registers their `UserCounter` in an `EpochCounter` shared object, which counts all txs in the epoch
-4) `claim_user_counter`: from epoch N+2, users can mint SPAM coins in proportion to the number of txs they sent during epoch N
+1. `new_user_counter`: user creates a `UserCounter` owned object for the current epoch (epoch N)
+2. `increment_user_counter`: user sends txs to increase `UserCounter.tx_count`, until epoch N ends
+3. `register_user_counter`: during epoch N+1, user registers their `UserCounter` in an `EpochCounter` shared object, which counts all txs in the epoch
+4. `claim_user_counter`: from epoch N+2, users can mint SPAM coins in proportion to the number of txs they sent during epoch N

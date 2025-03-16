@@ -1,107 +1,89 @@
 import { bcs } from "@iota/bcs";
 import { IotaObjectRef } from "@iota/iota-sdk/client";
-import {
-    Transaction,
-    TransactionResult,
-} from "@iota/iota-sdk/transactions";
+import { Transaction, TransactionResult } from "@iota/iota-sdk/transactions";
 import { SPAM_MODULE } from "./config.js";
 
 export function new_user_counter(
-    tx: Transaction,
-    packageId: string,
-    directorId: string,
+  tx: Transaction,
+  packageId: string,
+  directorId: string,
 ): TransactionResult {
-    return tx.moveCall({
-        target: `${packageId}::${SPAM_MODULE}::new_user_counter`,
-        arguments: [
-            tx.object(directorId),
-        ],
-    });
+  return tx.moveCall({
+    target: `${packageId}::${SPAM_MODULE}::new_user_counter`,
+    arguments: [tx.object(directorId)],
+  });
 }
 
 // This is the spam tx
 export function increment_user_counter(
-    tx: Transaction,
-    packageId: string,
-    userCounterRef: IotaObjectRef,
+  tx: Transaction,
+  packageId: string,
+  userCounterRef: IotaObjectRef,
 ): TransactionResult {
-    return tx.moveCall({
-        target: `${packageId}::${SPAM_MODULE}::increment_user_counter`,
-        arguments: [
-            tx.objectRef(userCounterRef),
-        ],
-    });
+  return tx.moveCall({
+    target: `${packageId}::${SPAM_MODULE}::increment_user_counter`,
+    arguments: [tx.objectRef(userCounterRef)],
+  });
 }
 
 export function destroy_user_counter(
-    tx: Transaction,
-    packageId: string,
-    userCounterId: string,
+  tx: Transaction,
+  packageId: string,
+  userCounterId: string,
 ): TransactionResult {
-    return tx.moveCall({
-        target: `${packageId}::${SPAM_MODULE}::destroy_user_counter`,
-        arguments: [
-            tx.object(userCounterId),
-        ],
-    });
+  return tx.moveCall({
+    target: `${packageId}::${SPAM_MODULE}::destroy_user_counter`,
+    arguments: [tx.object(userCounterId)],
+  });
 }
 
 export function register_user_counter(
-    tx: Transaction,
-    packageId: string,
-    directorId: string,
-    userCounterId: string,
+  tx: Transaction,
+  packageId: string,
+  directorId: string,
+  userCounterId: string,
 ): TransactionResult {
-    return tx.moveCall({
-        target: `${packageId}::${SPAM_MODULE}::register_user_counter`,
-        arguments: [
-            tx.object(directorId),
-            tx.object(userCounterId),
-        ],
-    });
+  return tx.moveCall({
+    target: `${packageId}::${SPAM_MODULE}::register_user_counter`,
+    arguments: [tx.object(directorId), tx.object(userCounterId)],
+  });
 }
 
 export function claim_user_counter(
-    tx: Transaction,
-    packageId: string,
-    directorId: string,
-    userCounterId: string,
+  tx: Transaction,
+  packageId: string,
+  directorId: string,
+  userCounterId: string,
 ): TransactionResult {
-    return tx.moveCall({
-        target: `${packageId}::${SPAM_MODULE}::claim_user_counter`,
-        arguments: [
-            tx.object(directorId),
-            tx.object(userCounterId),
-        ],
-    });
+  return tx.moveCall({
+    target: `${packageId}::${SPAM_MODULE}::claim_user_counter`,
+    arguments: [tx.object(directorId), tx.object(userCounterId)],
+  });
 }
 
 export function stats_for_specific_epochs(
-    tx: Transaction,
-    packageId: string,
-    directorId: string,
-    epochNumbers: number[],
+  tx: Transaction,
+  packageId: string,
+  directorId: string,
+  epochNumbers: number[],
 ): TransactionResult {
-    return tx.moveCall({
-        target: `${packageId}::${SPAM_MODULE}::stats_for_specific_epochs`,
-        arguments: [
-            tx.object(directorId),
-            tx.pure(bcs.vector(bcs.u64()).serialize(epochNumbers)),
-        ],
-    });
+  return tx.moveCall({
+    target: `${packageId}::${SPAM_MODULE}::stats_for_specific_epochs`,
+    arguments: [
+      tx.object(directorId),
+      tx.pure(bcs.vector(bcs.u64()).serialize(epochNumbers)),
+    ],
+  });
 }
 
 export function stats_for_recent_epochs(
-    tx: Transaction,
-    packageId: string,
-    directorId: string,
-    epochCount: number,
+  tx: Transaction,
+  packageId: string,
+  directorId: string,
+  epochCount: number,
 ): TransactionResult {
-    return tx.moveCall({
-        target: `${packageId}::${SPAM_MODULE}::stats_for_recent_epochs`,
-        arguments: [
-            tx.object(directorId),
-            tx.pure.u64(epochCount),
-        ],
-    });
+  return tx.moveCall({
+    target: `${packageId}::${SPAM_MODULE}::stats_for_recent_epochs`,
+    arguments: [tx.object(directorId), tx.pure.u64(epochCount)],
+  });
 }

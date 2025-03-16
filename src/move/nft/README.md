@@ -28,10 +28,7 @@ iota client call --package 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49c
 
 ```
 
-where:
-    - Package ID: 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f
-    - AdminCap ID: 0x13fba29a4e50fef38d7da548a66638ae090b62d79d6dc70e9206b1c8e78d253e
-    - SpamNFTManager ID: 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5
+where: - Package ID: 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f - AdminCap ID: 0x13fba29a4e50fef38d7da548a66638ae090b62d79d6dc70e9206b1c8e78d253e - SpamNFTManager ID: 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5
 
 ## admin_mint
 
@@ -60,7 +57,4 @@ always got the below error despite it works well on the explorer.rebased.iota.or
 VMVerificationOrDeserializationError
 ```
 
-where:
-    - Package ID: 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f
-    - SpamNFTManager ID: 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5
-
+where: - Package ID: 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f - SpamNFTManager ID: 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5

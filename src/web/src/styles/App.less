@@ -1,232 +1,250 @@
 @import "./.shared.constants.less";
 
 header {
-    padding-bottom: 2.4rem;
-    h1 {
-        img {
-            height: 3.9rem;
-            width: 3.9rem;
-        }
+  padding-bottom: 2.4rem;
+  h1 {
+    img {
+      height: 3.9rem;
+      width: 3.9rem;
     }
-    #status-indicator {
-        font-size: 1.1rem;
-    }
+  }
+  #status-indicator {
+    font-size: 1.1rem;
+  }
 }
 
 #event-log {
-    padding: 1rem 1.5rem;
-    margin-top: 1rem;
-    max-height: 400px;
-    overflow-y: scroll;
-    background: @color-bg-end;
-    border-radius: @radius;
-    .event {
-        padding: 0.3rem 0;
-        line-height: 1.5rem;
-        text-align: left;
-        .event-time {
-            display: inline-block;
-            margin-right: 1rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 0.5rem;
-            background-color: #1d2742;
-            font-family: monospace;
-            font-size: 0.9rem;
-        }
-        font-family: monospace;
+  padding: 1rem 1.5rem;
+  margin-top: 1rem;
+  max-height: 400px;
+  overflow-y: scroll;
+  background: @color-bg-end;
+  border-radius: @radius;
+  .event {
+    padding: 0.3rem 0;
+    line-height: 1.5rem;
+    text-align: left;
+    .event-time {
+      display: inline-block;
+      margin-right: 1rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.5rem;
+      background-color: #1d2742;
+      font-family: monospace;
+      font-size: 0.9rem;
     }
+    font-family: monospace;
+  }
 }
 
 #page {
-    #page-home, #page-about {
-        h3 {
-            padding-top: 3rem;
-            padding-bottom: 0.5rem;
-            font-weight: 800;
-        }
+  #page-home,
+  #page-about {
+    h3 {
+      padding-top: 3rem;
+      padding-bottom: 0.5rem;
+      font-weight: 800;
     }
-    #page-home {
-        #img-cult {
-            width: 100%;
-            border-radius: @radius;
-            margin-top: 1rem;
-            aspect-ratio: 1.5 / 1;
-        }
-        .link-list {
-            padding: 1rem 0;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            p {
-                padding: 0;
-            }
-        }
-        h3 {
-            font-size: 1.4rem;
-        }
+  }
+  #page-home {
+    #img-cult {
+      width: 100%;
+      border-radius: @radius;
+      margin-top: 1rem;
+      aspect-ratio: 1.5 / 1;
     }
-    #page-rpc {
-        font-size: 1.1rem;
-        font-weight: @text-weight;
-        #rpc-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            padding-top: 2rem;
-            .rpc {
-                *:hover {
-                    cursor: pointer;
-                }
-                input[type=checkbox] {
-                    margin-right: 0.5rem;
-                }
-            }
-        }
-        .subsection {
-            padding-top: 2rem;
-            p {
-                padding: 0;
-            }
-            input[type=text] {
-                margin-bottom: 0;
-            }
-        }
+    .link-list {
+      padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      p {
+        padding: 0;
+      }
     }
-    #page-wallet {
+    h3 {
+      font-size: 1.4rem;
+    }
+  }
+  #page-rpc {
+    font-size: 1.1rem;
+    font-weight: @text-weight;
+    #rpc-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-top: 2rem;
+      .rpc {
+        *:hover {
+          cursor: pointer;
+        }
+        input[type="checkbox"] {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+    .subsection {
+      padding-top: 2rem;
+      p {
+        padding: 0;
+      }
+      input[type="text"] {
+        margin-bottom: 0;
+      }
+    }
+  }
+  #page-wallet {
+    h2 {
+      font-size: 1.8rem;
+    }
+    #page-wallet-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      > div {
+        background-color: @color-bg-begin;
+        border-radius: @radius;
+        padding: 2.25rem 1.5rem 2.75rem;
         h2 {
-            font-size: 1.8rem;
+          padding-top: 0;
         }
-        #page-wallet-sections {
-            display: flex;
-            flex-direction: column;
-            gap: 3rem;
-            > div {
-                background-color: @color-bg-begin;
-                border-radius: @radius;
-                padding: 2.25rem 1.5rem 2.75rem;
-                h2 {
-                    padding-top: 0;
-                }
-                .btn, .okay-box, .error-box {
-                    margin-bottom: 0;
-                }
-            }
-            #wallet-info {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                #wallet-content {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 2rem;
-                    padding-top: 1rem;
-                    font-size: 1.1rem;
-                    .wallet-section {
-                        h4 {
-                            font-size: 1.2rem;
-                        }
-                    }
-                    .dont-share-secret-key {
-                        padding-top: 1rem;
-                        &, * {
-                            font-weight: 500;
-                            color: rgb(222, 125, 125);
-                        }
-                    }
-                }
-            }
+        .btn,
+        .okay-box,
+        .error-box {
+          margin-bottom: 0;
         }
+      }
+      #wallet-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        #wallet-content {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          padding-top: 1rem;
+          font-size: 1.1rem;
+          .wallet-section {
+            h4 {
+              font-size: 1.2rem;
+            }
+          }
+          .dont-share-secret-key {
+            padding-top: 1rem;
+            &,
+            * {
+              font-weight: 500;
+              color: rgb(222, 125, 125);
+            }
+          }
+        }
+      }
     }
+  }
 }
 
 .iota-address {
-    padding: 1rem;
-    background-color: @color-bg-end;
-    display: inline-block;
-    border-radius: @radius;
-    word-break: break-all;
-    font-family: monospace;
-    font-size: 1rem;
+  padding: 1rem;
+  background-color: @color-bg-end;
+  display: inline-block;
+  border-radius: @radius;
+  word-break: break-all;
+  font-family: monospace;
+  font-size: 1rem;
 }
 
 .counter-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1rem 0 2rem;
+  font-weight: 500;
+  width: 100%;
+  overflow-y: auto;
+  max-height: 400px;
+  .counter-card {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    align-items: center;
-    padding: 1rem 0 2rem;
-    font-weight: 500;
+    gap: 1rem;
     width: 100%;
-    overflow-y: auto;
-    max-height: 400px;
-    .counter-card {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-        padding: 1.5rem;
-        border-radius: @radius;
-        text-align: left;
-        > div {
-            display: flex;
-            justify-content: space-between;
-            > div {
-                padding: 0.3rem 0.5rem;
-                border-radius: 0.5rem;
-            }
-        }
-        .counter-epoch {
-            margin-left: 0.5rem;
-        }
-        &.current {
-            background-image: linear-gradient(to bottom,
-                                  rgb(91, 186, 83),
-                                  rgb(34, 109, 32));
-            .counter-epoch {
-                background-color: rgb(34, 109, 32);
-            }
-        }
-        &.register {
-            background-image: linear-gradient(to bottom,
-                                  rgb(199, 179, 66),
-                                  rgb(150, 127, 0));
-            .counter-epoch {
-                background-color: rgb(142, 121, 0);
-            }
-        }
-        &.claim {
-            background-image: linear-gradient(to bottom,
-                                  rgb(90, 174, 200),
-                                  rgb(29, 107, 127));
-            .counter-epoch {
-                background-color: rgb(29, 107, 127);
-            }
-        }
-        &.delete {
-            background-image: linear-gradient(to bottom,
-                                  rgb(213, 97, 97),
-                                  rgb(127, 29, 29));
-            .counter-epoch {
-                background-color: rgb(127, 29, 29);
-            }
-        }
+    padding: 1.5rem;
+    border-radius: @radius;
+    text-align: left;
+    > div {
+      display: flex;
+      justify-content: space-between;
+      > div {
+        padding: 0.3rem 0.5rem;
+        border-radius: 0.5rem;
+      }
     }
+    .counter-epoch {
+      margin-left: 0.5rem;
+    }
+    &.current {
+      background-image: linear-gradient(
+        to bottom,
+        rgb(91, 186, 83),
+        rgb(34, 109, 32)
+      );
+      .counter-epoch {
+        background-color: rgb(34, 109, 32);
+      }
+    }
+    &.register {
+      background-image: linear-gradient(
+        to bottom,
+        rgb(199, 179, 66),
+        rgb(150, 127, 0)
+      );
+      .counter-epoch {
+        background-color: rgb(142, 121, 0);
+      }
+    }
+    &.claim {
+      background-image: linear-gradient(
+        to bottom,
+        rgb(90, 174, 200),
+        rgb(29, 107, 127)
+      );
+      .counter-epoch {
+        background-color: rgb(29, 107, 127);
+      }
+    }
+    &.delete {
+      background-image: linear-gradient(
+        to bottom,
+        rgb(213, 97, 97),
+        rgb(127, 29, 29)
+      );
+      .counter-epoch {
+        background-color: rgb(127, 29, 29);
+      }
+    }
+  }
 }
 
 .rainbow {
-    font-size: 2.3rem;
+  font-size: 2.3rem;
 }
 
 @keyframes blink {
-    0% { opacity: 1; }
-    10% { opacity: 0; }
-    20% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
 }
 
 .blink {
-    animation: blink 1s linear;
+  animation: blink 1s linear;
 }
 
 .blink-loop {
-    animation: blink 1s infinite;
+  animation: blink 1s infinite;
 }

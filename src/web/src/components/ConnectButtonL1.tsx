@@ -1,25 +1,27 @@
-import { ConnectModal, useCurrentAccount, useDisconnectWallet } from "@iota/dapp-kit";
+import {
+  ConnectModal,
+  useCurrentAccount,
+  useDisconnectWallet,
+} from "@iota/dapp-kit";
 import "@iota/dapp-kit/dist/index.css";
 
 export const ConnectButtonL1: React.FC = () => {
-    const account = useCurrentAccount();
-    const { mutate: disconnectWallet } = useDisconnectWallet();
+  const account = useCurrentAccount();
+  const { mutate: disconnectWallet } = useDisconnectWallet();
 
-    return !account ? (
-        <ConnectModal
-            trigger={
-                <div>
-                    <button className="btn-outlined">
-                        Connect wallet
-                    </button>
-                </div>
-            }
-        />
-    ) : (
+  return !account ? (
+    <ConnectModal
+      trigger={
         <div>
-            <button className="btn-outlined" onClick={() => disconnectWallet()}>
-                Disconnect
-            </button>
+          <button className="btn-outlined">Connect wallet</button>
         </div>
-    );
+      }
+    />
+  ) : (
+    <div>
+      <button className="btn-outlined" onClick={() => disconnectWallet()}>
+        Disconnect
+      </button>
+    </div>
+  );
 };

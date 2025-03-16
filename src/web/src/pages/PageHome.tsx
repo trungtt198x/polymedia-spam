@@ -3,26 +3,30 @@ import { LinkExternal } from "@polymedia/suitcase-react";
 import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../lib/types";
 
-export const PageHome: React.FC = () =>
-{
-    const { network } = useOutletContext<AppContext>();
-    const spamPackageId = SPAM_IDS[network].packageId;
+export const PageHome: React.FC = () => {
+  const { network } = useOutletContext<AppContext>();
+  const spamPackageId = SPAM_IDS[network].packageId;
 
-    const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
+  const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
 
-    return <div id="page-home">
-    <div id="home-content">
-        <h1><span className="rainbow" style={{fontSize: "3rem"}}>Spam Club</span></h1>
+  return (
+    <div id="page-home">
+      <div id="home-content">
+        <h1>
+          <span className="rainbow" style={{ fontSize: "3rem" }}>
+            Spam Club
+          </span>
+        </h1>
 
         <img id="img-cult" src="img/spam-home.png" alt="cult" />
 
         <h3>COIN TYPE</h3>
         <p>
-            <span className="iota-address">
-                <LinkExternal href={explorerCoin} follow={true}>
-                    spam::SPAM
-                </LinkExternal>
-            </span>
+          <span className="iota-address">
+            <LinkExternal href={explorerCoin} follow={true}>
+              spam::SPAM
+            </LinkExternal>
+          </span>
         </p>
 
         {/* {network === "mainnet" && <>
@@ -90,34 +94,36 @@ export const PageHome: React.FC = () =>
         </div> */}
 
         <h3>SOCIALS</h3>
-        <p style={{paddingBottom: 0}}>
-            There are no official social media accounts, only community-owned:
+        <p style={{ paddingBottom: 0 }}>
+          There are no official social media accounts, only community-owned:
         </p>
         <div className="tight">
-            <p>
-                <LinkExternal href="https://x.com/SPAM_SUI">
-                    Twitter
-                </LinkExternal>
-            </p>
-            <p>
-                <LinkExternal href="https://t.me/spam_sui">
-                    Telegram
-                </LinkExternal>
-            </p>
+          <p>
+            <LinkExternal href="https://x.com/SPAM_SUI">Twitter</LinkExternal>
+          </p>
+          <p>
+            <LinkExternal href="https://t.me/spam_sui">Telegram</LinkExternal>
+          </p>
         </div>
 
         <h3>PHILOSOPHY</h3>
         <div className="tight">
-            <p>
-                <LinkExternal href="https://x.com/juzybits/status/1789587870900007104" follow={true}>
-                    <i>SPAM embodies the ideals of crypto</i>
-                </LinkExternal>
-            </p>
-            <p>
-                <LinkExternal href="https://x.com/juzybits/status/1798664689498632196" follow={true}>
-                    <i>The goals of SPAM, and why mining ended</i>
-                </LinkExternal>
-            </p>
+          <p>
+            <LinkExternal
+              href="https://x.com/juzybits/status/1789587870900007104"
+              follow={true}
+            >
+              <i>SPAM embodies the ideals of crypto</i>
+            </LinkExternal>
+          </p>
+          <p>
+            <LinkExternal
+              href="https://x.com/juzybits/status/1798664689498632196"
+              follow={true}
+            >
+              <i>The goals of SPAM, and why mining ended</i>
+            </LinkExternal>
+          </p>
         </div>
 
         {/* <h3>IN THE MEDIA</h3>
@@ -164,7 +170,7 @@ export const PageHome: React.FC = () =>
                 </LinkExternal><br/>
             </p>
         </div> */}
-        
+      </div>
     </div>
-    </div>;
+  );
 };

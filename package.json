@@ -1,36 +1,38 @@
 {
-    "private": true,
-    "version": "0.0.0",
-    "name": "polymedia-spam-monorepo",
-    "author": "@juzybits (https://polymedia.app)",
-    "homepage": "https://github.com/trungtt198x/polymedia-spam",
-    "description": "The original Proof of Spam coin",
-    "license": "Apache-2.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/trungtt198x/polymedia-spam"
-    },
-    "keywords": [],
-    "scripts": {
-        "build": "turbo run build",
-        "clean": "turbo run clean && rm -rf dist/ node_modules/ .turbo/ src/iota*/build/ src/iota*/Move.lock src/iota*/.coverage_map.mvcov src/iota*/.trace",
-        "dev": "turbo run dev",
-        "lint": "turbo run lint",
-        "typecheck": "turbo run typecheck"
-    },
-    "devDependencies": {
-        "@eslint/compat": "^1.1.1",
-        "@eslint/js": "^9.11.1",
-        "@stylistic/eslint-plugin": "^2.8.0",
-        "eslint": "^9.11.1",
-        "eslint-plugin-import": "^2.30.0",
-        "eslint-plugin-react": "^7.37.0",
-        "turbo": "^2.1.2",
-        "typescript": "^5.6.2",
-        "typescript-eslint": "^8.7.0"
-    },
-    "engines": {
-        "node": ">=18"
-    },
-    "packageManager": "pnpm@9.11.0"
+  "private": true,
+  "version": "0.0.0",
+  "name": "polymedia-spam-monorepo",
+  "author": "@juzybits (https://polymedia.app)",
+  "homepage": "https://github.com/trungtt198x/polymedia-spam",
+  "description": "The original Proof of Spam coin",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trungtt198x/polymedia-spam"
+  },
+  "keywords": [],
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "turbo run clean && rm -rf dist/ node_modules/ .turbo/ src/iota*/build/ src/iota*/Move.lock src/iota*/.coverage_map.mvcov src/iota*/.trace",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \".\""
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.1.1",
+    "@eslint/js": "^9.11.1",
+    "@stylistic/eslint-plugin": "^2.8.0",
+    "eslint": "^9.11.1",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-react": "^7.37.0",
+    "turbo": "^2.1.2",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0",
+    "prettier": "^3.3.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@9.11.0"
 }

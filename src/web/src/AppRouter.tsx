@@ -11,20 +11,20 @@ import { PageStats } from "./pages/PageStats";
 import { PageWallet } from "./pages/PageWallet";
 
 export const AppRouter: React.FC = () => {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<AppIotaProviders />} >
-                    <Route index element={<PageHome />} />
-                    <Route path="/about" element={<PageAbout />} />
-                    <Route path="/spam" element={<PageSpam />} />
-                    <Route path="/nft" element={<PageNFT />} />
-                    <Route path="/wallet" element={<PageWallet />} />
-                    <Route path="/rpcs" element={<PageRPCs />} />
-                    <Route path="/stats" element={<PageStats />} />
-                    <Route path="*" element={<PageNotFound />} />
-                </Route>
-            </Routes>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppIotaProviders />}>
+          <Route index element={<PageHome />} />
+          <Route path="/about" element={<PageAbout />} />
+          <Route path="/spam" element={<PageSpam />} />
+          <Route path="/nft" element={<PageNFT />} />
+          <Route path="/wallet" element={<PageWallet />} />
+          <Route path="/rpcs" element={<PageRPCs />} />
+          <Route path="/stats" element={<PageStats />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 };

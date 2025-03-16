@@ -12,203 +12,224 @@ import { EpochData, formatEpochPeriod, getEpochTimes } from "../lib/epochs";
 
 const newSupplyPerEpoch = TOTAL_EPOCH_REWARD;
 const firstEpoch: Record<NetworkName, number> = {
-    mainnet: SPAM_IDS.mainnet.epoch,
-    testnet: SPAM_IDS.testnet.epoch,
-    devnet: 0,
-    localnet: 0,
+  mainnet: SPAM_IDS.mainnet.epoch,
+  testnet: SPAM_IDS.testnet.epoch,
+  devnet: 0,
+  localnet: 0,
 };
 
-export const PageStats: React.FC = () =>
-{
-    /* State */
+export const PageStats: React.FC = () => {
+  /* State */
 
-    const { network, spammer } = useOutletContext<AppContext>();
-    const [ stats, setStats ] = useState<Stats>();
-    const [ currEpoch, setCurrEpoch ] = useState<EpochData>();
-    const [ gasPerTx, setGasPerTx ] = useState<number>(0.000774244);
+  const { network, spammer } = useOutletContext<AppContext>();
+  const [stats, setStats] = useState<Stats>();
+  const [currEpoch, setCurrEpoch] = useState<EpochData>();
+  const [gasPerTx, setGasPerTx] = useState<number>(0.000774244);
 
-    /* Functions */
+  /* Functions */
 
-    useEffect(() => {
-        fetchStats();
-        fetchCurrEpoch();
-        fetchGasPerTx();
-    }, [spammer.current, network]);
+  useEffect(() => {
+    fetchStats();
+    fetchCurrEpoch();
+    fetchGasPerTx();
+  }, [spammer.current, network]);
 
-    const fetchStats = async () => {
-        try {
-            setStats(undefined);
-            let newStats: Stats;
-            if (network === "mainnet") {
-                newStats = await spammer.current.getSpamClient().fetchStatsForSpecificEpochs([
-                    422,421,420,419,418,417,416,415,414,413,412,411,410,409,408,407,406,405,404,
-                    403,402,401,400,399,398,397,396,395,394,393,392,391,390,389,388,387,386,
-                ]);
-            } else {
-                newStats = await spammer.current.getSpamClient().fetchStatsForRecentEpochs(40);
-                // Prepend a synthetic epoch counter for the current epoch
-                newStats.epochs.unshift({
-                    epoch: newStats.epoch,
-                    tx_count: "0",
-                });
-            }
-            setStats(newStats);
-        } catch (err) {
-            console.warn(`[fetchStats] ${err}`);
-        }
-    };
+  const fetchStats = async () => {
+    try {
+      setStats(undefined);
+      let newStats: Stats;
+      if (network === "mainnet") {
+        newStats = await spammer.current
+          .getSpamClient()
+          .fetchStatsForSpecificEpochs([
+            422, 421, 420, 419, 418, 417, 416, 415, 414, 413, 412, 411, 410,
+            409, 408, 407, 406, 405, 404, 403, 402, 401, 400, 399, 398, 397,
+            396, 395, 394, 393, 392, 391, 390, 389, 388, 387, 386,
+          ]);
+      } else {
+        newStats = await spammer.current
+          .getSpamClient()
+          .fetchStatsForRecentEpochs(40);
+        // Prepend a synthetic epoch counter for the current epoch
+        newStats.epochs.unshift({
+          epoch: newStats.epoch,
+          tx_count: "0",
+        });
+      }
+      setStats(newStats);
+    } catch (err) {
+      console.warn(`[fetchStats] ${err}`);
+    }
+  };
 
-    const fetchCurrEpoch = async () => {
-        try {
-            setCurrEpoch(undefined);
-            const iotaState = await spammer.current.getIotaClient().getLatestIotaSystemState();
-            setCurrEpoch({
-                epochNumber: Number(iotaState.epoch),
-                durationMs: Number(iotaState.epochDurationMs),
-                startTimeMs: Number(iotaState.epochStartTimestampMs),
-            });
-        } catch (err) {
-            console.warn(`[fetchCurrEpoch] ${err}`);
-        }
-    };
+  const fetchCurrEpoch = async () => {
+    try {
+      setCurrEpoch(undefined);
+      const iotaState = await spammer.current
+        .getIotaClient()
+        .getLatestIotaSystemState();
+      setCurrEpoch({
+        epochNumber: Number(iotaState.epoch),
+        durationMs: Number(iotaState.epochDurationMs),
+        startTimeMs: Number(iotaState.epochStartTimestampMs),
+      });
+    } catch (err) {
+      console.warn(`[fetchCurrEpoch] ${err}`);
+    }
+  };
 
-    const fetchGasPerTx = async () => {
-        try {
-            const newGasPerTx = await spammer.current.getSpamClient().fetchGasCostOfIncrementTx();
-            setGasPerTx(newGasPerTx);
-        } catch (err) {
-            console.warn(`[fetchGasPerTx] ${err}`);
-        }
-    };
+  const fetchGasPerTx = async () => {
+    try {
+      const newGasPerTx = await spammer.current
+        .getSpamClient()
+        .fetchGasCostOfIncrementTx();
+      setGasPerTx(newGasPerTx);
+    } catch (err) {
+      console.warn(`[fetchGasPerTx] ${err}`);
+    }
+  };
 
-    /* HTML */
+  /* HTML */
 
-    const CounterCard: React.FC<{
-        epoch: { epoch: string; tx_count: string };
-        currentEpoch: number;
-    }> = ({
-        epoch,
-        currentEpoch,
-    }) => {
-        const epochNumber = Number(epoch.epoch);
-        if (epochNumber < firstEpoch[network]) {
-            return null;
-        }
-        const epochTimes = currEpoch && getEpochTimes(epochNumber, currEpoch);
-        const epochTxs = Number(epoch.tx_count);
-        const epochGas = epochTxs * gasPerTx;
-        const spamPerTx = newSupplyPerEpoch / epochTxs;
-        const iotaPerSpam = epochGas / newSupplyPerEpoch;
+  const CounterCard: React.FC<{
+    epoch: { epoch: string; tx_count: string };
+    currentEpoch: number;
+  }> = ({ epoch, currentEpoch }) => {
+    const epochNumber = Number(epoch.epoch);
+    if (epochNumber < firstEpoch[network]) {
+      return null;
+    }
+    const epochTimes = currEpoch && getEpochTimes(epochNumber, currEpoch);
+    const epochTxs = Number(epoch.tx_count);
+    const epochGas = epochTxs * gasPerTx;
+    const spamPerTx = newSupplyPerEpoch / epochTxs;
+    const iotaPerSpam = epochGas / newSupplyPerEpoch;
 
-        let epochType: "current" | "register" | "claim";
-        if (epochNumber === currentEpoch) {
-            epochType = "current";
-        } else if (epochNumber === currentEpoch - 1) {
-            epochType = "register";
-        } else {
-            epochType = "claim";
-        }
-
-        return <div className={`counter-card ${epochType}`}>
-            <div>
-                <div className="counter-epoch">Epoch {epoch.epoch}</div>
-                <div>{(() => {
-                    if (epochType === "current") {
-                        return "spamming now";
-                    }
-                    if (epochType === "register") {
-                        return "registering now";
-                    }
-                    return "claimable";
-                })()}</div>
-            </div>
-
-            {epochTimes &&
-            <div>
-                <div>
-                    {formatEpochPeriod(epochTimes.startTime, epochTimes.endTime, false)}
-                </div>
-            </div>
-            }
-
-            <div>
-                <div>
-                    {(() => {
-                        if (epochType === "current") {
-                            return "Txs in epoch: ongoing";
-                        }
-                        if (epochType === "register") {
-                            return `Txs in epoch: ${formatNumber(epochTxs)} (so far)`;
-                        }
-                        return `Txs in epoch: ${formatNumber(epochTxs)}`;
-                    })()}
-                </div>
-            </div>
-
-            {Number.isFinite(spamPerTx) &&
-            <div>
-                <div>
-                    SPAM mined per tx: {formatNumber(spamPerTx)}
-                </div>
-            </div>
-            }
-
-            {epochGas > 0 &&
-            <div>
-                <div>
-                    Gas paid in epoch: {formatNumber(epochGas)} IOTA
-                </div>
-            </div>
-            }
-
-            {iotaPerSpam > 0 &&
-            <div>
-                <div>
-                    Gas cost per SPAM: {iotaPerSpam.toFixed(8)} IOTA
-                </div>
-            </div>
-            }
-        </div>;
-    };
-
-    const heading = <h1><span className="rainbow">Stats</span></h1>;
-
-    if (!stats) {
-        return <>
-            {heading}
-            <p>Loading...</p>
-        </>;
+    let epochType: "current" | "register" | "claim";
+    if (epochNumber === currentEpoch) {
+      epochType = "current";
+    } else if (epochNumber === currentEpoch - 1) {
+      epochType = "register";
+    } else {
+      epochType = "claim";
     }
 
-    const epochsCompleted = network === "mainnet" ? 37 : Number(stats.epoch) - 1 - firstEpoch[network];
-    const totalTxs = Number(stats.tx_count);
-    const totalGas = totalTxs * gasPerTx;
-    const claimableSupply = epochsCompleted * newSupplyPerEpoch;
-    const dailyInflation = newSupplyPerEpoch / claimableSupply * 100;
-
-    return <>
-        {heading}
-        <div className="tight">
-            <p>Total transactions: {formatNumber(totalTxs)}</p>
-            <p>Total gas paid: {formatNumber(totalGas, "compact")} IOTA</p>
-            {network !== "mainnet" &&
-                <p>Daily inflation: {dailyInflation.toFixed(2)}%</p>
-            }
-            {/* <p>Current epoch: {stats.epoch}</p> */}
-            {/* <p>Epochs completed: {epochsCompleted}</p> */}
-            {/* <p>System status: {stats.paused ? "paused" : "running"}</p> */}
+    return (
+      <div className={`counter-card ${epochType}`}>
+        <div>
+          <div className="counter-epoch">Epoch {epoch.epoch}</div>
+          <div>
+            {(() => {
+              if (epochType === "current") {
+                return "spamming now";
+              }
+              if (epochType === "register") {
+                return "registering now";
+              }
+              return "claimable";
+            })()}
+          </div>
         </div>
 
-        {stats.epochs.length > 0 &&
-        <>
-            <br/>
-            <h2>Epochs:</h2>
-
-            <div className="counter-cards">
-                {stats.epochs.map(epoch =>
-                    <CounterCard epoch={epoch} currentEpoch={Number(stats.epoch)} key={epoch.epoch} />
-                )}
+        {epochTimes && (
+          <div>
+            <div>
+              {formatEpochPeriod(
+                epochTimes.startTime,
+                epochTimes.endTime,
+                false,
+              )}
             </div>
-        </>}
-    </>;
+          </div>
+        )}
+
+        <div>
+          <div>
+            {(() => {
+              if (epochType === "current") {
+                return "Txs in epoch: ongoing";
+              }
+              if (epochType === "register") {
+                return `Txs in epoch: ${formatNumber(epochTxs)} (so far)`;
+              }
+              return `Txs in epoch: ${formatNumber(epochTxs)}`;
+            })()}
+          </div>
+        </div>
+
+        {Number.isFinite(spamPerTx) && (
+          <div>
+            <div>SPAM mined per tx: {formatNumber(spamPerTx)}</div>
+          </div>
+        )}
+
+        {epochGas > 0 && (
+          <div>
+            <div>Gas paid in epoch: {formatNumber(epochGas)} IOTA</div>
+          </div>
+        )}
+
+        {iotaPerSpam > 0 && (
+          <div>
+            <div>Gas cost per SPAM: {iotaPerSpam.toFixed(8)} IOTA</div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const heading = (
+    <h1>
+      <span className="rainbow">Stats</span>
+    </h1>
+  );
+
+  if (!stats) {
+    return (
+      <>
+        {heading}
+        <p>Loading...</p>
+      </>
+    );
+  }
+
+  const epochsCompleted =
+    network === "mainnet" ? 37 : Number(stats.epoch) - 1 - firstEpoch[network];
+  const totalTxs = Number(stats.tx_count);
+  const totalGas = totalTxs * gasPerTx;
+  const claimableSupply = epochsCompleted * newSupplyPerEpoch;
+  const dailyInflation = (newSupplyPerEpoch / claimableSupply) * 100;
+
+  return (
+    <>
+      {heading}
+      <div className="tight">
+        <p>Total transactions: {formatNumber(totalTxs)}</p>
+        <p>Total gas paid: {formatNumber(totalGas, "compact")} IOTA</p>
+        {network !== "mainnet" && (
+          <p>Daily inflation: {dailyInflation.toFixed(2)}%</p>
+        )}
+        {/* <p>Current epoch: {stats.epoch}</p> */}
+        {/* <p>Epochs completed: {epochsCompleted}</p> */}
+        {/* <p>System status: {stats.paused ? "paused" : "running"}</p> */}
+      </div>
+
+      {stats.epochs.length > 0 && (
+        <>
+          <br />
+          <h2>Epochs:</h2>
+
+          <div className="counter-cards">
+            {stats.epochs.map((epoch) => (
+              <CounterCard
+                epoch={epoch}
+                currentEpoch={Number(stats.epoch)}
+                key={epoch.epoch}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  );
 };
