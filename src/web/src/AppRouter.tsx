@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AppIotaProviders } from "./AppIotaProviders";
 
-import { PageAbout } from "./pages/PageAbout";
 import { PageNFT } from "./pages/PageNFT";
 import { PageHome } from "./pages/PageHome";
 import { PageNotFound } from "./pages/PageNotFound";
@@ -16,7 +15,6 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path="/" element={<AppIotaProviders />}>
           <Route index element={<PageHome />} />
-          <Route path="/about" element={<PageAbout />} />
           <Route path="/spam" element={<PageSpam />} />
           <Route path="/nft" element={<PageNFT />} />
           <Route path="/wallet" element={<PageWallet />} />

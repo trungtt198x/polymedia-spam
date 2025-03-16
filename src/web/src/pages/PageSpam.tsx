@@ -11,7 +11,6 @@ import {
   UPDATE_INTERVAL_MS,
 } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
-// import { LinkToPolymedia } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { AppContext } from "../lib/types";
