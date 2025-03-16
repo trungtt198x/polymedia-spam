@@ -50,8 +50,6 @@ export const PageWallet: React.FC = () => {
     return userAccepted;
   };
 
-  /* HTML */
-
   if (!disclaimerAccepted) {
     return <PageDisclaimer />;
   }
@@ -59,17 +57,17 @@ export const PageWallet: React.FC = () => {
   const AutoGenWallet: React.FC = () => {
     return (
       <div id="wallet-info">
-        <h2>Auto-generated account</h2>
+        <h3>Auto-generated account</h3>
         <div id="wallet-content">
           <div className="wallet-section">
-            <h4>Address</h4>
+            <b>Address</b>
             <p>Fund IOTA to this address to perform spam transactions</p>
             <span className="iota-address">
               {spammer.current.getSpamClient().signer.toIotaAddress()}
             </span>
           </div>
           <div className="wallet-section">
-            <h4>Secret key</h4>
+            <b>Secret key</b>
             <p>It allows to restore the account. Copy it somewhere safe!</p>
             <span className="iota-address">
               {(
@@ -143,7 +141,7 @@ export const PageWallet: React.FC = () => {
 
     return (
       <div>
-        <h2>Set claim address</h2>
+        <h3>Set claim address</h3>
         <p>Claim SPAM coins to this address:</p>
         <input
           type="text"
@@ -213,7 +211,7 @@ export const PageWallet: React.FC = () => {
 
     return (
       <div>
-        <h2>Import existing account</h2>
+        <h3>Import existing account</h3>
         <p>This will replace the current account with the imported one!</p>
         <input
           type="text"
@@ -247,7 +245,7 @@ export const PageWallet: React.FC = () => {
 
     return (
       <div>
-        <h2>Create new account</h2>
+        <h3>Create new account</h3>
         <p>This will replace the current account with a new one!</p>
         <div className="btn-group">
           <button className="btn" onClick={onSubmit}>

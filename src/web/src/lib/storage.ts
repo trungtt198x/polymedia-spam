@@ -98,7 +98,9 @@ export function saveClaimAddressToStorage(claimAddress: string): void {
 const disclaimerAcceptedKey = "spam.disclaimerAccepted";
 
 export function loadDisclaimerAcceptedFromStorage(): boolean {
+  console.log("loadDisclaimerAcceptedFromStorage");
   const accepted = localStorage.getItem(disclaimerAcceptedKey);
+  console.log("accepted:", accepted);
   return accepted === "yes";
 }
 

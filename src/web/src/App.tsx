@@ -19,6 +19,7 @@ import {
   loadRpcUrlsFromStorage,
   saveClaimAddressToStorage,
   saveDisclaimerAcceptedToStorage,
+  loadDisclaimerAcceptedFromStorage,
   saveKeypairToStorage,
   saveRpcUrlsToStorage,
 } from "./lib/storage";
@@ -92,6 +93,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     setSpamView(emptySpamView());
     setBalances(emptyBalances());
+    setDisclaimerAccepted(loadDisclaimerAcceptedFromStorage);
 
     updateSpamView();
     updateBalances();

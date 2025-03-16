@@ -5,6 +5,7 @@ import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../lib/types";
 import { RpcUrl } from "../lib/storage";
 import { RPC_ENDPOINTS } from "@polymedia/spam-sdk";
+import toast, { Toaster } from "react-hot-toast";
 
 export const PageRPCs: React.FC = () => {
   const { network, spammer, rpcUrls, updateRpcUrls } =
@@ -13,7 +14,6 @@ export const PageRPCs: React.FC = () => {
   const [rpcs, setRpcs] = useState<RpcUrl[]>([...rpcUrls]);
   const [newRpcUrl, setNewRpcUrl] = useState("");
   const [hasChanges, setHasChanges] = useState<boolean>(false);
-  const [showSavedMessage, setShowSavedMessage] = useState<boolean>(false);
 
   useEffect(() => {
     setRpcs([...rpcUrls]);
@@ -36,13 +36,10 @@ export const PageRPCs: React.FC = () => {
     );
   };
 
-  const onSubmit = async () => {
+  const onSaveRPCs = async () => {
     await updateRpcUrls(rpcs);
     setHasChanges(false);
-    setShowSavedMessage(true);
-    setTimeout(() => {
-      setShowSavedMessage(false);
-    }, 2000);
+    toast.success("RPC(s) saved");
   };
 
   const onAddRpcUrl = () => {
@@ -51,6 +48,7 @@ export const PageRPCs: React.FC = () => {
       setRpcs(rpcs.concat({ url: trimmedUrl, enabled: true }));
       setNewRpcUrl("");
       setHasChanges(true);
+      toast.success("RPC added");
     }
   };
 
@@ -61,65 +59,90 @@ export const PageRPCs: React.FC = () => {
       }),
     );
     setHasChanges(true);
+    toast.success("RPC restored");
+  };
+
+  const SaveRPCs: React.FC = () => {
+    return (
+      <div id="rpc-selector">
+        <h3>Set one or multiple RPC(s)</h3>
+        <p>Multiple RPCs will auto be rotated to avoid rate limit.</p>
+        {rpcs.map((rpc) => (
+          <div key={rpc.url} className="rpc">
+            <label>
+              <input
+                type="checkbox"
+                checked={rpc.enabled}
+                onChange={() => onCheckboxChange(rpc.url)}
+              />
+              {rpc.url}
+            </label>
+          </div>
+        ))}
+
+        <div>
+          <button className="btn" onClick={onSaveRPCs} disabled={!hasChanges}>
+            {spammer?.current?.status === "running"
+              ? "Save and restart"
+              : "Save"}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const AddRPC: React.FC = () => {
+    return (
+      <div className="subsection">
+        <h3>Add another RPC</h3>
+        <input
+          type="text"
+          value={newRpcUrl}
+          onChange={(e) => setNewRpcUrl(e.target.value)}
+          placeholder="RPC link"
+        />
+        <br />
+        <br />
+        <button className="btn" onClick={onAddRpcUrl}>
+          Add RPC
+        </button>
+      </div>
+    );
+  };
+
+  const RestoreRPC: React.FC = () => {
+    return (
+      <div className="subsection">
+        <h3>Restore default RPC</h3>
+        <button className="btn" onClick={onResetRpcs}>
+          Reset RPCs
+        </button>
+      </div>
+    );
   };
 
   return (
     <>
-      <h1>
-        <span className="rainbow">RPCs</span>
-      </h1>
+      <>
+        <h1>
+          <span className="rainbow">RPC</span>
+        </h1>
 
-      <div id="page-rpc" className="tight">
-        <p>You can choose what RPCs to use for spamming transactions.</p>
-        <p>The app rotates between the enabled RPCs to avoid rate limits.</p>
+        <div id="page-rpc">
+          <div id="page-wallet-sections">
+            <SaveRPCs />
+            <br />
+            <br />
 
-        <div id="rpc-selector">
-          {rpcs.map((rpc) => (
-            <div key={rpc.url} className="rpc">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={rpc.enabled}
-                  onChange={() => onCheckboxChange(rpc.url)}
-                />
-                {rpc.url}
-              </label>
-            </div>
-          ))}
+            <AddRPC />
+            <br />
+            <br />
 
-          <div>
-            <button className="btn" onClick={onSubmit} disabled={!hasChanges}>
-              {spammer?.current?.status === "running"
-                ? "Save and restart"
-                : "Save"}
-            </button>
-            {showSavedMessage && (
-              <div style={{ color: "lightgreen" }}>Done!</div>
-            )}
+            <RestoreRPC />
           </div>
         </div>
-
-        <div className="subsection">
-          <p>You can also add a custom RPC:</p>
-          <input
-            type="text"
-            value={newRpcUrl}
-            onChange={(e) => setNewRpcUrl(e.target.value)}
-            placeholder="Add new RPC"
-          />
-          <br />
-          <button className="btn" onClick={onAddRpcUrl}>
-            Add RPC
-          </button>
-        </div>
-
-        <div className="subsection">
-          <p>Restore the default RPC list:</p>
-          <button className="btn" onClick={onResetRpcs}>
-            Reset RPCs
-          </button>
-        </div>
-      </div>
+      </>
+      <Toaster />
     </>
   );
 };
