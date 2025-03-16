@@ -69,7 +69,7 @@ export const App: React.FC = () => {
       loadClaimAddressFromStorage(),
     ),
   );
-  const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean>(true);
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean>(false);
 
   const { iotaWalletClient } = useIotaWalletClient(network, DEFAULT_NETWORK);
 

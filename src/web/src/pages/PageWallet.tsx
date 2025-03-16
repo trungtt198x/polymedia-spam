@@ -5,6 +5,7 @@ import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { useEffect, useState } from "react";
 import { useLocation, useOutletContext } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { loadClaimAddressFromStorage, pairFromSecretKey } from "../lib/storage";
@@ -15,10 +16,6 @@ export const PageWallet: React.FC = () => {
   const location = useLocation();
   const { spammer, disclaimerAccepted, replaceKeypair, updateClaimAddress } =
     useOutletContext<AppContext>();
-  const [createSuccess, setCreateSuccess] = useState<boolean>(false);
-  const [importSuccess, setImportSuccess] = useState<boolean>(false);
-
-  /* Functions */
 
   useEffect(() => {
     const handleHashNavigation = () => {
@@ -34,9 +31,19 @@ export const PageWallet: React.FC = () => {
   }, [location.hash]);
 
   const confirmAndReplaceWallet = (pair: Ed25519Keypair): boolean => {
-    const userAccepted = window.confirm(
-      "🚨 WARNING 🚨\n\nThis will delete and replace your current wallet.\n\nAre you sure?",
-    );
+    // const userAccepted = window.confirm(
+    //   "🚨 WARNING 🚨\n\nThis will delete and replace your current account.\n\nAre you sure?",
+    // );
+
+    // let userAccepted;
+    // confirmToast(
+    //   "This will delete and replace the current account. Are you sure?",
+    //   (userAccepted) => userAccepted = true,
+    //   (userAccepted) => userAccepted = false
+    // );
+
+    const userAccepted = true;
+
     if (userAccepted) {
       replaceKeypair(pair);
     }
@@ -49,35 +56,33 @@ export const PageWallet: React.FC = () => {
     return <PageDisclaimer />;
   }
 
-  const WalletInfo: React.FC = () => {
+  const AutoGenWallet: React.FC = () => {
     return (
       <div id="wallet-info">
-        <h2>Miner wallet</h2>
+        <h2>Auto-generated account</h2>
         <div id="wallet-content">
           <div className="wallet-section">
-            <h4>IOTA address</h4>
-            <p>
-              Send IOTA to this address to fund your miner wallet used to
-              perform spam transactions.
-            </p>
+            <h4>Address</h4>
+            <p>Fund IOTA to this address to perform spam transactions</p>
             <span className="iota-address">
               {spammer.current.getSpamClient().signer.toIotaAddress()}
             </span>
           </div>
           <div className="wallet-section">
             <h4>Secret key</h4>
-            <p>It allows you to restore your wallet. Copy it somewhere safe!</p>
+            <p>It allows to restore the account. Copy it somewhere safe!</p>
             <span className="iota-address">
               {(
                 spammer.current.getSpamClient().signer as Ed25519Keypair
               ).getSecretKey()}
             </span>
             <div className="dont-share-secret-key">
-              Don't share your secret key with anyone
+              Secret key generated and stored on the browser. Clearing cookies
+              will delete it.
             </div>
           </div>
         </div>
-        <div id="set-claim-address" />
+        {/* <div id="set-claim-address" /> */}
       </div>
     );
   };
@@ -121,7 +126,9 @@ export const PageWallet: React.FC = () => {
       if (claimAddress) {
         try {
           updateClaimAddress(claimAddress);
-          setMsg({ type: "okay", text: "Success!" });
+          // setMsg({ type: "okay", text: "Success!" });
+          setMsg(null);
+          toast.success("Claim address set");
         } catch (err) {
           setMsg({ type: "error", text: String(err) });
         }
@@ -137,9 +144,11 @@ export const PageWallet: React.FC = () => {
     return (
       <div>
         <h2>Set claim address</h2>
-        <p>Send claimed SPAM to this address:</p>
-        <textarea
+        <p>Claim SPAM coins to this address:</p>
+        <input
+          type="text"
           value={claimAddress}
+          placeholder="Address to receive SPAM"
           onChange={onInputChange}
           onKeyDown={onKeyDown}
           disabled={disableTextarea}
@@ -148,11 +157,11 @@ export const PageWallet: React.FC = () => {
         <br />
         {spammer.current.status !== "stopped" ? (
           <button className="btn" onClick={onStopSpammer}>
-            STOP MINER TO SET ADDRESS
+            Stop spamming to set address
           </button>
         ) : (
           <button className="btn" onClick={onSubmit} disabled={disableButton}>
-            SET CLAIM ADDRESS
+            Set address
           </button>
         )}
         {msg && (
@@ -195,35 +204,33 @@ export const PageWallet: React.FC = () => {
     };
 
     const onSubmit = (): void => {
-      setImportSuccess(false);
       const pair = pairFromSecretKey(secretKey);
       const okay = confirmAndReplaceWallet(pair);
-      setImportSuccess(okay);
+      if (okay) {
+        toast.success("Secret key imported");
+      }
     };
 
     return (
       <div>
-        <h2>Import existing wallet</h2>
-        <p>Paste your secret key and click the import button.</p>
-        <textarea
+        <h2>Import existing account</h2>
+        <p>This will replace the current account with the imported one!</p>
+        <input
+          type="text"
           value={secretKey}
+          placeholder="Paste secret key here"
           onChange={onInputChange}
           onKeyDown={onKeyDown}
           style={{ width: "100%", wordBreak: "break-all" }}
         />
         <br />
         <button className="btn" onClick={onSubmit} disabled={disableSubmit}>
-          IMPORT
+          Import
         </button>
         {errMsg && (
           <div className="error-box">
             <div>Invalid secret key:</div>
             <div>{errMsg}</div>
-          </div>
-        )}
-        {importSuccess && (
-          <div className="okay-box">
-            <div>Success!</div>
           </div>
         )}
       </div>
@@ -232,67 +239,51 @@ export const PageWallet: React.FC = () => {
 
   const CreateWalletForm: React.FC = () => {
     const onSubmit = (): void => {
-      setCreateSuccess(false);
       const okay = confirmAndReplaceWallet(new Ed25519Keypair());
-      setCreateSuccess(okay);
+      if (okay) {
+        toast.success("New account created");
+      }
     };
 
     return (
       <div>
-        <h2>Create new wallet</h2>
-        <p>Delete your current wallet and replace it with a new one.</p>
+        <h2>Create new account</h2>
+        <p>This will replace the current account with a new one!</p>
         <div className="btn-group">
           <button className="btn" onClick={onSubmit}>
-            CREATE WALLET
+            Create account
           </button>
-        </div>
-        {createSuccess && (
-          <div className="okay-box">
-            <div>Success!</div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const BackUpWarning: React.FC = () => {
-    return (
-      <div>
-        <h2>Back up your secret key!</h2>
-        <div className="tight">
-          <p>
-            ▸ Your miner wallet is stored in your browser. Only you have access
-            to it.
-          </p>
-          <p>
-            ▸ Clearing cookies will delete your wallet. We cannot recover it for
-            you.
-          </p>
-          <p>
-            ▸ You can only restore your miner wallet if you save the secret key.
-          </p>
         </div>
       </div>
     );
   };
 
   return (
-    <div id="page-wallet">
-      <h1>
-        <span className="rainbow">Wallet</span>
-      </h1>
+    <>
+      <div id="page-wallet">
+        <h1>
+          <span className="rainbow">Wallet</span>
+        </h1>
 
-      <div id="page-wallet-sections">
-        <WalletInfo />
+        <div id="page-rpc">
+          <p>
+            To perform spam transactions, either use auto-generated account or
+            import existing account.
+          </p>
+          <br />
+        </div>
 
-        <ClaimAddressForm />
+        <div id="page-wallet-sections">
+          <AutoGenWallet />
 
-        <ImportWalletForm />
+          <ImportWalletForm />
 
-        <CreateWalletForm />
+          <CreateWalletForm />
 
-        <BackUpWarning />
+          <ClaimAddressForm />
+        </div>
       </div>
-    </div>
+      <Toaster />
+    </>
   );
 };

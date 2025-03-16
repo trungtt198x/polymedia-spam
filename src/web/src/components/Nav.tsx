@@ -31,10 +31,7 @@ export const Nav: React.FC<{
         Home
       </Link>
       <Link to="/stats" className={selected("/stats")} onClick={onClick}>
-        Stats
-      </Link>
-      <Link to="/about" className={selected("/about")} onClick={onClick}>
-        About
+        Status
       </Link>
       <Link to="/spam" className={selected("/spam")} onClick={onClick}>
         Spam
@@ -46,7 +43,7 @@ export const Nav: React.FC<{
         Wallet
       </Link>
       <Link to="/rpcs" className={selected("/rpcs")} onClick={onClick}>
-        RPCs
+        RPC
       </Link>
       <div className="divider" />
 
