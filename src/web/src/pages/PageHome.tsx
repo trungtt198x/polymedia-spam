@@ -28,10 +28,10 @@ export const PageHome: React.FC = () => {
             <p>
               One billion{" "}
               <LinkExternal href={explorerCoin} follow={true}>
-                SPAM
+                $SPAM
               </LinkExternal>{" "}
-              coins are minted every day to all participants in such a way that
-              the more transactions sent, the more SPAM coins received.
+              coins are minted every day and split between users. The more you
+              spam, the more $SPAM you receive.
             </p>
           </div>
         </div>
@@ -41,13 +41,13 @@ export const PageHome: React.FC = () => {
         <h2>Rules</h2>
         <div id="page-wallet-sections">
           <div className="tight">
-            <p>▸ Start spamming at any time. </p>
+            <p>▸ Start spamming. </p>
             <p>
-              ▸ Must register counter within the next day. Otherwise, will get
-              voided.{" "}
+              ▸ Must register counter within the next day. Otherwise accrued
+              $SPAM is forfeited.{" "}
             </p>
-            <p>▸ Claim SPAM coins anytime after that. </p>
-            <p>▸ Spend SPAM coins on NFTs. </p>
+            <p>▸ Claim $SPAM coins anytime after that. </p>
+            <p>▸ Redeem $SPAM for NFTs. </p>
           </div>
         </div>
 
@@ -57,16 +57,26 @@ export const PageHome: React.FC = () => {
             <p>
               ▸ Setup and fund the miner <Link to="/wallet">wallet</Link>
             </p>
-            <p>
-              ▸ Optionally setup another better <Link to="/rpcs">RPC</Link>
-            </p>
             <p>▸ Choose Mainnet or Testnet</p>
             <p>
-              ▸ Start <Link to="/spam">spam</Link>
+              ▸ Start <Link to="/spam">spamming</Link>
             </p>
             <p>
-              ▸ Spend SPAM coins on minting <Link to="/nft">NFT</Link>
+              ▸ Redeem $SPAM for <Link to="/nft">NFTs</Link>
             </p>
+            <p>
+              ▸ RPC too slow? Change it <Link to="/rpcs">here</Link>
+            </p>
+            <i>
+              Need Testnet $IOTA? Hit{" "}
+              <LinkExternal
+                href="https://docs.iota.org/about-iota"
+                follow={true}
+              >
+                Connect Wallet
+              </LinkExternal>{" "}
+              button.
+            </i>
           </div>
         </div>
       </div>

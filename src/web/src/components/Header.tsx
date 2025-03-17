@@ -16,13 +16,13 @@ export const Header: React.FC<{
       >
         <h1>
           <span>
-            <img alt="polymedia" src="/img/spam-logo.png" className="logo" />
+            <img alt="polymedia" src="/img/spam-logo.png" />
           </span>
         </h1>
       </Link>
 
       <span id="status-indicator">
-        <StatusSpan status={status} />
+        <StatusSpan status={status} textOnly={false} />
       </span>
     </header>
   );

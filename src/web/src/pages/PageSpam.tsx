@@ -350,7 +350,8 @@ export const PageSpam: React.FC = () => {
       <div>
         <div className="tight">
           <p>
-            Status: <StatusSpan status={spammer.current.status} />
+            Status:{" "}
+            <StatusSpan status={spammer.current.status} textOnly={true} />
           </p>
           <p>
             Current epoch:

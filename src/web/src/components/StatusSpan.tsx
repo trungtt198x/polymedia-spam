@@ -1,18 +1,36 @@
 import { SpamStatus } from "@polymedia/spam-sdk";
 
 export const StatusSpan: React.FC<{
-  status?: SpamStatus;
-}> = ({ status }) => {
+  status: SpamStatus;
+  textOnly: boolean;
+}> = ({ status, textOnly }) => {
   if (!status) {
     return <span>loading</span>;
   }
   let className: string;
+  let imageName: string;
   if (status === "stopped") {
     className = "text-red";
+    imageName = "stopped.gif";
   } else if (status === "stopping") {
     className = "text-orange";
+    imageName = "orange.gif";
   } else {
     className = "text-green";
+    imageName = "running.gif";
   }
-  return <span className={className}>{status}</span>;
+
+  const imageSrc = `/img/${imageName}`;
+
+  if (textOnly) {
+    return <span className={className}>{status}</span>;
+  } else {
+    return (
+      <h1>
+        <span>
+          <img alt="" src={imageSrc} style={{ borderRadius: "40%" }} />
+        </span>
+      </h1>
+    );
+  }
 };
