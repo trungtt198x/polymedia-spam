@@ -1,14 +1,25 @@
 services:
+  traefik:
+    image: traefik:v2.8
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+
   web:
     container_name: web-spam-iota
     build:
       context: ..
       dockerfile: docker/web/Dockerfile
-    ports:
-      - "80:80"
-    networks:
-      - web
-
-networks:
-  web:
-    external: true
+    labels:
+      - "traefik.http.routers.your-app.rule=Host(`ecosystem-dev.iota.cafe`)"
+      - "traefik.http.routers.your-app.entrypoints=websecure"
+      - "traefik.http.routers.your-app.tls.certresolver=myresolver"
