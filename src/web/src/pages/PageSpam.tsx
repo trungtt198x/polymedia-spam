@@ -9,18 +9,19 @@ import {
   SPAM_TX_LOW_BALANCE,
   IS_DISABLED,
   UPDATE_INTERVAL_MS,
+  SPAM_IDS,
 } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
+import { LinkExternal } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
-import { useOutletContext, Link } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "../components/StatusSpan";
+import { TextWithCopyClipboard } from "../components/TextWithCopyClipboard";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "../lib/epochs";
 
 export const PageSpam: React.FC = () => {
-  /* State */
-
   const { network, balances, spammer, spamView, disclaimerAccepted } =
     useOutletContext<AppContext>();
   const [currEpoch, setCurrEpoch] = useState<EpochData>();
@@ -28,7 +29,11 @@ export const PageSpam: React.FC = () => {
   const isLoading =
     spamView.counters.epoch === -1 || balances.iota === -1 || !currEpoch;
 
-  /* Functions */
+  const signerAddress = spammer.current.getSpamClient().signer.toIotaAddress();
+  const claimAddress = spammer.current.getClaimAddress() || signerAddress;
+
+  const spamPackageId = SPAM_IDS[network].packageId;
+  const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
 
   useEffect(() => {
     setCurrEpoch(undefined);
@@ -137,16 +142,33 @@ export const PageSpam: React.FC = () => {
       return null;
     }
     return (
-      <>
-        <p>
-          IOTA balance:{" "}
-          {isLoading ? "loading..." : formatNumber(balances.iota, "compact")}
-        </p>
-        <p>
-          SPAM balance:{" "}
-          {isLoading ? "loading..." : formatNumber(balances.spam, "compact")}
-        </p>
-      </>
+      <div className="text-red">
+        <span>
+          {isLoading
+            ? "loading..."
+            : `${formatNumber(balances.iota, "compact")} IOTA`}
+        </span>{" "}
+        <span>
+          {isLoading
+            ? "loading..."
+            : `${formatNumber(balances.spam, "compact")} SPAM`}
+        </span>
+      </div>
+    );
+  };
+
+  const BalanceIOTA: React.FC = () => {
+    if (!balances) {
+      return null;
+    }
+    return (
+      <div className="text-red">
+        <span>
+          {isLoading
+            ? "loading..."
+            : `${formatNumber(balances.iota, "compact")} IOTA`}
+        </span>
+      </div>
     );
   };
 
@@ -171,28 +193,28 @@ export const PageSpam: React.FC = () => {
       return null;
     }
     let message: React.ReactNode;
+    const fundingMsg = "Fund your Spam bot account with IOTA tokens";
     if (counters.register?.registered === false) {
       message = (
-        <p className="text-orange">
-          🚨 Send IOTA to your wallet to register the counter!
-        </p>
+        <p className="text-orange">{fundingMsg} to register the counter!</p>
       );
     } else if (counters.claim.length) {
       message = (
         <p className="text-orange">
-          Send IOTA to your wallet to claim the counter
+          {fundingMsg} to claim the counter
           {counters.claim.length > 1 ? "s" : ""}
         </p>
       );
     } else {
-      message = <p>Top up your wallet to start.</p>;
+      message = <p>{fundingMsg}</p>;
     }
     return (
       <>
         {message}
-        <Link className="btn" to="/wallet">
-          TOP UP
-        </Link>
+        <TextWithCopyClipboard text={signerAddress} />
+        <br />
+        <br />
+        <BalanceIOTA />
       </>
     );
   };
@@ -339,46 +361,55 @@ export const PageSpam: React.FC = () => {
     );
   };
 
-  const signerAddress = spammer.current.getSpamClient().signer.toIotaAddress();
-  const claimAddress = spammer.current.getClaimAddress() || signerAddress;
+  const ExtraData: React.FC = () => {
+    return (
+      <div className="tight">
+        <p>
+          Status: <StatusSpan status={spammer.current.status} textOnly={true} />
+        </p>
+        <p>
+          Current epoch:
+          {isLoading ? (
+            "loading... "
+          ) : (
+            <HrefLink
+              network={network}
+              isOnlyExplorer={true}
+              isAddress={false}
+              hrefEndValue=""
+              hrefDisplay={counters.epoch}
+            />
+          )}
+        </p>
+        <Balances />
+        <p>
+          Claim address:
+          <HrefLink
+            network={network as string}
+            isOnlyExplorer={false}
+            isAddress={true}
+            hrefEndValue={claimAddress}
+            hrefDisplay={shortenAddress(claimAddress)}
+          />
+        </p>
+      </div>
+    );
+  };
 
   return (
     <>
       <h1>
-        <span className="rainbow">Spam</span>
+        <span className="rainbow">Spam Club</span>
       </h1>
+      <h2>
+        Spam the network and earn{" "}
+        <LinkExternal href={explorerCoin} follow={true}>
+          $SPAM
+        </LinkExternal>{" "}
+        token
+      </h2>
       <div>
-        <div className="tight">
-          <p>
-            Status:{" "}
-            <StatusSpan status={spammer.current.status} textOnly={true} />
-          </p>
-          <p>
-            Current epoch:
-            {isLoading ? (
-              "loading... "
-            ) : (
-              <HrefLink
-                network={network}
-                isOnlyExplorer={true}
-                isAddress={false}
-                hrefEndValue=""
-                hrefDisplay={counters.epoch}
-              />
-            )}
-          </p>
-          <Balances />
-          <p>
-            Claim address:
-            <HrefLink
-              network={network as string}
-              isOnlyExplorer={false}
-              isAddress={true}
-              hrefEndValue={claimAddress}
-              hrefDisplay={shortenAddress(claimAddress)}
-            />
-          </p>
-        </div>
+        <ExtraData />
 
         <TopUp />
 
