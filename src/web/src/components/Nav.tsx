@@ -27,9 +27,9 @@ export const Nav: React.FC<{
 
   return (
     <nav>
-      <Link to="/" className={selected("/")} onClick={onClick}>
+      {/* <Link to="/" className={selected("/")} onClick={onClick}>
         Home
-      </Link>
+      </Link> */}
       <Link to="/stats" className={selected("/stats")} onClick={onClick}>
         Status
       </Link>

@@ -19,6 +19,8 @@ import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "../components/StatusSpan";
 import { TextWithCopyClipboard } from "../components/TextWithCopyClipboard";
+import { HrefLink } from "../components/HrefLink";
+import { Balances, BalanceIOTA } from "../components/Balances";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "../lib/epochs";
 
 export const PageSpam: React.FC = () => {
@@ -83,32 +85,7 @@ export const PageSpam: React.FC = () => {
 
   /* HTML */
 
-  const HrefLink: React.FC<{
-    network: string;
-    isOnlyExplorer: boolean;
-    isAddress: boolean;
-    hrefEndValue: string;
-    hrefDisplay: string;
-  }> = ({ network, isOnlyExplorer, isAddress, hrefEndValue, hrefDisplay }) => {
-    let href: string = EXPLORER[network] as string;
-
-    if (!isOnlyExplorer) {
-      href += isAddress ? "/address/" : "/object/";
-      href += hrefEndValue;
-    }
-
-    return (
-      <a
-        href={href}
-        style={{ textDecoration: "none" }}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {" "}
-        {hrefDisplay}{" "}
-      </a>
-    );
-  };
+  
 
   if (!disclaimerAccepted) {
     return <PageDisclaimer />;
@@ -117,9 +94,9 @@ export const PageSpam: React.FC = () => {
   const counters = spamView.counters;
   const hasCounters = Boolean(
     counters.current ||
-      counters.register ||
-      counters.claim.length > 0 ||
-      counters.delete.length > 0,
+    counters.register ||
+    counters.claim.length > 0 ||
+    counters.delete.length > 0,
   );
 
   let showProcessCountersButton = false;
@@ -136,57 +113,6 @@ export const PageSpam: React.FC = () => {
     }
     showProcessCountersButton = actionableCounters.length > 0;
   }
-
-  const Balances: React.FC = () => {
-    if (!balances) {
-      return null;
-    }
-    return (
-      <div className="text-red">
-        <span>
-          {isLoading
-            ? "loading..."
-            : `${formatNumber(balances.iota, "compact")} IOTA`}
-        </span>{" "}
-        <span>
-          {isLoading
-            ? "loading..."
-            : `${formatNumber(balances.spam, "compact")} SPAM`}
-        </span>
-      </div>
-    );
-  };
-
-  const BalanceIOTA: React.FC = () => {
-    if (!balances) {
-      return null;
-    }
-    return (
-      <div className="text-red">
-        <span>
-          {isLoading
-            ? "loading..."
-            : `${formatNumber(balances.iota, "compact")} IOTA`}
-        </span>
-      </div>
-    );
-  };
-
-  const CurrentRPC: React.FC = () => {
-    if (isLoading || balances.iota < SPAM_TX_LOW_BALANCE || IS_DISABLED) {
-      return null;
-    }
-    return (
-      <div className="tight">
-        <h2>Current RPC</h2>
-        <span className="iota-address">
-          {spammer.current.getSpamClient().rpcUrl}
-        </span>
-        <br />
-        <br />
-      </div>
-    );
-  };
 
   const TopUp: React.FC = () => {
     if (isLoading || !(balances.iota < SPAM_TX_LOW_BALANCE) || IS_DISABLED) {
@@ -213,7 +139,6 @@ export const PageSpam: React.FC = () => {
         {message}
         <TextWithCopyClipboard text={signerAddress} />
         <br />
-        <br />
         <BalanceIOTA />
       </>
     );
@@ -226,8 +151,8 @@ export const PageSpam: React.FC = () => {
     if (spammer.current.status === "stopped") {
       return (
         <>
-          <button className="btn" onClick={startLoop}>
-            SPAM
+          <button className="btn-green" onClick={startLoop}>
+            Start Spamming
           </button>
           {showProcessCountersButton && (
             <>
@@ -242,14 +167,14 @@ export const PageSpam: React.FC = () => {
     }
     if (spammer.current.status === "running") {
       return (
-        <button className="btn" onClick={stop} onMouseDown={stop}>
-          STOP
+        <button className="btn-red" onClick={stop} onMouseDown={stop}>
+          Stop Spamming
         </button>
       );
     }
     return (
       <button className="btn" disabled>
-        STOPPING
+        Stopping
       </button>
     );
   };
@@ -340,33 +265,9 @@ export const PageSpam: React.FC = () => {
     );
   };
 
-  const EventLog: React.FC = () => {
-    if (spamView.events.length === 0) {
-      return null;
-    }
-    const reversedEvents = [];
-    for (let i = spamView.events.length - 1; i >= 0; i--) {
-      reversedEvents.push(
-        <div className="event" key={i}>
-          <span className="event-time">{spamView.events[i].time}</span>
-          <span className="event-msg">{spamView.events[i].msg}</span>
-        </div>,
-      );
-    }
-    return (
-      <>
-        <h2>Event log</h2>
-        <div id="event-log">{reversedEvents}</div>
-      </>
-    );
-  };
-
   const ExtraData: React.FC = () => {
     return (
       <div className="tight">
-        <p>
-          Status: <StatusSpan status={spammer.current.status} textOnly={true} />
-        </p>
         <p>
           Current epoch:
           {isLoading ? (
@@ -381,7 +282,7 @@ export const PageSpam: React.FC = () => {
             />
           )}
         </p>
-        <Balances />
+        <Balances balances={balances} isLoading={isLoading} />
         <p>
           Claim address:
           <HrefLink
@@ -436,10 +337,6 @@ export const PageSpam: React.FC = () => {
             </div>
           </>
         )}
-
-        <CurrentRPC />
-
-        <EventLog />
       </div>
     </>
   );

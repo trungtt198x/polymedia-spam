@@ -20,6 +20,7 @@ import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
 import { ConnectButtonL1 } from "../components/ConnectButtonL1";
+import { HrefLinkTx } from "../components/HrefLinkTx";
 import { useCurrentAccount } from "@iota/dapp-kit";
 
 export const PageNFT: React.FC = () => {
@@ -116,58 +117,6 @@ export const PageNFT: React.FC = () => {
     } else {
       setMintFromConnectedWalletTxResult(`${resp.digest},${receivingAddress}`);
     }
-  };
-
-  /* HTML */
-
-  const HrefLink: React.FC<{
-    network: string;
-    isOnlyExplorer: boolean;
-    isAddress: boolean;
-    hrefEndValue: string;
-    hrefDisplay: string;
-  }> = ({ network, isOnlyExplorer, isAddress, hrefEndValue, hrefDisplay }) => {
-    let href: string = EXPLORER[network] as string;
-
-    if (!isOnlyExplorer) {
-      href += isAddress ? "/address/" : "/object/";
-      href += hrefEndValue;
-    }
-
-    return (
-      <a
-        href={href}
-        style={{ textDecoration: "none" }}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {" "}
-        {hrefDisplay}{" "}
-      </a>
-    );
-  };
-
-  const HrefLinkTx: React.FC<{
-    network: string;
-    hrefEndValue: string;
-    hrefDisplay: string;
-  }> = ({ network, isAddress, hrefEndValue, hrefDisplay }) => {
-    let href: string = EXPLORER[network] as string;
-    href += "/tx/";
-    href += hrefEndValue;
-    // href += `?network=${network}`;
-
-    return (
-      <a
-        href={href}
-        style={{ textDecoration: "none" }}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {" "}
-        {hrefDisplay}{" "}
-      </a>
-    );
   };
 
   if (!disclaimerAccepted) {
