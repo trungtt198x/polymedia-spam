@@ -3,14 +3,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import { Stats, SPAM_IDS, TOTAL_EPOCH_REWARD } from "@polymedia/spam-sdk";
+import {
+  Stats,
+  SPAM_IDS,
+  TOTAL_EPOCH_REWARD,
+  SPAM_EPOCHS_AMOUNT,
+} from "@polymedia/spam-sdk";
 import { NetworkName, formatNumber } from "@polymedia/suitcase-core";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../lib/types";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "../lib/epochs";
 
-const newSupplyPerEpoch = TOTAL_EPOCH_REWARD;
 const firstEpoch: Record<NetworkName, number> = {
   mainnet: SPAM_IDS.mainnet.epoch,
   testnet: SPAM_IDS.testnet.epoch,
@@ -19,8 +23,6 @@ const firstEpoch: Record<NetworkName, number> = {
 };
 
 export const PageStats: React.FC = () => {
-  /* State */
-
   const { network, spammer } = useOutletContext<AppContext>();
   const [stats, setStats] = useState<Stats>();
   const [currEpoch, setCurrEpoch] = useState<EpochData>();
@@ -37,25 +39,20 @@ export const PageStats: React.FC = () => {
   const fetchStats = async () => {
     try {
       setStats(undefined);
-      let newStats: Stats;
-      if (network === "mainnet") {
-        newStats = await spammer.current
-          .getSpamClient()
-          .fetchStatsForSpecificEpochs([
-            422, 421, 420, 419, 418, 417, 416, 415, 414, 413, 412, 411, 410,
-            409, 408, 407, 406, 405, 404, 403, 402, 401, 400, 399, 398, 397,
-            396, 395, 394, 393, 392, 391, 390, 389, 388, 387, 386,
-          ]);
-      } else {
-        newStats = await spammer.current
-          .getSpamClient()
-          .fetchStatsForRecentEpochs(40);
-        // Prepend a synthetic epoch counter for the current epoch
-        newStats.epochs.unshift({
-          epoch: newStats.epoch,
-          tx_count: "0",
-        });
-      }
+      const newStats: Stats = await spammer.current
+        .getSpamClient()
+        .fetchStatsForRecentEpochs(SPAM_EPOCHS_AMOUNT);
+      // .fetchStatsForSpecificEpochs([
+      //   422, 421, 420, 419, 418, 417, 416, 415, 414, 413, 412, 411, 410,
+      //   409, 408, 407, 406, 405, 404, 403, 402, 401, 400, 399, 398, 397,
+      //   396, 395, 394, 393, 392, 391, 390, 389, 388, 387, 386,
+      // ]);
+
+      // Prepend a synthetic epoch counter for the current epoch
+      newStats.epochs.unshift({
+        epoch: newStats.epoch,
+        tx_count: "0",
+      });
       setStats(newStats);
     } catch (err) {
       console.warn(`[fetchStats] ${err}`);
@@ -102,8 +99,8 @@ export const PageStats: React.FC = () => {
     const epochTimes = currEpoch && getEpochTimes(epochNumber, currEpoch);
     const epochTxs = Number(epoch.tx_count);
     const epochGas = epochTxs * gasPerTx;
-    const spamPerTx = newSupplyPerEpoch / epochTxs;
-    const iotaPerSpam = epochGas / newSupplyPerEpoch;
+    const spamPerTx = TOTAL_EPOCH_REWARD / epochTxs;
+    const iotaPerSpam = epochGas / TOTAL_EPOCH_REWARD;
 
     let epochType: "current" | "register" | "claim";
     if (epochNumber === currentEpoch) {
@@ -193,12 +190,11 @@ export const PageStats: React.FC = () => {
     );
   }
 
-  const epochsCompleted =
-    network === "mainnet" ? 37 : Number(stats.epoch) - 1 - firstEpoch[network];
+  // const epochsCompleted = Number(stats.epoch) - 1 - firstEpoch[network];
   const totalTxs = Number(stats.tx_count);
   const totalGas = totalTxs * gasPerTx;
-  const claimableSupply = epochsCompleted * newSupplyPerEpoch;
-  const dailyInflation = (newSupplyPerEpoch / claimableSupply) * 100;
+  // const claimableSupply = epochsCompleted * TOTAL_EPOCH_REWARD;
+  // const dailyInflation = (TOTAL_EPOCH_REWARD / claimableSupply) * 100;
 
   return (
     <>
@@ -206,9 +202,6 @@ export const PageStats: React.FC = () => {
       <div className="tight">
         <p>Total transactions: {formatNumber(totalTxs)}</p>
         <p>Total gas paid: {formatNumber(totalGas, "compact")} IOTA</p>
-        {network !== "mainnet" && (
-          <p>Daily inflation: {dailyInflation.toFixed(2)}%</p>
-        )}
         {/* <p>Current epoch: {stats.epoch}</p> */}
         {/* <p>Epochs completed: {epochsCompleted}</p> */}
         {/* <p>System status: {stats.paused ? "paused" : "running"}</p> */}

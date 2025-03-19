@@ -4,14 +4,9 @@ import {
   WalletProvider,
   createNetworkConfig,
 } from "@iota/dapp-kit";
-// import { useState } from "react";
+import { DEFAULT_NETWORK } from "@polymedia/spam-sdk";
 import { getFullnodeUrl } from "@iota/iota-sdk/client";
 import { App } from "./App";
-
-const defaultNetwork = "testnet";
-
-// const supportedNetworks = ["testnet", "mainnet"] as const;
-// type SupportedNetwork = typeof supportedNetworks[number];
 
 const { networkConfig } = createNetworkConfig({
   testnet: { url: getFullnodeUrl("testnet") },
@@ -20,10 +15,10 @@ const { networkConfig } = createNetworkConfig({
 
 const queryClient = new QueryClient();
 export const AppIotaProviders = () => {
-  // const [network, setNetwork] = useState<string>(defaultNetwork);
+  // const [network, setNetwork] = useState<string>(DEFAULT_NETWORK);
   return (
     <QueryClientProvider client={queryClient}>
-      <IotaClientProvider networks={networkConfig} network={defaultNetwork}>
+      <IotaClientProvider networks={networkConfig} network={DEFAULT_NETWORK}>
         <WalletProvider autoConnect={true}>
           <App />
         </WalletProvider>

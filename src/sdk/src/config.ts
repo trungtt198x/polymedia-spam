@@ -38,6 +38,9 @@ export const SPAM_IDS: Record<NetworkName, SpamConfig> = {
   },
 };
 
+// The number of epochs from the latest epoch
+export const SPAM_EPOCHS_AMOUNT = 20;
+
 export const SPAM_NFT_IDS: Record<NetworkName, SpamNftConfig> = {
   mainnet: {
     packageId: "",

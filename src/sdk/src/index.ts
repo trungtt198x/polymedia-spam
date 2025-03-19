@@ -7,3 +7,4 @@ export * from "./packageSpam.js";
 export * from "./packageNft.js";
 export * from "./types.js";
 export * from "./IotaWalletClient.js";
+export * from "./lib.js";

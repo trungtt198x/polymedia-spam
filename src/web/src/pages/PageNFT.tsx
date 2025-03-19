@@ -9,6 +9,8 @@ import {
   SPAM_DECIMALS,
   SPAM_MODULE,
   SPAM_SYMBOL,
+  shortenTx,
+  isValidIotaAddress,
 } from "@polymedia/spam-sdk";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 import { useEffect, useState, useRef } from "react";
@@ -19,7 +21,6 @@ import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
 import { ConnectButtonL1 } from "../components/ConnectButtonL1";
 import { useCurrentAccount } from "@iota/dapp-kit";
-import { EpochData, formatEpochPeriod, getEpochTimes } from "./lib/epochs";
 
 export const PageNFT: React.FC = () => {
   const {
@@ -40,21 +41,6 @@ export const PageNFT: React.FC = () => {
   const spamClient = spammer.current.getSpamClient();
   const minerAddress = spamClient.signer.toIotaAddress();
   const spamPackageId = spamClient.spamPackageId;
-
-  function shortenTx(tx) {
-    if (tx.length <= 8) {
-      return tx; // No need to format if the string is too short
-    }
-
-    const firstPart = tx.slice(0, 4);
-    const lastPart = tx.slice(-4);
-    return `${firstPart}...${lastPart}`;
-  }
-
-  const isValidIotaAddress = (address) => {
-    const suiAddressPattern = /^0x[a-fA-F0-9]{64}$/;
-    return suiAddressPattern.test(address);
-  };
 
   const startMint = async (
     evt: Event,
