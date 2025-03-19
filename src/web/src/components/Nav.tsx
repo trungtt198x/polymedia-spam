@@ -33,9 +33,9 @@ export const Nav: React.FC<{
       <Link to="/stats" className={selected("/stats")} onClick={onClick}>
         Status
       </Link>
-      <Link to="/spam" className={selected("/spam")} onClick={onClick}>
+      {/* <Link to="/spam" className={selected("/spam")} onClick={onClick}>
         Spam
-      </Link>
+      </Link> */}
       <Link to="/nft" className={selected("/nft")} onClick={onClick}>
         NFT
       </Link>
