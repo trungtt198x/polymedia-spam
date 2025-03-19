@@ -1,0 +1,32 @@
+{
+  "TESTNET": {
+    "SPAM": {
+      "packageId": "0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745",
+      "directorId": "0xc7dc8c06d28f77770bc4e84ac6fb14c82b4ac0cccd8198a59e71069dc1c3e418",
+      "epoch": 99
+    },
+    "NFT": {
+      "packageId": "0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f",
+      "adminId": "0x13fba29a4e50fef38d7da548a66638ae090b62d79d6dc70e9206b1c8e78d253e",
+      "nftManagerId": "0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5",
+      "epoch": 109
+    },
+    "explorer": "https://iotascan.com/testnet"
+  },
+  "MAINNET": {
+    "SPAM": {
+      "packageId": "",
+      "directorId": "",
+      "epoch": 0
+    },
+    "NFT": {
+      "packageId": "",
+      "adminId": "",
+      "nftManagerId": "",
+      "epoch": 0
+    },
+    "explorer": "https://iotascan.com/mainnet"
+  },
+  "defaultNetwork": "testnet",
+  "systemDisabled": false
+}
