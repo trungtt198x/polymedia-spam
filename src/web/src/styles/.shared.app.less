@@ -101,11 +101,18 @@ header {
     align-items: center;
     font-size: 1.5rem;
     font-weight: @text-weight;
-    img {
+    img,
+    span {
       height: 2rem;
       width: 2rem;
       padding-right: 0.5rem;
       box-sizing: content-box;
+      btn {
+        background-color: transparent;
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
   .btn-connect {
@@ -264,9 +271,9 @@ nav {
   }
   .btn-green {
     .btn;
-    background-color: lightgreen;
+    background-color: darkgreen;
     &:hover {
-      background-color: darkgreen;
+      background-color: lightgreen;
       cursor: pointer;
     }
   }

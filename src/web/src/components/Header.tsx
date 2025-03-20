@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
 import { SpamStatus } from "@polymedia/spam-sdk";
-import { StatusSpan } from "./StatusSpan";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFileCircleQuestion,
+  faGear,
+} from "@fortawesome/free-solid-svg-icons";
+import { NetworkDropdownSelector } from "@polymedia/suitcase-react";
+import { InstructionModal } from "./InstructionModal";
 
 export const Header: React.FC<{
   status: SpamStatus;
   inProgress: boolean;
-}> = ({ status, inProgress }) => {
+  onOpenInstruction: () => {};
+}> = ({ _status, inProgress }) => {
   return (
     <header>
       <Link
@@ -21,9 +28,11 @@ export const Header: React.FC<{
         </h1>
       </Link>
 
-      <span id="status-indicator">
-        <StatusSpan status={status} textOnly={false} />
-      </span>
+      <h1 style={{ paddingTop: "1rem" }}>
+        <span>
+          <InstructionModal explorerCoin={""} />
+        </span>
+      </h1>
     </header>
   );
 };

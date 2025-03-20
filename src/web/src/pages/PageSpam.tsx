@@ -11,13 +11,12 @@ import {
   UPDATE_INTERVAL_MS,
   SPAM_IDS,
 } from "@polymedia/spam-sdk";
-import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
+import { shortenAddress } from "@polymedia/suitcase-core";
 import { LinkExternal } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
-import { StatusSpan } from "../components/StatusSpan";
 import { TextWithCopyClipboard } from "../components/TextWithCopyClipboard";
 import { HrefLink } from "../components/HrefLink";
 import { Balances, BalanceIOTA } from "../components/Balances";
@@ -83,10 +82,6 @@ export const PageSpam: React.FC = () => {
     }
   };
 
-  /* HTML */
-
-  
-
   if (!disclaimerAccepted) {
     return <PageDisclaimer />;
   }
@@ -94,22 +89,25 @@ export const PageSpam: React.FC = () => {
   const counters = spamView.counters;
   const hasCounters = Boolean(
     counters.current ||
-    counters.register ||
-    counters.claim.length > 0 ||
-    counters.delete.length > 0,
+      counters.register ||
+      counters.claim.length > 0 ||
+      counters.delete.length > 0,
   );
+  // console.log("counters.current:", counters.current);
+  // console.log("counters:", counters);
 
   let showProcessCountersButton = false;
   const actionableCounters: string[] = [];
+  // const actionableCounters: string[] = ["Register", "Claim", "Delete"];
   if (hasCounters && spammer.current.status === "stopped") {
     if (counters.register?.registered === false) {
-      actionableCounters.push("REGISTER");
+      actionableCounters.push("Register");
     }
     if (counters.claim.length > 0) {
-      actionableCounters.push("CLAIM");
+      actionableCounters.push("Claim");
     }
     if (counters.delete.length > 0) {
-      actionableCounters.push("DELETE");
+      actionableCounters.push("Delete");
     }
     showProcessCountersButton = actionableCounters.length > 0;
   }
@@ -158,7 +156,7 @@ export const PageSpam: React.FC = () => {
             <>
               <br />
               <button className="btn break-all" onClick={startOnce}>
-                {actionableCounters.join(" + ")} COUNTERS
+                {actionableCounters.join(" + ")} Counters
               </button>
             </>
           )}
