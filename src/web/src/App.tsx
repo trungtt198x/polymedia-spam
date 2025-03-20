@@ -8,6 +8,8 @@ import {
   SpamEvent,
   Spammer,
   emptyUserCounters,
+  EXPLORER,
+  SPAM_IDS,
 } from "@polymedia/spam-sdk";
 import { sleep } from "@polymedia/suitcase-core";
 import { useEffect, useRef, useState } from "react";
@@ -81,12 +83,16 @@ export const App: React.FC = () => {
     balances,
     spammer,
     spamView,
-    replaceKeypair: updateKeypair,
+    replaceKeypair,
     updateClaimAddress,
     disclaimerAccepted,
     acceptDisclaimer,
     iotaWalletClient,
   };
+
+  const spamPackageId = SPAM_IDS[network].packageId;
+  const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
+  const spammerClient = spammer.current.getSpamClient();
 
   /* Functions */
 
@@ -113,11 +119,11 @@ export const App: React.FC = () => {
   const updateBalances = async () => {
     try {
       const balanceIOTA = await spammer.current.getIotaClient().getBalance({
-        owner: spammer.current.getSpamClient().signer.toIotaAddress(),
+        owner: spammerClient.signer.toIotaAddress(),
       });
       const balanceSpam = await spammer.current.getIotaClient().getBalance({
-        owner: spammer.current.getSpamClient().signer.toIotaAddress(),
-        coinType: `${spammer.current.getSpamClient().spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
+        owner: spammerClient.signer.toIotaAddress(),
+        coinType: `${spammerClient.spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
       });
       setBalances({
         spam: Number(balanceSpam.totalBalance) / 10 ** SPAM_DECIMALS,
@@ -165,7 +171,7 @@ export const App: React.FC = () => {
     // console.info("on-demand view update");
   }
 
-  function updateKeypair(newPair: Ed25519Keypair): void {
+  function replaceKeypair(newPair: Ed25519Keypair): void {
     if (spammer.current.status === "running") {
       spammer.current.stop();
     }
@@ -238,7 +244,17 @@ export const App: React.FC = () => {
   return (
     <div id="layout" className={layoutClasses.join(" ")}>
       <div>
-        <Header status={spammer.current.status} inProgress={inProgress} />
+        <Header
+          inProgress={inProgress}
+          explorerCoin={explorerCoin}
+          spammerStatus={spammer.current.status}
+          spammerCurrentAddress={spammerClient.signer.toIotaAddress()}
+          spammerCurrentKey={(
+            spammerClient.signer as Ed25519Keypair
+          ).getSecretKey()}
+          replaceKeypair={replaceKeypair}
+          updateClaimAddress={updateClaimAddress}
+        />
         <div id="nav-and-page">
           <Nav
             setShowMobileNav={setShowMobileNav}

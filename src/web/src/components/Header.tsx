@@ -7,12 +7,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { NetworkDropdownSelector } from "@polymedia/suitcase-react";
 import { InstructionModal } from "./InstructionModal";
+import { SettingsModal } from "./SettingsModal";
 
 export const Header: React.FC<{
-  status: SpamStatus;
   inProgress: boolean;
-  onOpenInstruction: () => {};
-}> = ({ _status, inProgress }) => {
+  explorerCoin: string;
+  spammerStatus: string;
+  spammerCurrentAddress: string;
+  spammerCurrentKey: string;
+  replaceKeypair: () => {};
+  updateClaimAddress: () => {};
+}> = ({
+  inProgress,
+  explorerCoin,
+  spammerStatus,
+  spammerCurrentAddress,
+  spammerCurrentKey,
+  replaceKeypair,
+  updateClaimAddress,
+}) => {
   return (
     <header>
       <Link
@@ -30,7 +43,16 @@ export const Header: React.FC<{
 
       <h1 style={{ paddingTop: "1rem" }}>
         <span>
-          <InstructionModal explorerCoin={""} />
+          <InstructionModal explorerCoin={explorerCoin} />
+        </span>
+        <span>
+          <SettingsModal
+            spammerStatus={spammerStatus}
+            spammerCurrentAddress={spammerCurrentAddress}
+            spammerCurrentKey={spammerCurrentKey}
+            replaceKeypair={replaceKeypair}
+            updateClaimAddress={updateClaimAddress}
+          />
         </span>
       </h1>
     </header>

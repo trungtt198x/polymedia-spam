@@ -5,10 +5,6 @@ import { Link } from "react-router-dom";
 export const Introduction: React.FC<{ explorerCoin: string }> = ({
   explorerCoin,
 }) => {
-  // const { network } = useOutletContext<AppContext>();
-  // const spamPackageId = SPAM_IDS[network].packageId;
-  // const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
-
   return (
     <div>
       <h2 style={{ textAlign: "center" }}>How does it work?</h2>

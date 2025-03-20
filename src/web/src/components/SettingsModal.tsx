@@ -7,14 +7,24 @@ import {
   faGear,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { Introduction } from "./Introduction";
+import { Settings } from "./Settings";
 import { modalStyles } from "./modalStyle";
 
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement("#app");
 
-export const InstructionModal: React.FC<{ explorerCoin: string }> = ({
-  explorerCoin,
+export const SettingsModal: React.FC<{
+  spammerStatus: string;
+  spammerCurrentAddress: string;
+  spammerCurrentKey: string;
+  replaceKeypair: () => {};
+  updateClaimAddress: () => {};
+}> = ({
+  spammerStatus,
+  spammerCurrentAddress,
+  spammerCurrentKey,
+  replaceKeypair,
+  updateClaimAddress,
 }) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
@@ -29,14 +39,20 @@ export const InstructionModal: React.FC<{ explorerCoin: string }> = ({
   return (
     <div>
       <btn onClick={openModal}>
-        <FontAwesomeIcon icon={faFileCircleQuestion} />
+        <FontAwesomeIcon icon={faGear} />
       </btn>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={modalStyles}
       >
-        <Introduction explorerCoin={explorerCoin} />{" "}
+        <Settings
+          spammerStatus={spammerStatus}
+          spammerCurrentAddress={spammerCurrentAddress}
+          spammerCurrentKey={spammerCurrentKey}
+          replaceKeypair={replaceKeypair}
+          updateClaimAddress={updateClaimAddress}
+        />{" "}
         <btn onClick={closeModal}>
           <FontAwesomeIcon icon={faCircleXmark} size="xl" />
         </btn>
