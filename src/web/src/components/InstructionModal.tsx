@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFileCircleQuestion,
   faGear,
-  faXmark,
+  faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Introduction } from "./Introduction";
 
@@ -26,6 +26,11 @@ export const InstructionModal: React.FC<{ explorerCoin: string }> = ({
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
+      backgroundColor: "rgb(15 23 42)",
+      color: "rgb(226 232 240)",
+      borderRadius: "2rem",
+      display: "flex",
+      // width: "50%"
     },
     overlay: {
       backgroundColor: "transparent",
@@ -50,10 +55,10 @@ export const InstructionModal: React.FC<{ explorerCoin: string }> = ({
         onRequestClose={closeModal}
         style={customStyles}
       >
+        <Introduction explorerCoin={"abc"} />{" "}
         <btn onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
+          <FontAwesomeIcon icon={faCircleXmark} size="xl" />
         </btn>
-        <Introduction explorerCoin={"abc"} />
       </Modal>
     </div>
   );
