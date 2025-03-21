@@ -2,7 +2,7 @@ import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { useEffect, useState } from "react";
 import { useLocation, useOutletContext } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { loadClaimAddressFromStorage, pairFromSecretKey } from "../lib/storage";
@@ -278,7 +278,6 @@ export const PageWallet: React.FC = () => {
           <ClaimAddressForm />
         </div>
       </div>
-      <Toaster />
     </>
   );
 };

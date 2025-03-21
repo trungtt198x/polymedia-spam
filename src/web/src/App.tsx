@@ -14,6 +14,7 @@ import {
 import { sleep } from "@polymedia/suitcase-core";
 import { useEffect, useRef, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import {
   RpcUrl,
   loadClaimAddressFromStorage,
@@ -36,7 +37,7 @@ import "./styles/.shared.app.less";
 import "./styles/App.less";
 
 import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
+// import { Footer } from "./components/Footer";
 import { Nav } from "./components/Nav";
 
 import useIotaWalletClient from "./hooks/useIotaWalletClient";
@@ -273,9 +274,10 @@ export const App: React.FC = () => {
             </div>
           </div>
         </div>
+        <Toaster />
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
 
       <button
         id="btn-menu"

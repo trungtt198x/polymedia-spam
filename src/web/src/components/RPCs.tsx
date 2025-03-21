@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RpcUrl } from "../lib/storage";
 import { RPC_ENDPOINTS } from "@polymedia/spam-sdk";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import {
   inputStyles,
   buttonStyles,
@@ -89,7 +89,11 @@ export const RPCs: React.FC<{
             ))}
           </div>
           <div className="wallet-section">
-            <button style={buttonStyles} onClick={onSaveRPCs} disabled={!hasChanges}>
+            <button
+              style={buttonStyles}
+              onClick={onSaveRPCs}
+              disabled={!hasChanges}
+            >
               Save
             </button>
           </div>
@@ -150,7 +154,6 @@ export const RPCs: React.FC<{
           <RestoreRPC />
         </div>
       </div>
-      <Toaster />
     </>
   );
 };

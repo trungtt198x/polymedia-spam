@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import { AppContext } from "../lib/types";
 import { RpcUrl } from "../lib/storage";
 import { RPC_ENDPOINTS } from "@polymedia/spam-sdk";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export const PageRPCs: React.FC = () => {
   const { network, spammer, rpcUrls, updateRpcUrls } =
@@ -140,7 +140,6 @@ export const PageRPCs: React.FC = () => {
           </div>
         </div>
       </>
-      <Toaster />
     </>
   );
 };

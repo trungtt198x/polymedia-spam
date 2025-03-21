@@ -12,15 +12,17 @@ import {
   shortenTx,
   isValidIotaAddress,
 } from "@polymedia/spam-sdk";
+import { LinkExternal } from "@polymedia/suitcase-react";
 import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
 import { useEffect, useState, useRef } from "react";
 import { useOutletContext, Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
 import { ConnectButtonL1 } from "../components/ConnectButtonL1";
 import { HrefLinkTx } from "../components/HrefLinkTx";
+import { Balances } from "../components/Balances";
 import { useCurrentAccount } from "@iota/dapp-kit";
 
 export const PageNFT: React.FC = () => {
@@ -42,6 +44,7 @@ export const PageNFT: React.FC = () => {
   const spamClient = spammer.current.getSpamClient();
   const minerAddress = spamClient.signer.toIotaAddress();
   const spamPackageId = spamClient.spamPackageId;
+  const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
 
   const startMint = async (
     evt: Event,
@@ -123,24 +126,6 @@ export const PageNFT: React.FC = () => {
     return <PageDisclaimer />;
   }
 
-  const Balances: React.FC = () => {
-    if (!balances) {
-      return null;
-    }
-    return (
-      <>
-        <p>
-          IOTA balance:{" "}
-          {isLoading ? "loading..." : formatNumber(balances.iota, "compact")}
-        </p>
-        <p>
-          SPAM balance:{" "}
-          {isLoading ? "loading..." : formatNumber(balances.spam, "compact")}
-        </p>
-      </>
-    );
-  };
-
   const MintTxResult: React.FC<{ isFromMinerWallet: boolean }> = ({
     isFromMinerWallet,
   }) => {
@@ -175,12 +160,17 @@ export const PageNFT: React.FC = () => {
     if (isLoading || IS_DISABLED) {
       return null;
     }
-    let message: React.ReactNode = <p>Top up your wallet to start.</p>;
-
     return (
       <>
-        {message}
-        <Link className="btn" to="/spam">
+        <h3>
+          Spam the network to earn{" "}
+          <LinkExternal href={explorerCoin} follow={true}>
+            $SPAM
+          </LinkExternal>{" "}
+          token for NFTs
+        </h3>
+
+        <Link className="btn" to="/">
           Spam up
         </Link>
       </>
@@ -253,7 +243,7 @@ export const PageNFT: React.FC = () => {
       </h1>
       <div>
         <div className="tight">
-          <Balances />
+          <Balances balances={balances} isLoading={isLoading} />
         </div>
         {balances?.spam === 0 ? (
           <SpamUp />
@@ -267,7 +257,6 @@ export const PageNFT: React.FC = () => {
           </div>
         )}
       </div>
-      <Toaster />
     </>
   );
 };

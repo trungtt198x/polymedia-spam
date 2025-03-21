@@ -1,6 +1,6 @@
 import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { isValidIotaAddress } from "@polymedia/spam-sdk";
 import { pairFromSecretKey } from "../lib/storage";
 import { TextWithCopyClipboard } from "./TextWithCopyClipboard";
@@ -245,7 +245,6 @@ export const Wallet: React.FC<{
           <ClaimAddressForm />
         </div>
       </div>
-      <Toaster />
     </>
   );
 };

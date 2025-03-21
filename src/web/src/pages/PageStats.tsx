@@ -201,12 +201,9 @@ export const PageStats: React.FC = () => {
         {/* <p>Epochs completed: {epochsCompleted}</p> */}
         {/* <p>System status: {stats.paused ? "paused" : "running"}</p> */}
       </div>
-
+      <br />
       {stats.epochs.length > 0 && (
         <>
-          <br />
-          <h2>Epochs:</h2>
-
           <div className="counter-cards">
             {stats.epochs.map((epoch) => (
               <CounterCard

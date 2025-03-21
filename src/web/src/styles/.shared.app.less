@@ -169,7 +169,8 @@ nav {
     padding: 0.2rem 0 0.2rem 0.6rem;
     border-style: solid;
     border-color: transparent;
-    border-left-width: 2px;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
     color: @color-muted;
     text-decoration: none;
     &:hover {
@@ -179,8 +180,8 @@ nav {
   a {
     &:hover,
     &.selected {
-      color: @color-blue-2;
-      border-color: @color-blue-2;
+      color: @color-text-green;
+      border-color: @color-text-green;
     }
   }
   .network-selector {
@@ -189,8 +190,8 @@ nav {
     position: relative;
     .network-option .text {
       &:hover {
-        color: lightgreen;
-        border-color: lightgreen;
+        color: @color-text-green;
+        border-color: @color-text-green;
       }
     }
     .network-options {
