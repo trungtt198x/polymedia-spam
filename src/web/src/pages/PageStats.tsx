@@ -172,7 +172,7 @@ export const PageStats: React.FC = () => {
 
   const heading = (
     <h1>
-      <span className="rainbow">Stats</span>
+      <span className="rainbow">Status</span>
     </h1>
   );
 

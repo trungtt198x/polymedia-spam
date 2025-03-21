@@ -1,25 +1,15 @@
 import React from "react";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { Settings } from "./Settings";
+import { faBolt, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { Introduction } from "./Introduction";
 import { modalStyles } from "./modalStyle";
 
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement("#app");
 
-export const SettingsModal: React.FC<{
-  spammerCurrentAddress: string;
-  spammerCurrentKey: string;
-  replaceKeypair: (...args: any[]) => any;
-  updateClaimAddress: (...args: any[]) => any;
-  currentClaimAddr: string;
-}> = ({
-  spammerCurrentAddress,
-  spammerCurrentKey,
-  replaceKeypair,
-  updateClaimAddress,
-  currentClaimAddr,
+export const RPCsModal: React.FC<{ explorerCoin: string }> = ({
+  explorerCoin,
 }) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
@@ -34,20 +24,14 @@ export const SettingsModal: React.FC<{
   return (
     <div>
       <btn onClick={openModal}>
-        <FontAwesomeIcon icon={faGear} />
+        <FontAwesomeIcon icon={faBolt} />
       </btn>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={modalStyles}
       >
-        <Settings
-          spammerCurrentAddress={spammerCurrentAddress}
-          spammerCurrentKey={spammerCurrentKey}
-          replaceKeypair={replaceKeypair}
-          updateClaimAddress={updateClaimAddress}
-          currentClaimAddr={currentClaimAddr}
-        />{" "}
+        <Introduction explorerCoin={explorerCoin} />{" "}
         <btn onClick={closeModal}>
           <FontAwesomeIcon icon={faCircleXmark} size="xl" />
         </btn>

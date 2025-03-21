@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { InstructionModal } from "./InstructionModal";
-import { SettingsModal } from "./SettingsModal";
+import { WalletModal } from "./WalletModal";
+import { RPCsModal } from "./RPCsModal";
 
 export const Header: React.FC<{
   inProgress: boolean;
@@ -39,13 +40,16 @@ export const Header: React.FC<{
           <InstructionModal explorerCoin={explorerCoin} />
         </span>
         <span>
-          <SettingsModal
+          <WalletModal
             spammerCurrentAddress={spammerCurrentAddress}
             spammerCurrentKey={spammerCurrentKey}
             replaceKeypair={replaceKeypair}
             updateClaimAddress={updateClaimAddress}
             currentClaimAddr={currentClaimAddr}
           />
+        </span>
+        <span>
+          <RPCsModal explorerCoin={explorerCoin} />
         </span>
       </h1>
     </header>

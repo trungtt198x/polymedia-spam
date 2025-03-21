@@ -6,7 +6,7 @@ import { pairFromSecretKey } from "../lib/storage";
 import { TextWithCopyClipboard } from "./TextWithCopyClipboard";
 import { inputStyles, buttonStyles, redText, hrStyles } from "./modalStyle";
 
-export const Settings: React.FC<{
+export const Wallet: React.FC<{
   spammerCurrentAddress: string;
   spammerCurrentKey: string;
   replaceKeypair: (...args: any[]) => any;
@@ -227,7 +227,7 @@ export const Settings: React.FC<{
   return (
     <>
       <div id="page-wallet">
-        <h1 style={{ textAlign: "center" }}>Settings</h1>
+        <h1 style={{ textAlign: "center" }}>Wallet</h1>
         <br />
         <div id="page-wallet-sections">
           <AutoGenWallet />

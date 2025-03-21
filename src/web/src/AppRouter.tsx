@@ -14,11 +14,8 @@ export const AppRouter: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AppIotaProviders />}>
-          {/* <Route index element={<PageHome />} /> */}
           <Route index element={<PageSpam />} />
-          {/* <Route path="/spam" element={<PageSpam />} /> */}
           <Route path="/nft" element={<PageNFT />} />
-          <Route path="/wallet" element={<PageWallet />} />
           <Route path="/rpcs" element={<PageRPCs />} />
           <Route path="/stats" element={<PageStats />} />
           <Route path="*" element={<PageNotFound />} />

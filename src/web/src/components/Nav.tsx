@@ -27,20 +27,11 @@ export const Nav: React.FC<{
 
   return (
     <nav>
-      {/* <Link to="/" className={selected("/")} onClick={onClick}>
-        Home
-      </Link> */}
       <Link to="/stats" className={selected("/stats")} onClick={onClick}>
         Status
       </Link>
-      {/* <Link to="/spam" className={selected("/spam")} onClick={onClick}>
-        Spam
-      </Link> */}
       <Link to="/nft" className={selected("/nft")} onClick={onClick}>
         NFT
-      </Link>
-      <Link to="/wallet" className={selected("/wallet")} onClick={onClick}>
-        Wallet
       </Link>
       <Link to="/rpcs" className={selected("/rpcs")} onClick={onClick}>
         RPC
