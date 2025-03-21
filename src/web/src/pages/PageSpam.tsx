@@ -135,7 +135,10 @@ export const PageSpam: React.FC = () => {
     return (
       <>
         {message}
-        <TextWithCopyClipboard text={signerAddress} />
+        <TextWithCopyClipboard
+          text={signerAddress}
+          className={"iota-address"}
+        />
         <br />
         <BalanceIOTA />
       </>

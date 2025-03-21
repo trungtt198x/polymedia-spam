@@ -2,14 +2,17 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import { shortenAddress } from "@polymedia/suitcase-core";
+import { shortenTx } from "@polymedia/spam-sdk";
 
-export const TextWithCopyClipboard: React.FC<{ text: string }> = ({ text }) => {
+export const TextWithCopyClipboard: React.FC<{
+  text: string;
+  className: string;
+}> = ({ text, className }) => {
   const [copiedState, setCopiedState] = useState(false);
 
   return (
-    <span className="iota-address">
-      {shortenAddress(text)}{" "}
+    <span className={className}>
+      {shortenTx(text)} &nbsp;
       <span style={{ cursor: "pointer" }}>
         <CopyToClipboard
           text={text}
@@ -20,7 +23,10 @@ export const TextWithCopyClipboard: React.FC<{ text: string }> = ({ text }) => {
             }, 5000);
           }}
         >
-          <FontAwesomeIcon icon={copiedState ? faCheckCircle : faCopy} />
+          <FontAwesomeIcon
+            icon={copiedState ? faCheckCircle : faCopy}
+            size="xs"
+          />
         </CopyToClipboard>
       </span>
     </span>

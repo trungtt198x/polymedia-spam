@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { AppContext } from "../lib/types";
 import { loadClaimAddressFromStorage, pairFromSecretKey } from "../lib/storage";
+import { TextWithCopyClipboard } from "./TextWithCopyClipboard";
+import { inputStyles, buttonStyles, redText } from "./modalStyle";
 
 export const Settings: React.FC<{
   spammerStatus: string;
@@ -32,24 +34,23 @@ export const Settings: React.FC<{
   const AutoGenWallet: React.FC = () => {
     return (
       <div id="wallet-info">
-        <h3>Auto-generated account</h3>
         <div id="wallet-content">
           <div className="wallet-section">
-            <b>Address</b>
-            <p>Fund IOTA to this address to perform spam transactions</p>
-            <span className="iota-address">{spammerCurrentAddress}</span>
+            <b>Address:</b>{" "}
+            <TextWithCopyClipboard
+              text={spammerCurrentAddress}
+              className={""}
+            />
           </div>
           <div className="wallet-section">
-            <b>Secret key</b>
-            <p>It allows to restore the account. Copy it somewhere safe!</p>
-            <span className="iota-address">{spammerCurrentKey}</span>
-            <div className="dont-share-secret-key">
+            <b>Secret key:</b>{" "}
+            <TextWithCopyClipboard text={spammerCurrentKey} className={""} />
+            <div style={redText}>
               Secret key generated and stored on the browser. Clearing cookies
               will delete it.
             </div>
           </div>
         </div>
-        {/* <div id="set-claim-address" /> */}
       </div>
     );
   };
@@ -175,27 +176,34 @@ export const Settings: React.FC<{
     };
 
     return (
-      <div>
-        <h3>Import existing account</h3>
-        <p>This will replace the current account with the imported one!</p>
-        <input
-          type="text"
-          value={secretKey}
-          placeholder="Paste secret key here"
-          onChange={onInputChange}
-          onKeyDown={onKeyDown}
-          style={{ width: "100%", wordBreak: "break-all" }}
-        />
-        <br />
-        <button className="btn" onClick={onSubmit} disabled={disableSubmit}>
-          Import
-        </button>
-        {errMsg && (
-          <div className="error-box">
-            <div>Invalid secret key:</div>
-            <div>{errMsg}</div>
+      <div id="wallet-info">
+        <b>Import existing account</b>
+        <div id="wallet-content" style={{ paddingTop: "0.5rem" }}>
+          <div className="wallet-section">
+            <input
+              type="text"
+              value={secretKey}
+              placeholder="Paste secret key here. Current account replaced"
+              onChange={onInputChange}
+              onKeyDown={onKeyDown}
+              style={inputStyles}
+            />
           </div>
-        )}
+          <div className="wallet-section" style={{ paddingTop: "0.5rem" }}>
+            <button
+              style={buttonStyles}
+              onClick={onSubmit}
+              disabled={disableSubmit}
+            >
+              Import
+            </button>
+          </div>
+          {errMsg && (
+            <div className="wallet-section">
+              <div style={redText}>{errMsg}</div>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -224,23 +232,13 @@ export const Settings: React.FC<{
   return (
     <>
       <div id="page-wallet">
-        <h1>
-          <span className="rainbow">Wallet</span>
-        </h1>
-
-        <div id="page-rpc">
-          <p>
-            To perform spam transactions, either use auto-generated account or
-            import existing account.
-          </p>
-          <br />
-        </div>
-
+        <h1 style={{ textAlign: "center" }}>Settings</h1>
+        <br />
         <div id="page-wallet-sections">
           <AutoGenWallet />
-
+          <br />
           <ImportWalletForm />
-
+          <br />
           <CreateWalletForm />
 
           <ClaimAddressForm />
