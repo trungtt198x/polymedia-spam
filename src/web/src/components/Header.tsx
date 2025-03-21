@@ -11,6 +11,9 @@ export const Header: React.FC<{
   replaceKeypair: (...args: any[]) => any;
   updateClaimAddress: (...args: any[]) => any;
   currentClaimAddr: string;
+  network: string;
+  rpcUrls: RpcUrl[];
+  updateRpcUrls: (...args: any[]) => any;
 }> = ({
   inProgress,
   explorerCoin,
@@ -19,6 +22,9 @@ export const Header: React.FC<{
   replaceKeypair,
   updateClaimAddress,
   currentClaimAddr,
+  network,
+  rpcUrls,
+  updateRpcUrls,
 }) => {
   return (
     <header>
@@ -49,7 +55,11 @@ export const Header: React.FC<{
           />
         </span>
         <span>
-          <RPCsModal explorerCoin={explorerCoin} />
+          <RPCsModal
+            network={network}
+            rpcUrls={rpcUrls}
+            updateRpcUrls={updateRpcUrls}
+          />
         </span>
       </h1>
     </header>

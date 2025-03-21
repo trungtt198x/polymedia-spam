@@ -23,7 +23,7 @@ export const Introduction: React.FC<{ explorerCoin: string }> = ({
 
         <br />
 
-        <b>How it works</b>
+        <h3>How it works</h3>
         <ol>
           <li>Start spamming. </li>
           <li>
@@ -36,7 +36,7 @@ export const Introduction: React.FC<{ explorerCoin: string }> = ({
 
         <hr style={hrStyles} />
 
-        <b>Getting started</b>
+        <h3>Getting started</h3>
         <ol>
           <li>Fund your Spam Bot Wallet. </li>
           <li>Spam to Earn. The more you spam, the bigger your rewards.</li>
@@ -45,7 +45,7 @@ export const Introduction: React.FC<{ explorerCoin: string }> = ({
 
         <hr style={hrStyles} />
 
-        <b>No spam, no gain. Spam or be rekt.</b>
+        <h3>No spam, no gain. Spam or be rekt.</h3>
       </div>
     </>
   );

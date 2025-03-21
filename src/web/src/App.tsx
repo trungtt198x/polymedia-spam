@@ -255,6 +255,9 @@ export const App: React.FC = () => {
           replaceKeypair={replaceKeypair}
           updateClaimAddress={updateClaimAddress}
           currentClaimAddr={spammer.current.getClaimAddress() || signerAddress}
+          network={network}
+          rpcUrls={rpcUrls}
+          updateRpcUrls={updateRpcUrls}
         />
         <div id="nav-and-page">
           <Nav

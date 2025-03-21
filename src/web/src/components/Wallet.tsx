@@ -32,14 +32,18 @@ export const Wallet: React.FC<{
       <div id="wallet-info">
         <div id="wallet-content">
           <div className="wallet-section">
-            <b>Current address:</b>{" "}
+            <b>
+              <strong>Current address:</strong>
+            </b>{" "}
             <TextWithCopyClipboard
               text={spammerCurrentAddress}
               className={""}
             />
           </div>
           <div className="wallet-section">
-            <b>Secret key:</b>{" "}
+            <b>
+              <strong>Secret key:</strong>
+            </b>{" "}
             <TextWithCopyClipboard text={spammerCurrentKey} className={""} />
             <div style={redText}>
               Secret key generated and stored on the browser. Clearing cookies
@@ -98,11 +102,13 @@ export const Wallet: React.FC<{
         {/* <b>Current claim address</b> */}
         <div id="wallet-content">
           <div className="wallet-section">
-            <b>Current claim address:</b>{" "}
+            <b>
+              <strong>Current claim address:</strong>
+            </b>{" "}
             <TextWithCopyClipboard text={currentClaimAddr} className={""} />
           </div>
 
-          <div className="wallet-section" style={{ paddingTop: "0.5rem" }}>
+          <div className="wallet-section" style={{ paddingTop: "1rem" }}>
             <input
               type="text"
               value={claimAddress}
@@ -112,7 +118,7 @@ export const Wallet: React.FC<{
               style={inputStyles}
             />
           </div>
-          <div className="wallet-section" style={{ paddingTop: "0.5rem" }}>
+          <div className="wallet-section" style={{ paddingTop: "1rem" }}>
             <button
               style={buttonStyles}
               onClick={onSubmit}
@@ -171,8 +177,8 @@ export const Wallet: React.FC<{
 
     return (
       <div id="wallet-info">
-        <b>Import existing account to replace current one</b>
-        <div id="wallet-content" style={{ paddingTop: "0.5rem" }}>
+        <h3>Import existing account to replace current one</h3>
+        <div id="wallet-content" style={{ paddingTop: "1rem" }}>
           <div className="wallet-section">
             <input
               type="text"
@@ -183,7 +189,7 @@ export const Wallet: React.FC<{
               style={inputStyles}
             />
           </div>
-          <div className="wallet-section" style={{ paddingTop: "0.5rem" }}>
+          <div className="wallet-section" style={{ paddingTop: "1rem" }}>
             <button
               style={buttonStyles}
               onClick={onSubmit}
@@ -212,8 +218,8 @@ export const Wallet: React.FC<{
 
     return (
       <div id="wallet-info">
-        <b>Create new account to replace current one</b>
-        <div id="wallet-content" style={{ paddingTop: "0.5rem" }}>
+        <h3>Create new account to replace current one</h3>
+        <div id="wallet-content" style={{ paddingTop: "1rem" }}>
           <div className="wallet-section">
             <button style={buttonStyles} onClick={onSubmit}>
               Create

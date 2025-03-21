@@ -27,6 +27,15 @@ export const inputStyles = {
   color: "darkblue",
 };
 
+export const checkboxStyles = {
+  display: "none",
+  border: "solid",
+  borderRadius: "1rem",
+  display: "inline-block",
+  // position: "relative",
+  cursor: "pointer",
+};
+
 export const buttonStyles = {
   display: "inline-block",
   backgroundColor: "rgb(27, 143, 192)",

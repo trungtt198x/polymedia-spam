@@ -48,7 +48,7 @@ export const WalletModal: React.FC<{
           updateClaimAddress={updateClaimAddress}
           currentClaimAddr={currentClaimAddr}
         />{" "}
-        <btn onClick={closeModal}>
+        <btn onClick={closeModal} style={{ cursor: "pointer" }}>
           <FontAwesomeIcon icon={faCircleXmark} size="xl" />
         </btn>
       </Modal>

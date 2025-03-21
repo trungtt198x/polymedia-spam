@@ -28,14 +28,12 @@ export const Nav: React.FC<{
   return (
     <nav>
       <Link to="/stats" className={selected("/stats")} onClick={onClick}>
-        Status
+        Stats
       </Link>
       <Link to="/nft" className={selected("/nft")} onClick={onClick}>
         NFT
       </Link>
-      <Link to="/rpcs" className={selected("/rpcs")} onClick={onClick}>
-        RPC
-      </Link>
+
       <div className="divider" />
 
       <NetworkDropdownSelector

@@ -35,7 +35,7 @@ export const InstructionModal: React.FC<{ explorerCoin: string }> = ({
         style={modalStyles}
       >
         <Introduction explorerCoin={explorerCoin} />{" "}
-        <btn onClick={closeModal}>
+        <btn onClick={closeModal} style={{ cursor: "pointer" }}>
           <FontAwesomeIcon icon={faCircleXmark} size="xl" />
         </btn>
       </Modal>
