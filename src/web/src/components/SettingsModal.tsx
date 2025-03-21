@@ -1,12 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFileCircleQuestion,
-  faGear,
-  faCircleXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faGear, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { Settings } from "./Settings";
 import { modalStyles } from "./modalStyle";
 
@@ -14,17 +9,17 @@ import { modalStyles } from "./modalStyle";
 Modal.setAppElement("#app");
 
 export const SettingsModal: React.FC<{
-  spammerStatus: string;
   spammerCurrentAddress: string;
   spammerCurrentKey: string;
-  replaceKeypair: () => {};
-  updateClaimAddress: () => {};
+  replaceKeypair: (...args: any[]) => any;
+  updateClaimAddress: (...args: any[]) => any;
+  currentClaimAddr: string;
 }> = ({
-  spammerStatus,
   spammerCurrentAddress,
   spammerCurrentKey,
   replaceKeypair,
   updateClaimAddress,
+  currentClaimAddr,
 }) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
@@ -47,11 +42,11 @@ export const SettingsModal: React.FC<{
         style={modalStyles}
       >
         <Settings
-          spammerStatus={spammerStatus}
           spammerCurrentAddress={spammerCurrentAddress}
           spammerCurrentKey={spammerCurrentKey}
           replaceKeypair={replaceKeypair}
           updateClaimAddress={updateClaimAddress}
+          currentClaimAddr={currentClaimAddr}
         />{" "}
         <btn onClick={closeModal}>
           <FontAwesomeIcon icon={faCircleXmark} size="xl" />

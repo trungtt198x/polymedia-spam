@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import {
   UserCounter,
   EXPLORER,
@@ -31,7 +26,7 @@ export const PageSpam: React.FC = () => {
     spamView.counters.epoch === -1 || balances.iota === -1 || !currEpoch;
 
   const signerAddress = spammer.current.getSpamClient().signer.toIotaAddress();
-  const claimAddress = spammer.current.getClaimAddress() || signerAddress;
+  // const claimAddress = spammer.current.getClaimAddress() || signerAddress;
 
   const spamPackageId = SPAM_IDS[network].packageId;
   const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
@@ -284,7 +279,7 @@ export const PageSpam: React.FC = () => {
           )}
         </p>
         <Balances balances={balances} isLoading={isLoading} />
-        <p>
+        {/* <p>
           Claim address:
           <HrefLink
             network={network as string}
@@ -293,7 +288,7 @@ export const PageSpam: React.FC = () => {
             hrefEndValue={claimAddress}
             hrefDisplay={shortenAddress(claimAddress)}
           />
-        </p>
+        </p> */}
       </div>
     );
   };

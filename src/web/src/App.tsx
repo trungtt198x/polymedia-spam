@@ -93,6 +93,7 @@ export const App: React.FC = () => {
   const spamPackageId = SPAM_IDS[network].packageId;
   const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
   const spammerClient = spammer.current.getSpamClient();
+  const signerAddress = spammerClient.signer.toIotaAddress();
 
   /* Functions */
 
@@ -247,13 +248,13 @@ export const App: React.FC = () => {
         <Header
           inProgress={inProgress}
           explorerCoin={explorerCoin}
-          spammerStatus={spammer.current.status}
           spammerCurrentAddress={spammerClient.signer.toIotaAddress()}
           spammerCurrentKey={(
             spammerClient.signer as Ed25519Keypair
           ).getSecretKey()}
           replaceKeypair={replaceKeypair}
           updateClaimAddress={updateClaimAddress}
+          currentClaimAddr={spammer.current.getClaimAddress() || signerAddress}
         />
         <div id="nav-and-page">
           <Nav

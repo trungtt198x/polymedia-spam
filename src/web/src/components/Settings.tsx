@@ -1,27 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
-import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { AppContext } from "../lib/types";
-import { loadClaimAddressFromStorage, pairFromSecretKey } from "../lib/storage";
+import { isValidIotaAddress } from "@polymedia/spam-sdk";
+import { pairFromSecretKey } from "../lib/storage";
 import { TextWithCopyClipboard } from "./TextWithCopyClipboard";
-import { inputStyles, buttonStyles, redText } from "./modalStyle";
+import { inputStyles, buttonStyles, redText, hrStyles } from "./modalStyle";
 
 export const Settings: React.FC<{
-  spammerStatus: string;
   spammerCurrentAddress: string;
   spammerCurrentKey: string;
-  replaceKeypair: () => {};
-  updateClaimAddress: () => {};
+  replaceKeypair: (...args: any[]) => any;
+  updateClaimAddress: (...args: any[]) => any;
+  currentClaimAddr: string;
 }> = ({
-  spammerStatus,
   spammerCurrentAddress,
   spammerCurrentKey,
   replaceKeypair,
   updateClaimAddress,
+  currentClaimAddr,
 }) => {
   const confirmAndReplaceWallet = (pair: Ed25519Keypair): boolean => {
     const userAccepted = true;
@@ -36,7 +32,7 @@ export const Settings: React.FC<{
       <div id="wallet-info">
         <div id="wallet-content">
           <div className="wallet-section">
-            <b>Address:</b>{" "}
+            <b>Current address:</b>{" "}
             <TextWithCopyClipboard
               text={spammerCurrentAddress}
               className={""}
@@ -56,13 +52,9 @@ export const Settings: React.FC<{
   };
 
   const ClaimAddressForm: React.FC = () => {
-    const [claimAddress, setClaimAddress] = useState<string | undefined>(
-      loadClaimAddressFromStorage(),
-    );
+    const [claimAddress, setClaimAddress] = useState<string | undefined>();
     const [msg, setMsg] = useState<{ type: "okay" | "error"; text: string }>();
-    const disableButton =
-      msg?.type === "error" || !claimAddress || spammerStatus !== "stopped";
-    const disableTextarea = spammerStatus !== "stopped";
+    const disableButton = msg?.type === "error" || !claimAddress;
 
     const onInputChange = (
       evt: React.ChangeEvent<HTMLTextAreaElement>,
@@ -73,7 +65,7 @@ export const Settings: React.FC<{
         setMsg(undefined);
         return;
       }
-      const cleanAddress = validateAndNormalizeAddress(newClaimAddress);
+      const cleanAddress = isValidIotaAddress(newClaimAddress);
       if (!cleanAddress) {
         setMsg({ type: "error", text: "Invalid address" });
         return;
@@ -94,45 +86,47 @@ export const Settings: React.FC<{
           updateClaimAddress(claimAddress);
           // setMsg({ type: "okay", text: "Success!" });
           setMsg(null);
-          toast.success("Claim address set");
+          toast.success("Claim address changed");
         } catch (err) {
           setMsg({ type: "error", text: String(err) });
         }
       }
     };
 
-    const onStopSpammer = () => {
-      if (spammerStatus === "running") {
-        spammer.current.stop();
-      }
-    };
-
     return (
-      <div>
-        <h3>Set claim address</h3>
-        <p>Claim SPAM coins to this address:</p>
-        <input
-          type="text"
-          value={claimAddress}
-          placeholder="Address to receive SPAM"
-          onChange={onInputChange}
-          onKeyDown={onKeyDown}
-          disabled={disableTextarea}
-          style={{ width: "100%", wordBreak: "break-all" }}
-        />
-        <br />
-        {spammerStatus !== "stopped" ? (
-          <p>Stop spamming to set address</p>
-        ) : (
-          <button className="btn" onClick={onSubmit} disabled={disableButton}>
-            Set address
-          </button>
-        )}
-        {msg && (
-          <div className={`${msg.type}-box`}>
-            <div>{msg.text}</div>
+      <div id="wallet-info">
+        {/* <b>Current claim address</b> */}
+        <div id="wallet-content">
+          <div className="wallet-section">
+            <b>Current claim address:</b>{" "}
+            <TextWithCopyClipboard text={currentClaimAddr} className={""} />
           </div>
-        )}
+
+          <div className="wallet-section" style={{ paddingTop: "0.5rem" }}>
+            <input
+              type="text"
+              value={claimAddress}
+              placeholder="Change address to receive $SPAM"
+              onChange={onInputChange}
+              onKeyDown={onKeyDown}
+              style={inputStyles}
+            />
+          </div>
+          <div className="wallet-section" style={{ paddingTop: "0.5rem" }}>
+            <button
+              style={buttonStyles}
+              onClick={onSubmit}
+              disabled={disableButton}
+            >
+              Change
+            </button>
+          </div>
+          {msg && (
+            <div className="wallet-section">
+              <div style={redText}>{msg.text}</div>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -177,13 +171,13 @@ export const Settings: React.FC<{
 
     return (
       <div id="wallet-info">
-        <b>Import existing account</b>
+        <b>Import existing account to replace current one</b>
         <div id="wallet-content" style={{ paddingTop: "0.5rem" }}>
           <div className="wallet-section">
             <input
               type="text"
               value={secretKey}
-              placeholder="Paste secret key here. Current account replaced"
+              placeholder="Paste secret key here"
               onChange={onInputChange}
               onKeyDown={onKeyDown}
               style={inputStyles}
@@ -217,13 +211,14 @@ export const Settings: React.FC<{
     };
 
     return (
-      <div>
-        <h3>Create new account</h3>
-        <p>This will replace the current account with a new one!</p>
-        <div className="btn-group">
-          <button className="btn" onClick={onSubmit}>
-            Create account
-          </button>
+      <div id="wallet-info">
+        <b>Create new account to replace current one</b>
+        <div id="wallet-content" style={{ paddingTop: "0.5rem" }}>
+          <div className="wallet-section">
+            <button style={buttonStyles} onClick={onSubmit}>
+              Create
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -236,11 +231,11 @@ export const Settings: React.FC<{
         <br />
         <div id="page-wallet-sections">
           <AutoGenWallet />
-          <br />
+          <hr style={hrStyles} />
           <ImportWalletForm />
-          <br />
+          <hr style={hrStyles} />
           <CreateWalletForm />
-
+          <hr style={hrStyles} />
           <ClaimAddressForm />
         </div>
       </div>

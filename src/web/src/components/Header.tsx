@@ -1,30 +1,23 @@
 import { Link } from "react-router-dom";
-import { SpamStatus } from "@polymedia/spam-sdk";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFileCircleQuestion,
-  faGear,
-} from "@fortawesome/free-solid-svg-icons";
-import { NetworkDropdownSelector } from "@polymedia/suitcase-react";
 import { InstructionModal } from "./InstructionModal";
 import { SettingsModal } from "./SettingsModal";
 
 export const Header: React.FC<{
   inProgress: boolean;
   explorerCoin: string;
-  spammerStatus: string;
   spammerCurrentAddress: string;
   spammerCurrentKey: string;
-  replaceKeypair: () => {};
-  updateClaimAddress: () => {};
+  replaceKeypair: (...args: any[]) => any;
+  updateClaimAddress: (...args: any[]) => any;
+  currentClaimAddr: string;
 }> = ({
   inProgress,
   explorerCoin,
-  spammerStatus,
   spammerCurrentAddress,
   spammerCurrentKey,
   replaceKeypair,
   updateClaimAddress,
+  currentClaimAddr,
 }) => {
   return (
     <header>
@@ -47,11 +40,11 @@ export const Header: React.FC<{
         </span>
         <span>
           <SettingsModal
-            spammerStatus={spammerStatus}
             spammerCurrentAddress={spammerCurrentAddress}
             spammerCurrentKey={spammerCurrentKey}
             replaceKeypair={replaceKeypair}
             updateClaimAddress={updateClaimAddress}
+            currentClaimAddr={currentClaimAddr}
           />
         </span>
       </h1>

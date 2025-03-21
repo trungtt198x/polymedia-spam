@@ -1,6 +1,5 @@
-import { SPAM_IDS, EXPLORER } from "@polymedia/spam-sdk";
 import { LinkExternal } from "@polymedia/suitcase-react";
-import { Link } from "react-router-dom";
+import { hrStyles } from "./modalStyle";
 
 export const Introduction: React.FC<{ explorerCoin: string }> = ({
   explorerCoin,
@@ -8,7 +7,7 @@ export const Introduction: React.FC<{ explorerCoin: string }> = ({
   return (
     <>
       <div id="page-wallet">
-        <h1 style={{ textAlign: "center" }}>How does it work?</h1>
+        <h1 style={{ textAlign: "center" }}>Instructions</h1>
         <br />
         <p>
           <LinkExternal href={explorerCoin} follow={true}>
@@ -35,7 +34,7 @@ export const Introduction: React.FC<{ explorerCoin: string }> = ({
           <li>Redeem $SPAM for NFTs. </li>
         </ol>
 
-        <br />
+        <hr style={hrStyles} />
 
         <b>Getting started</b>
         <ol>
@@ -44,7 +43,7 @@ export const Introduction: React.FC<{ explorerCoin: string }> = ({
           <li>Claim your earned $SPAM anytime. </li>
         </ol>
 
-        <br />
+        <hr style={hrStyles} />
 
         <b>No spam, no gain. Spam or be rekt.</b>
       </div>

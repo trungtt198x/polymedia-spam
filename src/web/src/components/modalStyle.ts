@@ -22,6 +22,7 @@ export const inputStyles = {
   wordBreak: "break-all",
   backgroundColor: "#fff",
   borderRadius: "0.8rem",
+  border: "solid",
   padding: "0.4rem",
   color: "darkblue",
 };
@@ -33,7 +34,7 @@ export const buttonStyles = {
   color: "white",
   // fontWeight: "70",
   marginBottom: "0.5rem",
-  padding: "0.3em 1em",
+  padding: "0.5em 1em",
   textDecoration: "none",
   userSelect: "none",
   whiteSpace: "nowrap",
@@ -45,4 +46,11 @@ export const redText = {
   color: "rgb(222, 125, 125)",
   fontWeight: "30",
   wordBreak: "break-all",
+};
+
+export const hrStyles = {
+  border: "0", // kill the default border
+  height: "1px",
+  backgroundColor: "grey",
+  margin: "2rem 0",
 };
