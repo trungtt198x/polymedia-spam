@@ -1,8 +1,6 @@
 import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import {
   SPAM_DECIMALS,
-  SPAM_MODULE,
-  SPAM_SYMBOL,
   IOTA_DECIMALS,
   DEFAULT_NETWORK,
   SpamEvent,
@@ -11,6 +9,7 @@ import {
   EXPLORER,
   SPAM_IDS,
   SHOW_EVENT_TYPE,
+  getSpamCoinType,
 } from "@polymedia/spam-sdk";
 import { sleep } from "@polymedia/suitcase-core";
 import { useEffect, useRef, useState } from "react";
@@ -76,7 +75,7 @@ export const App: React.FC = () => {
   );
   const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean>(false);
 
-  const { iotaWalletClient } = useIotaWalletClient(network, DEFAULT_NETWORK);
+  const { iotaWalletClient } = useIotaWalletClient(network, DEFAULT_NETWORK, handleSpamEvent);
 
   const appContext: AppContext = {
     network,
@@ -126,7 +125,7 @@ export const App: React.FC = () => {
       });
       const balanceSpam = await spammer.current.getIotaClient().getBalance({
         owner: spammerClient.signer.toIotaAddress(),
-        coinType: `${spammerClient.spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
+        coinType: getSpamCoinType(network), // `${spammerClient.spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
       });
       setBalances({
         spam: Number(balanceSpam.totalBalance) / 10 ** SPAM_DECIMALS,

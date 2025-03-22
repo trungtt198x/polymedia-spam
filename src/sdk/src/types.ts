@@ -58,4 +58,16 @@ export function emptyUserCounters(): UserCounters {
     claim: [],
     delete: [],
   };
-}
+};
+
+export type SpamEvent = {
+  type: "debug" | "info" | "warn" | "error";
+  msg: string;
+  txDigest?: string;
+};
+
+export type SpamEventHandler = (event: SpamEvent) => void;
+
+export type SpamStatus = "stopped" | "running" | "stopping";
+
+export type CounterOp = "register" | "claim" | "delete";

@@ -12,21 +12,9 @@ import {
 import { SpamClient } from "./SpamClient.js";
 import { SpamClientRotator } from "./SpamClientRotator.js";
 import { SpamError, parseSpamError } from "./errors.js";
-import { UserCounters, emptyUserCounters } from "./types.js";
+import { UserCounters, emptyUserCounters, SpamEvent, SpamEventHandler, SpamStatus, CounterOp } from "./types.js";
 import { SPAM_STATUS } from "./config.js";
 import { shortenStuff } from "./lib.js";
-
-export type SpamStatus = "stopped" | "running" | "stopping";
-
-export type CounterOp = "register" | "claim" | "delete";
-
-export type SpamEvent = {
-  type: "debug" | "info" | "warn" | "error";
-  msg: string;
-  txDigest?: string;
-};
-
-export type SpamEventHandler = (event: SpamEvent) => void;
 
 const TXS_UNTIL_ROTATE = 50;
 const SLEEP_MS_AFTER_RPC_CHANGE = 1000;

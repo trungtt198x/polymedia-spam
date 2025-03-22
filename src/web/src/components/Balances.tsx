@@ -1,6 +1,9 @@
 import { formatNumber } from "@polymedia/suitcase-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
+import {
+  shortenStuff,
+} from "@polymedia/spam-sdk";
 import { UserBalances } from "../lib/types";
 
 export const Balances: React.FC<{
@@ -24,6 +27,23 @@ export const Balances: React.FC<{
           : `SPAM: ${formatNumber(balances.spam, "compact")}`}
       </span>
     </p>
+  );
+};
+
+export const AddressAndBalances: React.FC<{
+  address: string;
+  balances: UserBalances;
+  isLoading: boolean;
+}> = ({ address, balances, isLoading }) => {
+  return (
+    <>
+      <div>
+        {shortenStuff(address)}{" "}
+      </div>
+      <div className="tight">
+        <Balances balances={balances} isLoading={isLoading} />
+      </div>
+    </>
   );
 };
 

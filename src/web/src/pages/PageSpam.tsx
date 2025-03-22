@@ -15,7 +15,7 @@ import { PageDisclaimer } from "./PageDisclaimer";
 import { TextWithCopyClipboard } from "../components/TextWithCopyClipboard";
 import { HrefLink } from "../components/HrefLink";
 import { EventLog } from "../components/EventLog";
-import { Balances, BalanceIOTA } from "../components/Balances";
+import { BalanceIOTA, AddressAndBalances } from "../components/Balances";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "../lib/epochs";
 
 export const PageSpam: React.FC = () => {
@@ -285,7 +285,7 @@ export const PageSpam: React.FC = () => {
             />
           )}
         </p>
-        <Balances balances={balances} isLoading={isLoading} />
+        <AddressAndBalances address={shortenStuff(signerAddress)} balances={balances} isLoading={isLoading} />
         {/* <p>
           Claim address:
           <HrefLink

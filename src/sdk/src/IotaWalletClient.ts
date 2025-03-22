@@ -10,7 +10,8 @@ import { NetworkName } from "@polymedia/suitcase-core";
 
 import { SignTx } from "./lib.js";
 import * as pkgNft from "./packageNft.js";
-import { SPAM_NFT_IDS } from "./config.js";
+import { SPAM_NFT_IDS, getSpamCoinType, SPAM_DECIMALS, IOTA_DECIMALS } from "./config.js";
+import { SpamEvent, SpamEventHandler } from "./types.js";
 
 /**
  * A client to interact with the demo IOTA contract.
@@ -20,12 +21,26 @@ export class IotaWalletClient {
   public readonly signTx: SignTx;
   public readonly nftPackageId: string;
   public readonly nftManagerId: string;
+  public readonly network: NetworkName;
+  protected eventHandler: SpamEventHandler;
 
-  constructor(iotaClient: IotaClient, signTx: SignTx, network: NetworkName) {
+  constructor(iotaClient: IotaClient, signTx: SignTx, network: NetworkName, eventHandler: SpamEventHandler) {
     this.iotaClient = iotaClient;
     this.signTx = signTx;
     this.nftPackageId = SPAM_NFT_IDS[network].packageId;
     this.nftManagerId = SPAM_NFT_IDS[network].nftManagerId;
+    this.eventHandler = eventHandler;
+    this.network = network;
+  }
+
+  /* Events */
+
+  public setEventHandler(handler: SpamEventHandler) {
+    this.eventHandler = handler;
+  }
+
+  protected event(event: SpamEvent) {
+    this.eventHandler && this.eventHandler(event);
   }
 
   public async mint(
@@ -41,7 +56,30 @@ export class IotaWalletClient {
       sender,
       dryRun,
     });
+    this.event({
+      type: "info",
+      msg: "NFT minted",
+      txDigest: resp.digest,
+    });
     return resp;
+  }
+
+  public async getBalances(owner: string): Promise<{ spam: number; iota: number } | null> {
+    try {
+      const balanceIOTA = await this.iotaClient.getBalance({
+        owner
+      });
+      const balanceSpam = await this.iotaClient.getBalance({
+        owner,
+        coinType: getSpamCoinType(this.network),
+      });
+      return {
+        spam: Number(balanceSpam.totalBalance) / 10 ** SPAM_DECIMALS,
+        iota: Number(balanceIOTA.totalBalance) / 10 ** IOTA_DECIMALS,
+      };
+    } catch (_err) {
+      return null;
+    }
   }
 
   // === data fetching ===

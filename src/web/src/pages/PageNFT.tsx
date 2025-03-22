@@ -23,7 +23,7 @@ import { StatusSpan } from "./components/StatusSpan";
 import { ConnectButtonL1 } from "../components/ConnectButtonL1";
 import { HrefLinkTx } from "../components/HrefLinkTx";
 import { EventLog } from "../components/EventLog";
-import { Balances } from "../components/Balances";
+import { AddressAndBalances } from "../components/Balances";
 import { useCurrentAccount } from "@iota/dapp-kit";
 
 export const PageNFT: React.FC = () => {
@@ -182,7 +182,17 @@ export const PageNFT: React.FC = () => {
     isFromMinerWallet,
   }) => {
     const [receivingAddress, setReceivingAddress] = useState("");
+    const [connectedWalletBalances, setConnectedWalletBalances] = useState();
     const account = useCurrentAccount();
+
+    useEffect(() => {
+      if (account) {
+        iotaWalletClient.getBalances(account.address).then((balances) => {
+          setConnectedWalletBalances(balances);
+        });
+      }
+    }, [account]);
+
     const onInputChange = (
       evt: React.ChangeEvent<HTMLTextAreaElement>,
     ): void => {
@@ -207,6 +217,7 @@ export const PageNFT: React.FC = () => {
             >
               Mint from miner wallet
             </button>
+            <AddressAndBalances address={shortenStuff(minerAddress)} balances={balances} isLoading={isLoading} />
             <br />
           </>
         ) : (
@@ -221,6 +232,10 @@ export const PageNFT: React.FC = () => {
               Mint from connected wallet
             </button>
             <ConnectButtonL1 />
+            {account && <>
+              <AddressAndBalances address={shortenStuff(account.address)} balances={connectedWalletBalances} isLoading={isLoading} />
+            </>}
+            <br />
           </>
         )}
 
@@ -242,23 +257,13 @@ export const PageNFT: React.FC = () => {
       <h1>
         <span className="rainbow">NFT</span>
       </h1>
-      <div>
-        <div className="tight">
-          <Balances balances={balances} isLoading={isLoading} />
-        </div>
-        {balances?.spam === 0 ? (
-          <SpamUp />
-        ) : (
-          <div id="page-wallet">
-            <div id="page-wallet-sections">
-              <MintForm isFromMinerWallet={true} />
+      <div id="page-wallet">
+        <div id="page-wallet-sections">
+          <MintForm isFromMinerWallet={true} />
 
-              <MintForm isFromMinerWallet={false} />
-            </div>
-          </div>
-        )}
+          <MintForm isFromMinerWallet={false} />
+        </div>
       </div>
-      
       <EventLog spamView={spamView} msgFilter={"nft"} network={network} />
     </>
   );
