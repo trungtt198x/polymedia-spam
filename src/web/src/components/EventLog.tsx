@@ -3,7 +3,11 @@ import { HrefLinkTx } from "./HrefLinkTx";
 
 export type EventMsgFilter = "nft" | "counter";
 
-export const EventLog: React.FC<{ spamView: SpamView; msgFilter: EventMsgFilter; network: string }> = ({ spamView, msgFilter, network }) => {
+export const EventLog: React.FC<{
+  spamView: SpamView;
+  msgFilter: EventMsgFilter;
+  network: string;
+}> = ({ spamView, msgFilter, network }) => {
   if (spamView.events.length === 0) {
     return null;
   }
@@ -14,8 +18,8 @@ export const EventLog: React.FC<{ spamView: SpamView; msgFilter: EventMsgFilter;
       reversedEvents.push(
         <div className="event" key={i}>
           <span className="event-time">{evt.time}</span>
-          
-          {evt.txDigest ?
+
+          {evt.txDigest ? (
             <span className="event-msg">
               <HrefLinkTx
                 network={network}
@@ -23,9 +27,9 @@ export const EventLog: React.FC<{ spamView: SpamView; msgFilter: EventMsgFilter;
                 hrefDisplay={evt.msg}
               />
             </span>
-            :
+          ) : (
             <span className="event-msg">{evt.msg}</span>
-          }
+          )}
         </div>,
       );
     }

@@ -182,16 +182,16 @@ export const PageNFT: React.FC = () => {
     isFromMinerWallet,
   }) => {
     const [receivingAddress, setReceivingAddress] = useState("");
-    const [connectedWalletBalances, setConnectedWalletBalances] = useState();
+    // const [connectedWalletBalances, setConnectedWalletBalances] = useState(null);
     const account = useCurrentAccount();
 
-    useEffect(() => {
-      if (account) {
-        iotaWalletClient.getBalances(account.address).then((balances) => {
-          setConnectedWalletBalances(balances);
-        });
-      }
-    }, [account]);
+    // useEffect(() => {
+    //   if (account) {
+    //     iotaWalletClient.getBalances(account.address).then((balances) => {
+    //       setConnectedWalletBalances(balances);
+    //     });
+    //   }
+    // }, [account]);
 
     const onInputChange = (
       evt: React.ChangeEvent<HTMLTextAreaElement>,
@@ -217,7 +217,11 @@ export const PageNFT: React.FC = () => {
             >
               Mint from miner wallet
             </button>
-            <AddressAndBalances address={shortenStuff(minerAddress)} balances={balances} isLoading={isLoading} />
+            <AddressAndBalances
+              address={shortenStuff(minerAddress)}
+              balances={balances}
+              isLoading={isLoading}
+            />
             <br />
           </>
         ) : (
@@ -231,10 +235,13 @@ export const PageNFT: React.FC = () => {
             >
               Mint from connected wallet
             </button>
+
+            {/* {account && <>
+              <AddressAndBalances address={shortenStuff(account.address)} balances={connectedWalletBalances} isLoading={false} />
+            </>} */}
+            {account && <div>{shortenStuff(account.address)}</div>}
+
             <ConnectButtonL1 />
-            {account && <>
-              <AddressAndBalances address={shortenStuff(account.address)} balances={connectedWalletBalances} isLoading={isLoading} />
-            </>}
             <br />
           </>
         )}

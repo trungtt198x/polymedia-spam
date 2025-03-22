@@ -58,7 +58,7 @@ export function emptyUserCounters(): UserCounters {
     claim: [],
     delete: [],
   };
-};
+}
 
 export type SpamEvent = {
   type: "debug" | "info" | "warn" | "error";

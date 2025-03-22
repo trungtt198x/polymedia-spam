@@ -1,9 +1,7 @@
 import { formatNumber } from "@polymedia/suitcase-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
-import {
-  shortenStuff,
-} from "@polymedia/spam-sdk";
+import { shortenStuff } from "@polymedia/spam-sdk";
 import { UserBalances } from "../lib/types";
 
 export const Balances: React.FC<{
@@ -37,9 +35,7 @@ export const AddressAndBalances: React.FC<{
 }> = ({ address, balances, isLoading }) => {
   return (
     <>
-      <div>
-        {shortenStuff(address)}{" "}
-      </div>
+      <div>{shortenStuff(address)} </div>
       <div className="tight">
         <Balances balances={balances} isLoading={isLoading} />
       </div>

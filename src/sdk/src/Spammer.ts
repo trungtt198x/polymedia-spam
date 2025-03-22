@@ -12,9 +12,15 @@ import {
 import { SpamClient } from "./SpamClient.js";
 import { SpamClientRotator } from "./SpamClientRotator.js";
 import { SpamError, parseSpamError } from "./errors.js";
-import { UserCounters, emptyUserCounters, SpamEvent, SpamEventHandler, SpamStatus, CounterOp } from "./types.js";
+import {
+  UserCounters,
+  emptyUserCounters,
+  SpamEvent,
+  SpamEventHandler,
+  SpamStatus,
+  CounterOp,
+} from "./types.js";
 import { SPAM_STATUS } from "./config.js";
-import { shortenStuff } from "./lib.js";
 
 const TXS_UNTIL_ROTATE = 50;
 const SLEEP_MS_AFTER_RPC_CHANGE = 1000;
@@ -114,15 +120,41 @@ export class Spammer {
     }
   }
 
-  public async handleCounter(counterId: string, counterOp: CounterOp): Promise<string | null> {
+  public handleCounter(counterId: string, counterOp: CounterOp) {
     if (this.status === "stopped") {
+      this._handleCounter(counterId, counterOp);
+    }
+  }
+
+  protected async _handleCounter(
+    counterId: string,
+    counterOp: CounterOp,
+  ): Promise<string | null> {
+    console.log(
+      `handleCounter - counterId: ${counterId}, counterOp: ${counterOp}`,
+    );
+    if (this.status === "stopped") {
+      let txHash: string | null = null;
       if (counterOp === "register") {
-        return this.registerUserCounter(counterId);
+        txHash = await this.registerUserCounter(counterId);
       } else if (counterOp === "claim") {
-        return this.claimUserCounters([counterId]);
+        txHash = await this.claimUserCounters([counterId]);
       } else if (counterOp === "delete") {
-        return this.destroyUserCounters([counterId]);
+        txHash = await this.destroyUserCounters([counterId]);
       }
+
+      // await this.refetchData();
+      if (txHash) {
+        await this.getIotaClient().waitForTransaction({
+          digest: txHash,
+          pollInterval: 500,
+        });
+      }
+
+      this.userCounters =
+        await this.getSpamClient().fetchUserCountersAndClassify();
+
+      return txHash;
     }
     return null;
   }
@@ -300,31 +332,23 @@ export class Spammer {
   /* Spam coin functions */
 
   protected async registerUserCounter(counterId: string): Promise<string> {
-    this.event({
-      type: "info",
-      msg: "Registering counter: " + shortenStuff(counterId),
-    });
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().registerUserCounter(counterId);
     this.requestRefetch = true;
     this.lastTxDigest = resp.digest;
     this.event({
-      type: "debug",
-      msg: `Registering counter: ${resp.effects?.status.status}: ${resp.digest}`,
+      type: "info",
+      msg: "Counter registered",
+      txDigest: resp.digest,
     });
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
+    console.log(`registerUserCounter - resp.digest: ${resp.digest}`);
     return resp.digest;
   }
 
   protected async claimUserCounters(counterIds: string[]): Promise<string> {
-    this.event({
-      type: "info",
-      msg:
-        "Claiming counters: " +
-        counterIds.map((objId) => shortenStuff(objId)).join(", "),
-    });
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().claimUserCounters(
       counterIds,
@@ -333,49 +357,49 @@ export class Spammer {
     this.requestRefetch = true;
     this.lastTxDigest = resp.digest;
     this.event({
-      type: "debug",
-      msg: `Claiming counters: ${resp.effects?.status.status}: ${resp.digest}`,
+      type: "info",
+      msg: "Counter claimed",
+      txDigest: resp.digest,
     });
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
+    console.log(`claimUserCounters - resp.digest: ${resp.digest}`);
     return resp.digest;
   }
 
   protected async destroyUserCounters(counterIds: string[]): Promise<string> {
-    this.event({
-      type: "info",
-      msg:
-        "Deleting counters: " +
-        counterIds.map((objId) => shortenStuff(objId)).join(", "),
-    });
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().destroyUserCounters(counterIds);
     this.requestRefetch = true;
     this.lastTxDigest = resp.digest;
     this.event({
-      type: "debug",
-      msg: `Deleting counters: ${resp.effects?.status.status}: ${resp.digest}`,
+      type: "info",
+      msg: "Counter deleted",
+      txDigest: resp.digest,
     });
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
+    console.log(`destroyUserCounters - resp.digest: ${resp.digest}`);
     return resp.digest;
   }
 
-  protected async newUserCounter(): Promise<void> {
-    this.event({ type: "info", msg: "Creating counter" });
+  protected async newUserCounter(): Promise<string> {
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().newUserCounter();
     this.requestRefetch = true;
     this.lastTxDigest = resp.digest;
     this.event({
-      type: "debug",
-      msg: `Creating counter: ${resp.effects?.status.status}: ${resp.digest}`,
+      type: "info",
+      msg: "Counter created",
+      txDigest: resp.digest,
     });
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
+    console.log(`newUserCounter - resp.digest: ${resp.digest}`);
+    return resp.digest;
   }
 
   protected async incrementUserCounter(

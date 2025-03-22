@@ -2,7 +2,11 @@ import { useMemo } from "react";
 import { useIotaClient, useSignTransaction } from "@iota/dapp-kit";
 import { IotaWalletClient, SpamEventHandler } from "@polymedia/spam-sdk";
 
-const useIotaWalletClient = (network: string, loadedNetwork: string, handleSpamEvent: SpamEventHandler) => {
+const useIotaWalletClient = (
+  network: string,
+  loadedNetwork: string,
+  handleSpamEvent: SpamEventHandler,
+) => {
   const iotaClient = useIotaClient();
   const { mutateAsync: walletSignTx } = useSignTransaction();
 

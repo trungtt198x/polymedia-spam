@@ -30,8 +30,8 @@ export function formatEpochPeriod(
   showTime: boolean,
 ): string {
   const now = new Date();
-  const verb = endDate > now ? "ends" : "ended";
-  return `Started ${formatEpochTime(startDate, showTime)}, ${verb} ${formatEpochTime(endDate, showTime)}`;
+  const verb = endDate > now ? "Ends" : "Ended";
+  return `Started ${formatEpochTime(startDate, showTime)} </> ${verb} ${formatEpochTime(endDate, showTime)}`;
 }
 
 export function formatEpochTime(date: Date, showTime: boolean): string {

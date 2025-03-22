@@ -75,7 +75,11 @@ export const App: React.FC = () => {
   );
   const [disclaimerAccepted, setDisclaimerAccepted] = useState<boolean>(false);
 
-  const { iotaWalletClient } = useIotaWalletClient(network, DEFAULT_NETWORK, handleSpamEvent);
+  const { iotaWalletClient } = useIotaWalletClient(
+    network,
+    DEFAULT_NETWORK,
+    handleSpamEvent,
+  );
 
   const appContext: AppContext = {
     network,

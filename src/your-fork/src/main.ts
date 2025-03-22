@@ -4,10 +4,7 @@ import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { SPAM_IDS, SpamClient, shortenStuff } from "@polymedia/spam-sdk";
 
 async function main() {
-  console.log(
-    "Mainnet package ID:",
-    shortenStuff(SPAM_IDS.mainnet.packageId),
-  );
+  console.log("Mainnet package ID:", shortenStuff(SPAM_IDS.mainnet.packageId));
 
   const spamClient = new SpamClient(
     new Ed25519Keypair(),

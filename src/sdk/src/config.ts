@@ -72,7 +72,8 @@ export const EXPLORER: Record<NetworkName, string> = {
 export const SPAM_MODULE = "spam";
 export const SPAM_SYMBOL = "SPAM";
 export const SPAM_DECIMALS = 4;
-export const getSpamCoinType = (network: NetworkName): string => `${SPAM_IDS[network].packageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`;
+export const getSpamCoinType = (network: NetworkName): string =>
+  `${SPAM_IDS[network].packageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`;
 
 export const SPAM_NFT_MODULE = "nft";
 

@@ -32,6 +32,12 @@ export const PageSpam: React.FC = () => {
   const spamPackageId = SPAM_IDS[network].packageId;
   const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
 
+  const btnStylesHandleCounter = {
+    padding: "0.5em 1em",
+    margin: "0",
+    fontWeight: "400",
+  };
+
   useEffect(() => {
     setCurrEpoch(undefined);
     updateCurrEpoch();
@@ -153,18 +159,18 @@ export const PageSpam: React.FC = () => {
     if (spammer.current.status === "stopped") {
       return (
         <>
-          {showProcessCountersButton ?
+          {showProcessCountersButton ? (
             <>
               <br />
               <button className="btn break-all" onClick={startOnce}>
                 {actionableCounters.join(" + ")} Counters
               </button>
             </>
-            :
+          ) : (
             <button className="btn-green" onClick={startLoop}>
               Start Spamming
             </button>
-          }
+          )}
         </>
       );
     }
@@ -205,22 +211,60 @@ export const PageSpam: React.FC = () => {
         status = "⏳ Registering counter...";
       } else {
         status = (
-          <span className="blink-loop">
-            🚨 MUST BE REGISTERED before epoch {counter.epoch + 1} ends
-          </span>
+          <>
+            <span className="blink-loop">
+              🚨 Before epoch {counter.epoch + 1} ends, must
+            </span>{" "}
+            <button
+              className="btn-green"
+              style={btnStylesHandleCounter}
+              onClick={() =>
+                {spammer.current.handleCounter(counter.id, "register");}
+              }
+            >
+              register
+            </button>
+          </>
         );
       }
     } else if (type === "claim") {
       if (spammer.current.status === "running") {
         status = "💰 Minting SPAM...";
       } else {
-        status = "✅ Can mint SPAM at any time";
+        // status = "✅ Can mint SPAM at any time";
+        status = (
+          <span>
+            Registered counter. Can{" "}
+            <button
+              className="btn-green"
+              style={btnStylesHandleCounter}
+              onClick={() => {spammer.current.handleCounter(counter.id, "claim");}}
+            >
+              claim
+            </button>{" "}
+            $SPAM at any time
+          </span>
+        );
       }
     } else {
       if (spammer.current.status === "running") {
         status = "🧹 Deleting counter...";
       } else {
-        status = "Unusable. Will be deleted.";
+        // status = "Unusable. Will be deleted.";
+        status = (
+          <span>
+            Unusable. Please{" "}
+            <button
+              className="btn-red"
+              style={btnStylesHandleCounter}
+              onClick={() =>
+                {spammer.current.handleCounter(counter.id, "delete");}
+              }
+            >
+              delete
+            </button>
+          </span>
+        );
       }
     }
 
@@ -285,7 +329,11 @@ export const PageSpam: React.FC = () => {
             />
           )}
         </p>
-        <AddressAndBalances address={shortenStuff(signerAddress)} balances={balances} isLoading={isLoading} />
+        <AddressAndBalances
+          address={shortenStuff(signerAddress)}
+          balances={balances}
+          isLoading={isLoading}
+        />
         {/* <p>
           Claim address:
           <HrefLink
@@ -341,7 +389,7 @@ export const PageSpam: React.FC = () => {
           </>
         )}
 
-        <EventLog spamView={spamView} msgFilter={"counter"} network={network}/>
+        <EventLog spamView={spamView} msgFilter={"counter"} network={network} />
       </div>
     </>
   );

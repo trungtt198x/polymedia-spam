@@ -10,7 +10,12 @@ import { NetworkName } from "@polymedia/suitcase-core";
 
 import { SignTx } from "./lib.js";
 import * as pkgNft from "./packageNft.js";
-import { SPAM_NFT_IDS, getSpamCoinType, SPAM_DECIMALS, IOTA_DECIMALS } from "./config.js";
+import {
+  SPAM_NFT_IDS,
+  getSpamCoinType,
+  SPAM_DECIMALS,
+  IOTA_DECIMALS,
+} from "./config.js";
 import { SpamEvent, SpamEventHandler } from "./types.js";
 
 /**
@@ -24,7 +29,12 @@ export class IotaWalletClient {
   public readonly network: NetworkName;
   protected eventHandler: SpamEventHandler;
 
-  constructor(iotaClient: IotaClient, signTx: SignTx, network: NetworkName, eventHandler: SpamEventHandler) {
+  constructor(
+    iotaClient: IotaClient,
+    signTx: SignTx,
+    network: NetworkName,
+    eventHandler: SpamEventHandler,
+  ) {
     this.iotaClient = iotaClient;
     this.signTx = signTx;
     this.nftPackageId = SPAM_NFT_IDS[network].packageId;
@@ -64,10 +74,12 @@ export class IotaWalletClient {
     return resp;
   }
 
-  public async getBalances(owner: string): Promise<{ spam: number; iota: number } | null> {
+  public async getBalances(
+    owner: string,
+  ): Promise<{ spam: number; iota: number } | null> {
     try {
       const balanceIOTA = await this.iotaClient.getBalance({
-        owner
+        owner,
       });
       const balanceSpam = await this.iotaClient.getBalance({
         owner,
