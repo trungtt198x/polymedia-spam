@@ -370,7 +370,6 @@ export class SpamClient {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private objResToFields(resp: IotaObjectResponse): Record<string, any> {
     if (resp.error) {
       throw Error(`response error: ${JSON.stringify(resp, null, 2)}`);
@@ -378,10 +377,9 @@ export class SpamClient {
     if (resp.data?.content?.dataType !== "moveObject") {
       throw Error(`response content missing: ${JSON.stringify(resp, null, 2)}`);
     }
-    return resp.data.content.fields as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+    return resp.data.content.fields as Record<string, any>;
   }
 
-  /* eslint-disable */
   protected parseUserCounter(resp: IotaObjectResponse): UserCounter {
     const fields = this.objResToFields(resp);
     const ref: IotaObjectRef = {
@@ -397,7 +395,6 @@ export class SpamClient {
       registered: Boolean(fields.registered),
     };
   }
-  /* eslint-enable */
 }
 
 // Dev-only

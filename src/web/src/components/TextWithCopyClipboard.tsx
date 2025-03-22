@@ -2,7 +2,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import { shortenTx } from "@polymedia/spam-sdk";
+import { shortenStuff } from "@polymedia/spam-sdk";
 
 export const TextWithCopyClipboard: React.FC<{
   text: string;
@@ -12,7 +12,7 @@ export const TextWithCopyClipboard: React.FC<{
 
   return (
     <span className={className}>
-      {shortenTx(text)} &nbsp;
+      {shortenStuff(text)} &nbsp;
       <span style={{ cursor: "pointer" }}>
         <CopyToClipboard
           text={text}

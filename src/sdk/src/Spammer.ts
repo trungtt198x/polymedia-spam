@@ -6,7 +6,6 @@ import {
 import { Signer } from "@iota/iota-sdk/cryptography";
 import {
   NetworkName,
-  shortenAddress,
   sleep,
   validateAndNormalizeAddress,
 } from "@polymedia/suitcase-core";
@@ -15,12 +14,16 @@ import { SpamClientRotator } from "./SpamClientRotator.js";
 import { SpamError, parseSpamError } from "./errors.js";
 import { UserCounters, emptyUserCounters } from "./types.js";
 import { SPAM_STATUS } from "./config.js";
+import { shortenStuff } from "./lib.js";
 
 export type SpamStatus = "stopped" | "running" | "stopping";
+
+export type CounterOp = "register" | "claim" | "delete";
 
 export type SpamEvent = {
   type: "debug" | "info" | "warn" | "error";
   msg: string;
+  txDigest?: string;
 };
 
 export type SpamEventHandler = (event: SpamEvent) => void;
@@ -121,6 +124,19 @@ export class Spammer {
       this.status = "stopping";
       this.event({ type: "info", msg: "Shutting down" });
     }
+  }
+
+  public async handleCounter(counterId: string, counterOp: CounterOp): Promise<string | null> {
+    if (this.status === "stopped") {
+      if (counterOp === "register") {
+        return this.registerUserCounter(counterId);
+      } else if (counterOp === "claim") {
+        return this.claimUserCounters([counterId]);
+      } else if (counterOp === "delete") {
+        return this.destroyUserCounters([counterId]);
+      }
+    }
+    return null;
   }
 
   /* Main loop */
@@ -295,10 +311,10 @@ export class Spammer {
 
   /* Spam coin functions */
 
-  protected async registerUserCounter(counterId: string): Promise<void> {
+  protected async registerUserCounter(counterId: string): Promise<string> {
     this.event({
       type: "info",
-      msg: "Registering counter: " + shortenAddress(counterId),
+      msg: "Registering counter: " + shortenStuff(counterId),
     });
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().registerUserCounter(counterId);
@@ -311,14 +327,15 @@ export class Spammer {
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
+    return resp.digest;
   }
 
-  protected async claimUserCounters(counterIds: string[]): Promise<void> {
+  protected async claimUserCounters(counterIds: string[]): Promise<string> {
     this.event({
       type: "info",
       msg:
         "Claiming counters: " +
-        counterIds.map((objId) => shortenAddress(objId)).join(", "),
+        counterIds.map((objId) => shortenStuff(objId)).join(", "),
     });
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().claimUserCounters(
@@ -334,14 +351,15 @@ export class Spammer {
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
+    return resp.digest;
   }
 
-  protected async destroyUserCounters(counterIds: string[]): Promise<void> {
+  protected async destroyUserCounters(counterIds: string[]): Promise<string> {
     this.event({
       type: "info",
       msg:
         "Deleting counters: " +
-        counterIds.map((objId) => shortenAddress(objId)).join(", "),
+        counterIds.map((objId) => shortenStuff(objId)).join(", "),
     });
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().destroyUserCounters(counterIds);
@@ -354,6 +372,7 @@ export class Spammer {
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
+    return resp.digest;
   }
 
   protected async newUserCounter(): Promise<void> {
@@ -398,18 +417,19 @@ export class Spammer {
 
   /* SpamNft functions */
 
-  protected async mint(
+  public async mint(
     spamCoinId: string,
     to: string,
   ): Promise<IotaTransactionBlockResponse> {
-    this.event({ type: "info", msg: "Minting NFT" });
+    // this.event({ type: "info", msg: "Minting NFT" });
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().mint(spamCoinId, to);
     this.requestRefetch = true;
     this.lastTxDigest = resp.digest;
     this.event({
-      type: "debug",
-      msg: `Minting NFT: ${resp.effects?.status.status}: ${resp.digest}`,
+      type: "info",
+      msg: "NFT minted",
+      txDigest: resp.digest,
     });
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);

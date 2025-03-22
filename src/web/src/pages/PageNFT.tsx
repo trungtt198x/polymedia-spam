@@ -9,11 +9,11 @@ import {
   SPAM_DECIMALS,
   SPAM_MODULE,
   SPAM_SYMBOL,
-  shortenTx,
+  shortenStuff,
   isValidIotaAddress,
 } from "@polymedia/spam-sdk";
 import { LinkExternal } from "@polymedia/suitcase-react";
-import { formatNumber, shortenAddress } from "@polymedia/suitcase-core";
+import { formatNumber } from "@polymedia/suitcase-core";
 import { useEffect, useState, useRef } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -22,6 +22,7 @@ import { PageDisclaimer } from "./PageDisclaimer";
 import { StatusSpan } from "./components/StatusSpan";
 import { ConnectButtonL1 } from "../components/ConnectButtonL1";
 import { HrefLinkTx } from "../components/HrefLinkTx";
+import { EventLog } from "../components/EventLog";
 import { Balances } from "../components/Balances";
 import { useCurrentAccount } from "@iota/dapp-kit";
 
@@ -143,10 +144,10 @@ export const PageNFT: React.FC = () => {
     }
 
     const [digest, to] = mintTxResult.split(",");
-    const txDisplay = `Transaction: ${shortenTx(digest)}`;
+    const txDisplay = `Transaction: ${shortenStuff(digest)}`;
     return (
       <>
-        <p>NFT minted to {shortenAddress(to)}</p>
+        <p>NFT minted to {shortenStuff(to)}</p>
         <HrefLinkTx
           network={network}
           hrefEndValue={digest}
@@ -257,6 +258,8 @@ export const PageNFT: React.FC = () => {
           </div>
         )}
       </div>
+      
+      <EventLog spamView={spamView} msgFilter={"nft"} network={network} />
     </>
   );
 };

@@ -4,7 +4,7 @@ import { IotaObjectResponse } from "@iota/iota-sdk/client";
 
 export type SignTx = (tx: Transaction) => Promise<SignatureWithBytes>;
 
-export const shortenTx = (tx: string): string => {
+export const shortenStuff = (tx: string): string => {
   if (tx.length <= 8) {
     return tx; // No need to format if the string is too short
   }
@@ -25,7 +25,6 @@ export type Nft = {
   imageUrl: string;
 };
 
-/* eslint-disable */
 export const objResToNft = (obj: IotaObjectResponse): Nft => {
   const content = obj.data?.content;
   if (!content || content.dataType !== "moveObject") {
@@ -38,4 +37,3 @@ export const objResToNft = (obj: IotaObjectResponse): Nft => {
     imageUrl: fields.image_url,
   };
 };
-/* eslint-enable */

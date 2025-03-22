@@ -28,7 +28,7 @@ export const inputStyles = {
 };
 
 export const checkboxStyles = {
-  display: "none",
+  // display: "none",
   border: "solid",
   borderRadius: "1rem",
   display: "inline-block",

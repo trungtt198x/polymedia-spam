@@ -1,13 +1,12 @@
 // Demonstrates using the SDK to build Node.js CLI tools for SPAM.
 
 import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
-import { SPAM_IDS, SpamClient } from "@polymedia/spam-sdk";
-import { shortenAddress } from "@polymedia/suitcase-core";
+import { SPAM_IDS, SpamClient, shortenStuff } from "@polymedia/spam-sdk";
 
 async function main() {
   console.log(
     "Mainnet package ID:",
-    shortenAddress(SPAM_IDS.mainnet.packageId),
+    shortenStuff(SPAM_IDS.mainnet.packageId),
   );
 
   const spamClient = new SpamClient(

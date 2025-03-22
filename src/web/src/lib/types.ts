@@ -3,7 +3,7 @@ import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { RpcUrl } from "./storage";
 
 export type SpamView = {
-  events: { time: string; msg: string }[];
+  events: { time: string; msg: string; txDigest?: string }[];
   counters: UserCounters;
 };
 

@@ -5,8 +5,8 @@ import {
   IS_DISABLED,
   UPDATE_INTERVAL_MS,
   SPAM_IDS,
+  shortenStuff,
 } from "@polymedia/spam-sdk";
-import { shortenAddress } from "@polymedia/suitcase-core";
 import { LinkExternal } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
@@ -14,6 +14,7 @@ import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { TextWithCopyClipboard } from "../components/TextWithCopyClipboard";
 import { HrefLink } from "../components/HrefLink";
+import { EventLog } from "../components/EventLog";
 import { Balances, BalanceIOTA } from "../components/Balances";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "../lib/epochs";
 
@@ -61,6 +62,11 @@ export const PageSpam: React.FC = () => {
       spammer.current.stop();
     }
   };
+
+  // const onClaimCounter = async (evt: Event, counterId: any): Promise<string> => {
+  //   evt.preventDefault();
+  //   return spammer.current.handleCounter(counterId, "claim");
+  // };
 
   const updateCurrEpoch = async () => {
     try {
@@ -147,17 +153,18 @@ export const PageSpam: React.FC = () => {
     if (spammer.current.status === "stopped") {
       return (
         <>
-          <button className="btn-green" onClick={startLoop}>
-            Start Spamming
-          </button>
-          {showProcessCountersButton && (
+          {showProcessCountersButton ?
             <>
               <br />
               <button className="btn break-all" onClick={startOnce}>
                 {actionableCounters.join(" + ")} Counters
               </button>
             </>
-          )}
+            :
+            <button className="btn-green" onClick={startLoop}>
+              Start Spamming
+            </button>
+          }
         </>
       );
     }
@@ -231,7 +238,7 @@ export const PageSpam: React.FC = () => {
               isOnlyExplorer={false}
               isAddress={false}
               hrefEndValue={counter.id}
-              hrefDisplay={shortenAddress(counter.id)}
+              hrefDisplay={shortenStuff(counter.id)}
             />
           </div>
         </div>
@@ -286,7 +293,7 @@ export const PageSpam: React.FC = () => {
             isOnlyExplorer={false}
             isAddress={true}
             hrefEndValue={claimAddress}
-            hrefDisplay={shortenAddress(claimAddress)}
+            hrefDisplay={shortenStuff(claimAddress)}
           />
         </p> */}
       </div>
@@ -333,6 +340,8 @@ export const PageSpam: React.FC = () => {
             </div>
           </>
         )}
+
+        <EventLog spamView={spamView} msgFilter={"counter"} network={network}/>
       </div>
     </>
   );

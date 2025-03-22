@@ -10,6 +10,7 @@ import {
   emptyUserCounters,
   EXPLORER,
   SPAM_IDS,
+  SHOW_EVENT_TYPE,
 } from "@polymedia/spam-sdk";
 import { sleep } from "@polymedia/suitcase-core";
 import { useEffect, useRef, useState } from "react";
@@ -37,7 +38,7 @@ import "./styles/.shared.app.less";
 import "./styles/App.less";
 
 import { Header } from "./components/Header";
-// import { Footer } from "./components/Footer";
+import { Footer } from "./components/Footer";
 import { Nav } from "./components/Nav";
 
 import useIotaWalletClient from "./hooks/useIotaWalletClient";
@@ -154,11 +155,12 @@ export const App: React.FC = () => {
   function handleSpamEvent(e: SpamEvent): void {
     console[e.type](e.msg);
     setSpamView((oldView) => {
-      if (e.type !== "debug") {
+      if (e.type === SHOW_EVENT_TYPE) {
         // Only show non-debug events to the user
         oldView.events.push({
           time: new Date().toLocaleTimeString(),
           msg: e.msg,
+          txDigest: e.txDigest,
         });
         // Update balances when the spammer stops
         if (e.msg === "Stopped as requested") {
@@ -277,7 +279,7 @@ export const App: React.FC = () => {
         <Toaster />
       </div>
 
-      {/* <Footer /> */}
+      <Footer />
 
       <button
         id="btn-menu"

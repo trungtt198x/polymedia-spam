@@ -26,42 +26,43 @@ export const Header: React.FC<{
   rpcUrls,
   updateRpcUrls,
 }) => {
-  return (
-    <header>
-      <Link
-        to="/"
-        onClick={(e) => {
-          inProgress && e.preventDefault();
-        }}
-      >
-        <h1>
+    return (
+      <header>
+        <Link
+          to="/"
+          onClick={(e) => {
+            inProgress && e.preventDefault();
+          }}
+        >
+          <h1>
+            <span>
+              <img alt="polymedia" src="/img/spam-logo.png" />
+            </span>
+          </h1>
+        </Link>
+
+        <h1 style={{ paddingTop: "1rem" }}>
+
           <span>
-            <img alt="polymedia" src="/img/spam-logo.png" />
+            <WalletModal
+              spammerCurrentAddress={spammerCurrentAddress}
+              spammerCurrentKey={spammerCurrentKey}
+              replaceKeypair={replaceKeypair}
+              updateClaimAddress={updateClaimAddress}
+              currentClaimAddr={currentClaimAddr}
+            />
+          </span>
+          <span>
+            <InstructionModal explorerCoin={explorerCoin} />
+          </span>
+          <span>
+            <RPCsModal
+              network={network}
+              rpcUrls={rpcUrls}
+              updateRpcUrls={updateRpcUrls}
+            />
           </span>
         </h1>
-      </Link>
-
-      <h1 style={{ paddingTop: "1rem" }}>
-        <span>
-          <InstructionModal explorerCoin={explorerCoin} />
-        </span>
-        <span>
-          <WalletModal
-            spammerCurrentAddress={spammerCurrentAddress}
-            spammerCurrentKey={spammerCurrentKey}
-            replaceKeypair={replaceKeypair}
-            updateClaimAddress={updateClaimAddress}
-            currentClaimAddr={currentClaimAddr}
-          />
-        </span>
-        <span>
-          <RPCsModal
-            network={network}
-            rpcUrls={rpcUrls}
-            updateRpcUrls={updateRpcUrls}
-          />
-        </span>
-      </h1>
-    </header>
-  );
-};
+      </header>
+    );
+  };

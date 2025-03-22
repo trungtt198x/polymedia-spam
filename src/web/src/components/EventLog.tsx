@@ -1,22 +1,44 @@
 import { SpamView } from "../lib/types";
+import { HrefLinkTx } from "./HrefLinkTx";
 
-export const EventLog: React.FC<{ spamView: SpamView }> = ({ spamView }) => {
+export type EventMsgFilter = "nft" | "counter";
+
+export const EventLog: React.FC<{ spamView: SpamView; msgFilter: EventMsgFilter; network: string }> = ({ spamView, msgFilter, network }) => {
   if (spamView.events.length === 0) {
     return null;
   }
   const reversedEvents = [];
   for (let i = spamView.events.length - 1; i >= 0; i--) {
-    reversedEvents.push(
-      <div className="event" key={i}>
-        <span className="event-time">{spamView.events[i].time}</span>
-        <span className="event-msg">{spamView.events[i].msg}</span>
-      </div>,
+    const evt = spamView.events[i];
+    if (evt.msg.toLowerCase().includes(msgFilter)) {
+      reversedEvents.push(
+        <div className="event" key={i}>
+          <span className="event-time">{evt.time}</span>
+          
+          {evt.txDigest ?
+            <span className="event-msg">
+              <HrefLinkTx
+                network={network}
+                hrefEndValue={evt.txDigest}
+                hrefDisplay={evt.msg}
+              />
+            </span>
+            :
+            <span className="event-msg">{evt.msg}</span>
+          }
+        </div>,
+      );
+    }
+  }
+
+  if (reversedEvents.length === 0) {
+    return null;
+  } else {
+    return (
+      <div className="event-section">
+        <h2>Event log</h2>
+        <div id="event-log">{reversedEvents}</div>
+      </div>
     );
   }
-  return (
-    <>
-      <h2>Event log</h2>
-      <div id="event-log">{reversedEvents}</div>
-    </>
-  );
 };

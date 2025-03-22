@@ -12,7 +12,7 @@ export const HrefLinkTx: React.FC<{
   return (
     <a
       href={href}
-      style={{ textDecoration: "none" }}
+      // style={{ textDecoration: "none" }}
       target="_blank"
       rel="noopener noreferrer"
     >
