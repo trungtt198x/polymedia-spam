@@ -61,5 +61,5 @@ export const hrStyles = {
   border: "0", // kill the default border
   height: "1px",
   backgroundColor: "grey",
-  margin: "2rem 0",
+  margin: "1rem 0",
 };

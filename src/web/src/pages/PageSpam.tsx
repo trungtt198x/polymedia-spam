@@ -218,9 +218,9 @@ export const PageSpam: React.FC = () => {
             <button
               className="btn-green"
               style={btnStylesHandleCounter}
-              onClick={() =>
-                {spammer.current.handleCounter(counter.id, "register");}
-              }
+              onClick={() => {
+                spammer.current.handleCounter(counter.id, "register");
+              }}
             >
               register
             </button>
@@ -238,7 +238,9 @@ export const PageSpam: React.FC = () => {
             <button
               className="btn-green"
               style={btnStylesHandleCounter}
-              onClick={() => {spammer.current.handleCounter(counter.id, "claim");}}
+              onClick={() => {
+                spammer.current.handleCounter(counter.id, "claim");
+              }}
             >
               claim
             </button>{" "}
@@ -257,9 +259,9 @@ export const PageSpam: React.FC = () => {
             <button
               className="btn-red"
               style={btnStylesHandleCounter}
-              onClick={() =>
-                {spammer.current.handleCounter(counter.id, "delete");}
-              }
+              onClick={() => {
+                spammer.current.handleCounter(counter.id, "delete");
+              }}
             >
               delete
             </button>
