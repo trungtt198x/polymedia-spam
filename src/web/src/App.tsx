@@ -159,23 +159,19 @@ export const App: React.FC = () => {
     console[e.type](e.msg);
     setSpamView((oldView) => {
       if (e.type === SHOW_EVENT_TYPE) {
-        // Only show non-debug events to the user
         oldView.events.push({
           time: new Date().toLocaleTimeString(),
           msg: e.msg,
           txDigest: e.txDigest,
         });
-        // Update balances when the spammer stops
-        if (e.msg === "Stopped as requested") {
-          updateBalances();
-        }
+
+        updateBalances();
       }
       return {
         events: oldView.events,
         counters: spammer.current.userCounters,
       };
     });
-    // console.info("on-demand view update");
   }
 
   function replaceKeypair(newPair: Ed25519Keypair): void {

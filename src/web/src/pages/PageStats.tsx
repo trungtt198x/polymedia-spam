@@ -95,7 +95,7 @@ export const PageStats: React.FC = () => {
     const epochTxs = Number(epoch.tx_count);
     const epochGas = epochTxs * gasPerTx;
     const spamPerTx = TOTAL_EPOCH_REWARD / epochTxs;
-    const iotaPerSpam = epochGas / TOTAL_EPOCH_REWARD;
+    // const iotaPerSpam = epochGas / TOTAL_EPOCH_REWARD;
 
     let epochType: "current" | "register" | "claim";
     if (epochNumber === currentEpoch) {
@@ -139,33 +139,33 @@ export const PageStats: React.FC = () => {
           <div>
             {(() => {
               if (epochType === "current") {
-                return "Txs in epoch: ongoing";
+                return "Total transactions: ongoing";
               }
               if (epochType === "register") {
-                return `Txs in epoch: ${formatNumber(epochTxs)} (so far)`;
+                return `Total transactions: ${formatNumber(epochTxs)} (so far)`;
               }
-              return `Txs in epoch: ${formatNumber(epochTxs)}`;
+              return `Total transactions: ${formatNumber(epochTxs)}`;
             })()}
           </div>
         </div>
 
         {Number.isFinite(spamPerTx) && (
           <div>
-            <div>SPAM mined per tx: {formatNumber(spamPerTx)}</div>
+            <div>$SPAM mined per tx: {formatNumber(spamPerTx)}</div>
           </div>
         )}
 
         {epochGas > 0 && (
           <div>
-            <div>Gas paid in epoch: {formatNumber(epochGas)} IOTA</div>
+            <div>Total gas paid: {formatNumber(epochGas)} IOTA</div>
           </div>
         )}
 
-        {iotaPerSpam > 0 && (
+        {/* {iotaPerSpam > 0 && (
           <div>
             <div>Gas cost per SPAM: {iotaPerSpam.toFixed(8)} IOTA</div>
           </div>
-        )}
+        )} */}
       </div>
     );
   };
@@ -185,7 +185,7 @@ export const PageStats: React.FC = () => {
     );
   }
 
-  // const epochsCompleted = Number(stats.epoch) - 1 - firstEpoch[network];
+  const epochsCompleted = Number(stats.epoch) - 1 - firstEpoch[network];
   const totalTxs = Number(stats.tx_count);
   const totalGas = totalTxs * gasPerTx;
   // const claimableSupply = epochsCompleted * TOTAL_EPOCH_REWARD;
@@ -197,9 +197,8 @@ export const PageStats: React.FC = () => {
       <div className="tight">
         <p>Total transactions: {formatNumber(totalTxs)}</p>
         <p>Total gas paid: {formatNumber(totalGas, "compact")} IOTA</p>
-        {/* <p>Current epoch: {stats.epoch}</p> */}
-        {/* <p>Epochs completed: {epochsCompleted}</p> */}
-        {/* <p>System status: {stats.paused ? "paused" : "running"}</p> */}
+        <p>Current epoch: {stats.epoch}</p>
+        <p>Epochs completed: {epochsCompleted}</p>
       </div>
       <br />
       {stats.epochs.length > 0 && (

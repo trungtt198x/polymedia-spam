@@ -274,9 +274,7 @@ export const PageNFT: React.FC = () => {
       </h1>
       {spammer.current.status === "running" && (
         <>
-          <h3 className="blink-loop">
-            Please stop spamming first before NFT mint
-          </h3>
+          <h3 className="blink-loop">Please stop spamming before NFT mint</h3>
           <span>
             <Link className="btn-red" to="/">
               <FontAwesomeIcon icon={faBackward} size="xs" /> Stop Spamming

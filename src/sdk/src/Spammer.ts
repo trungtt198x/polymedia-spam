@@ -129,34 +129,43 @@ export class Spammer {
   protected async _handleCounter(
     counterId: string,
     counterOp: CounterOp,
-  ): Promise<string | null> {
+  ): Promise<string | undefined> {
     console.log(
       `handleCounter - counterId: ${counterId}, counterOp: ${counterOp}`,
     );
     if (this.status === "stopped") {
-      let txHash: string | null = null;
+      let eventData: SpamEvent | null = null;
       if (counterOp === "register") {
-        txHash = await this.registerUserCounter(counterId);
+        eventData = await this.registerUserCounter(counterId);
       } else if (counterOp === "claim") {
-        txHash = await this.claimUserCounters([counterId]);
+        eventData = await this.claimUserCounters([counterId]);
       } else if (counterOp === "delete") {
-        txHash = await this.destroyUserCounters([counterId]);
+        eventData = await this.destroyUserCounters([counterId]);
       }
 
       // await this.refetchData();
-      if (txHash) {
-        await this.getIotaClient().waitForTransaction({
-          digest: txHash,
-          pollInterval: 500,
-        });
+      if (eventData) {
+        if (eventData.txDigest) {
+          await this.getIotaClient().waitForTransaction({
+            digest: eventData.txDigest,
+            pollInterval: 500,
+          });
+        }
+
+        this.userCounters =
+          await this.getSpamClient().fetchUserCountersAndClassify();
+
+        this.requestRefetch = false;
+
+        // This event will trigger "App.tsx" to perform necessary updates
+        this.event(eventData);
+
+        return eventData?.txDigest;
+      } else {
+        return undefined;
       }
-
-      this.userCounters =
-        await this.getSpamClient().fetchUserCountersAndClassify();
-
-      return txHash;
     }
-    return null;
+    return undefined;
   }
 
   /* Main loop */
@@ -331,24 +340,25 @@ export class Spammer {
 
   /* Spam coin functions */
 
-  protected async registerUserCounter(counterId: string): Promise<string> {
+  protected async registerUserCounter(counterId: string): Promise<SpamEvent> {
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().registerUserCounter(counterId);
     this.requestRefetch = true;
     this.lastTxDigest = resp.digest;
-    this.event({
-      type: "info",
-      msg: "Counter registered",
-      txDigest: resp.digest,
-    });
+
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
     console.log(`registerUserCounter - resp.digest: ${resp.digest}`);
-    return resp.digest;
+
+    return {
+      type: "info",
+      msg: "Counter registered",
+      txDigest: resp.digest,
+    };
   }
 
-  protected async claimUserCounters(counterIds: string[]): Promise<string> {
+  protected async claimUserCounters(counterIds: string[]): Promise<SpamEvent> {
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().claimUserCounters(
       counterIds,
@@ -356,33 +366,37 @@ export class Spammer {
     );
     this.requestRefetch = true;
     this.lastTxDigest = resp.digest;
-    this.event({
-      type: "info",
-      msg: "Counter claimed",
-      txDigest: resp.digest,
-    });
+
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
     console.log(`claimUserCounters - resp.digest: ${resp.digest}`);
-    return resp.digest;
+
+    return {
+      type: "info",
+      msg: "Counter claimed",
+      txDigest: resp.digest,
+    };
   }
 
-  protected async destroyUserCounters(counterIds: string[]): Promise<string> {
+  protected async destroyUserCounters(
+    counterIds: string[],
+  ): Promise<SpamEvent> {
     await this.simulateLatencyOnLocalnet();
     const resp = await this.getSpamClient().destroyUserCounters(counterIds);
     this.requestRefetch = true;
     this.lastTxDigest = resp.digest;
-    this.event({
-      type: "info",
-      msg: "Counter deleted",
-      txDigest: resp.digest,
-    });
+
     if (resp.effects?.status.status !== "success") {
       throw new Error(resp.effects?.status.error);
     }
     console.log(`destroyUserCounters - resp.digest: ${resp.digest}`);
-    return resp.digest;
+
+    return {
+      type: "info",
+      msg: "Counter deleted",
+      txDigest: resp.digest,
+    };
   }
 
   protected async newUserCounter(): Promise<string> {
