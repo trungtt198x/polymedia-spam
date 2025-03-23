@@ -104,10 +104,20 @@ export class Spammer {
 
   /* Start and stop */
 
+  protected getCurrentCounterEpochNumber() {
+    try {
+      return this.userCounters.current?.epoch || "";
+    } catch (_err) {
+      return "";
+    }
+  }
+
   public start(loop: boolean) {
     if (this.status === "stopped") {
       this.status = "running";
-      const msg = loop ? "Starting" : "Processing counters";
+      const msg = loop
+        ? `Started spamming counter ${this.getCurrentCounterEpochNumber()}`
+        : "Processing counters";
       this.event({ type: "info", msg });
       this.spam(loop);
     }
@@ -116,7 +126,10 @@ export class Spammer {
   public stop() {
     if (this.status === "running") {
       this.status = "stopping";
-      this.event({ type: "info", msg: "Shutting down" });
+      this.event({
+        type: "info",
+        msg: `Stopped spamming counter ${this.getCurrentCounterEpochNumber()}`,
+      });
     }
   }
 
@@ -240,7 +253,7 @@ export class Spammer {
       // When the epoch changes, the counter is no longer incrementable
       if (errCode === SpamError.EWrongEpoch) {
         const msg = `Epoch change. Sleeping for ${SLEEP_MS_AFTER_EPOCH_CHANGE / 1000} seconds`;
-        this.event({ type: "info", msg });
+        this.event({ type: "debug", msg });
         if (this.txsSinceRotate >= TXS_UNTIL_ROTATE) {
           this.txsSinceRotate = Math.floor(TXS_UNTIL_ROTATE / 2); // stay on current RPC
         }
@@ -252,7 +265,7 @@ export class Spammer {
         /Balance of gas object \d+ is lower than the needed amount/.test(errStr)
       ) {
         this.status = "stopping";
-        this.event({ type: "info", msg: "Out of gas. Stopping." });
+        this.event({ type: "debug", msg: "Out of gas. Stopping." });
       }
       // The validator didn't pick up the object changes yet. Happens sometimes when changing RPCs.
       else if (

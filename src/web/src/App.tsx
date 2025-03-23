@@ -156,7 +156,6 @@ export const App: React.FC = () => {
   };
 
   function handleSpamEvent(e: SpamEvent): void {
-    console[e.type](e.msg);
     setSpamView((oldView) => {
       if (e.type === SHOW_EVENT_TYPE) {
         oldView.events.push({

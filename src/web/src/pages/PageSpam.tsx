@@ -95,8 +95,6 @@ export const PageSpam: React.FC = () => {
       counters.claim.length > 0 ||
       counters.delete.length > 0,
   );
-  // console.log("counters.current:", counters.current);
-  // console.log("counters:", counters);
 
   let showProcessCountersButton = false;
   const actionableCounters: string[] = [];
@@ -204,7 +202,7 @@ export const PageSpam: React.FC = () => {
       }
     } else if (type === "register") {
       if (counter.registered) {
-        status = `✅ Registered, possible to mint SPAM from epoch ${counter.epoch + 2}`;
+        status = `✅ Registered, possible to mint $SPAM from epoch ${counter.epoch + 2}`;
       } else if (spammer.current.status === "running") {
         status = "⏳ Registering counter...";
       } else {
@@ -227,9 +225,8 @@ export const PageSpam: React.FC = () => {
       }
     } else if (type === "claim") {
       if (spammer.current.status === "running") {
-        status = "💰 Minting SPAM...";
+        status = "💰 Minting $SPAM...";
       } else {
-        // status = "✅ Can mint SPAM at any time";
         status = (
           <span>
             Registered counter. Can{" "}
@@ -250,7 +247,6 @@ export const PageSpam: React.FC = () => {
       if (spammer.current.status === "running") {
         status = "🧹 Deleting counter...";
       } else {
-        // status = "Unusable. Will be deleted.";
         status = (
           <span>
             Unusable. Please{" "}
@@ -275,7 +271,6 @@ export const PageSpam: React.FC = () => {
         <div>
           <div className="counter-epoch">Epoch {counter.epoch}</div>
           <div>
-            {/* <LinkToPolymedia network={network} kind="object" addr={counter.id} /> */}
             Counter:
             <HrefLink
               network={network}
