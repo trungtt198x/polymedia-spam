@@ -25,6 +25,8 @@ import { HrefLinkTx } from "../components/HrefLinkTx";
 import { EventLog } from "../components/EventLog";
 import { AddressAndBalances } from "../components/Balances";
 import { useCurrentAccount } from "@iota/dapp-kit";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 export const PageNFT: React.FC = () => {
   const {
@@ -182,16 +184,17 @@ export const PageNFT: React.FC = () => {
     isFromMinerWallet,
   }) => {
     const [receivingAddress, setReceivingAddress] = useState("");
-    // const [connectedWalletBalances, setConnectedWalletBalances] = useState(null);
+    const [connectedWalletBalances, setConnectedWalletBalances] =
+      useState(null);
     const account = useCurrentAccount();
 
-    // useEffect(() => {
-    //   if (account) {
-    //     iotaWalletClient.getBalances(account.address).then((balances) => {
-    //       setConnectedWalletBalances(balances);
-    //     });
-    //   }
-    // }, [account]);
+    useEffect(() => {
+      if (account) {
+        iotaWalletClient.getBalances(account.address).then((balances) => {
+          setConnectedWalletBalances(balances);
+        });
+      }
+    }, [account]);
 
     const onInputChange = (
       evt: React.ChangeEvent<HTMLTextAreaElement>,
@@ -236,10 +239,15 @@ export const PageNFT: React.FC = () => {
               Mint from connected wallet
             </button>
 
-            {/* {account && <>
-              <AddressAndBalances address={shortenStuff(account.address)} balances={connectedWalletBalances} isLoading={false} />
-            </>} */}
-            {account && <div>{shortenStuff(account.address)}</div>}
+            {account && spammer.current.status !== "running" && (
+              <>
+                <AddressAndBalances
+                  address={shortenStuff(account.address)}
+                  balances={connectedWalletBalances}
+                  isLoading={false}
+                />
+              </>
+            )}
 
             <ConnectButtonL1 />
             <br />
@@ -264,13 +272,31 @@ export const PageNFT: React.FC = () => {
       <h1>
         <span className="rainbow">NFT</span>
       </h1>
-      <div id="page-wallet">
-        <div id="page-wallet-sections">
-          <MintForm isFromMinerWallet={true} />
+      {spammer.current.status === "running" && (
+        <>
+          <h3 className="blink-loop">
+            Please stop spamming first before NFT mint
+          </h3>
+          <span>
+            <Link className="btn-red" to="/">
+              <FontAwesomeIcon icon={faBackward} size="xs" /> Stop Spamming
+            </Link>
+          </span>
+          <br />
+        </>
+      )}
+      <div
+        className={spammer.current.status === "running" ? "div-disabled" : ""}
+      >
+        <div id="page-wallet">
+          <div id="page-wallet-sections">
+            <MintForm isFromMinerWallet={true} />
 
-          <MintForm isFromMinerWallet={false} />
+            <MintForm isFromMinerWallet={false} />
+          </div>
         </div>
       </div>
+
       <EventLog spamView={spamView} msgFilter={"nft"} network={network} />
     </>
   );

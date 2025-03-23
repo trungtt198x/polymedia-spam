@@ -2,6 +2,7 @@ import { formatNumber } from "@polymedia/suitcase-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { shortenStuff } from "@polymedia/spam-sdk";
+import { useEffect } from "react";
 import { UserBalances } from "../lib/types";
 
 export const Balances: React.FC<{
@@ -11,6 +12,18 @@ export const Balances: React.FC<{
   if (!balances) {
     return null;
   }
+
+  useEffect(() => {
+    if (isLoading) {
+      setTimeout((isLoading) => {
+        if (isLoading) {
+          console.log("still loading... Reload the page!");
+          window.location.reload();
+        }
+      }, 5000);
+    }
+  }, [isLoading]);
+
   return (
     <p>
       <span>

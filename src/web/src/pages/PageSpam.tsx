@@ -56,23 +56,18 @@ export const PageSpam: React.FC = () => {
     }
   };
 
-  const startOnce = (evt: Event) => {
-    evt.preventDefault();
-    if (spammer.current.status === "stopped") {
-      spammer.current.start(false);
-    }
-  };
+  // const startOnce = (evt: Event) => {
+  //   evt.preventDefault();
+  //   if (spammer.current.status === "stopped") {
+  //     spammer.current.start(false);
+  //   }
+  // };
 
   const stop = () => {
     if (spammer.current.status === "running") {
       spammer.current.stop();
     }
   };
-
-  // const onClaimCounter = async (evt: Event, counterId: any): Promise<string> => {
-  //   evt.preventDefault();
-  //   return spammer.current.handleCounter(counterId, "claim");
-  // };
 
   const updateCurrEpoch = async () => {
     try {
@@ -108,13 +103,13 @@ export const PageSpam: React.FC = () => {
   // const actionableCounters: string[] = ["Register", "Claim", "Delete"];
   if (hasCounters && spammer.current.status === "stopped") {
     if (counters.register?.registered === false) {
-      actionableCounters.push("Register");
+      actionableCounters.push("register");
     }
     if (counters.claim.length > 0) {
-      actionableCounters.push("Claim");
+      actionableCounters.push("claim");
     }
     if (counters.delete.length > 0) {
-      actionableCounters.push("Delete");
+      actionableCounters.push("delete");
     }
     showProcessCountersButton = actionableCounters.length > 0;
   }
@@ -162,9 +157,12 @@ export const PageSpam: React.FC = () => {
           {showProcessCountersButton ? (
             <>
               <br />
-              <button className="btn break-all" onClick={startOnce}>
+              {/* <button className="btn break-all" onClick={startOnce}>
                 {actionableCounters.join(" + ")} Counters
-              </button>
+              </button> */}
+              <span className="blink-loop">
+                You have counter(s) to {actionableCounters.join(" & ")}
+              </span>
             </>
           ) : (
             <button className="btn-green" onClick={startLoop}>
@@ -173,19 +171,19 @@ export const PageSpam: React.FC = () => {
           )}
         </>
       );
-    }
-    if (spammer.current.status === "running") {
+    } else if (spammer.current.status === "running") {
       return (
         <button className="btn-red" onClick={stop} onMouseDown={stop}>
           Stop Spamming
         </button>
       );
+    } else {
+      return (
+        <button className="btn" disabled>
+          Stopping
+        </button>
+      );
     }
-    return (
-      <button className="btn" disabled>
-        Stopping
-      </button>
-    );
   };
 
   const CounterCard: React.FC<{
@@ -373,7 +371,7 @@ export const PageSpam: React.FC = () => {
           <>
             <br />
             <br />
-            <h2>Your counters</h2>
+            <h2>Your counter(s)</h2>
             <div className="counter-cards">
               {counters.current && (
                 <CounterCard type="current" counter={counters.current} />
