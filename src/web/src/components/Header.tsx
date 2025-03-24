@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { InstructionModal } from "./InstructionModal";
 import { WalletModal } from "./WalletModal";
 import { RPCsModal } from "./RPCsModal";
+import { StatusSpan } from "./StatusSpan";
 
 export const Header: React.FC<{
   inProgress: boolean;
@@ -14,6 +15,7 @@ export const Header: React.FC<{
   network: string;
   rpcUrls: RpcUrl[];
   updateRpcUrls: (...args: any[]) => any;
+  spammerStatus: string;
 }> = ({
   inProgress,
   explorerCoin,
@@ -25,6 +27,7 @@ export const Header: React.FC<{
   network,
   rpcUrls,
   updateRpcUrls,
+  spammerStatus,
 }) => {
   return (
     <header>
@@ -36,7 +39,11 @@ export const Header: React.FC<{
       >
         <h1>
           <span>
-            <img alt="polymedia" src="/img/spam-logo.png" />
+            <img
+              alt=""
+              src="/img/spam-logo.png"
+              style={{ borderRadius: "40%" }}
+            />
           </span>
         </h1>
       </Link>
@@ -60,6 +67,9 @@ export const Header: React.FC<{
             rpcUrls={rpcUrls}
             updateRpcUrls={updateRpcUrls}
           />
+        </span>
+        <span style={{ width: "3rem" }}>
+          <StatusSpan status={spammerStatus} textOnly={false} />
         </span>
       </h1>
     </header>

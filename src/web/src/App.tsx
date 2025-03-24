@@ -259,6 +259,7 @@ export const App: React.FC = () => {
           network={network}
           rpcUrls={rpcUrls}
           updateRpcUrls={updateRpcUrls}
+          spammerStatus={spammer.current.status}
         />
         <div id="nav-and-page">
           <Nav
