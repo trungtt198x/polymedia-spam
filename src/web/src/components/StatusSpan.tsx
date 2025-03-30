@@ -28,7 +28,11 @@ export const StatusSpan: React.FC<{
     return (
       <h1>
         <span>
-          <img alt="" src={imageSrc} style={{ borderRadius: "40%" }} />
+          <img
+            alt=""
+            src={imageSrc}
+            style={{ borderRadius: "40%", width: "auto" }}
+          />
         </span>
       </h1>
     );
