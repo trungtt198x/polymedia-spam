@@ -475,4 +475,8 @@ export class Spammer {
     }
     return resp;
   }
+
+  public async sendIOTA(receivingAddr: string): Promise<string> {
+    return this.getSpamClient().sendIOTA(receivingAddr);
+  }
 }

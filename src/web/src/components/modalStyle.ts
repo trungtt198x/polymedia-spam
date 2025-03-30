@@ -11,6 +11,8 @@ export const modalStyles = {
     borderRadius: "2rem",
     display: "flex",
     fontWeight: "50",
+    overflowY: "auto",
+    maxHeight: "600px",
   },
   overlay: {
     backgroundColor: "transparent",
@@ -43,7 +45,7 @@ export const buttonStyles = {
   color: "white",
   // fontWeight: "70",
   marginBottom: "0.5rem",
-  padding: "0.5em 1em",
+  padding: "0.4em 1em",
   textDecoration: "none",
   userSelect: "none",
   whiteSpace: "nowrap",

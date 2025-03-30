@@ -17,6 +17,7 @@ export type SpamNftConfig = {
   adminId: string;
   nftManagerId: string;
   epoch: number; // when the Move pkg was published
+  mintPrice: number; // in $SPAM with 4 decimals
 };
 
 export const SPAM_IDS: Record<NetworkName, SpamConfig> = {
@@ -49,16 +50,10 @@ export const SPAM_NFT_IDS: Record<NetworkName, SpamNftConfig> = {
     ...TESTNET.NFT,
   },
   devnet: {
-    packageId: "",
-    adminId: "",
-    nftManagerId: "",
-    epoch: 1, // when the Move pkg was published
+    ...TESTNET.NFT,
   },
   localnet: {
-    packageId: "",
-    adminId: "",
-    nftManagerId: "",
-    epoch: 1, // when the Move pkg was published
+    ...TESTNET.NFT,
   },
 };
 

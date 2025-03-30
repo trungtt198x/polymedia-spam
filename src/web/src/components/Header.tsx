@@ -16,6 +16,7 @@ export const Header: React.FC<{
   rpcUrls: RpcUrl[];
   updateRpcUrls: (...args: any[]) => any;
   spammerStatus: string;
+  sendIOTA: (...args: any[]) => any;
 }> = ({
   inProgress,
   explorerCoin,
@@ -28,6 +29,7 @@ export const Header: React.FC<{
   rpcUrls,
   updateRpcUrls,
   spammerStatus,
+  sendIOTA,
 }) => {
   return (
     <header>
@@ -52,6 +54,8 @@ export const Header: React.FC<{
             replaceKeypair={replaceKeypair}
             updateClaimAddress={updateClaimAddress}
             currentClaimAddr={currentClaimAddr}
+            sendIOTA={sendIOTA}
+            network={network}
           />
         </span>
         <span>

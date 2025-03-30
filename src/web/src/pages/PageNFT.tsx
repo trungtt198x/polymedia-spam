@@ -48,6 +48,7 @@ export const PageNFT: React.FC = () => {
   const minerAddress = spamClient.signer.toIotaAddress();
   const spamPackageId = spamClient.spamPackageId;
   const explorerCoin = `${EXPLORER[network]}/coin/${spamPackageId}::spam::SPAM`;
+  const nftMintPrice = spamClient.nftMintPrice;
 
   const startMint = async (
     evt: Event,
@@ -221,9 +222,10 @@ export const PageNFT: React.FC = () => {
               Mint from miner wallet
             </button>
             <AddressAndBalances
-              address={shortenStuff(minerAddress)}
+              address={minerAddress}
               balances={balances}
               isLoading={isLoading}
+              network={network}
             />
             <br />
           </>
@@ -242,9 +244,10 @@ export const PageNFT: React.FC = () => {
             {account && spammer.current.status !== "running" && (
               <>
                 <AddressAndBalances
-                  address={shortenStuff(account.address)}
+                  address={account.address}
                   balances={connectedWalletBalances}
                   isLoading={false}
+                  network={network}
                 />
               </>
             )}
@@ -272,6 +275,8 @@ export const PageNFT: React.FC = () => {
       <h1>
         <span className="rainbow">NFT</span>
       </h1>
+      <h2>{nftMintPrice} $SPAM tokens per NFT</h2>
+      <br />
       {spammer.current.status === "running" && (
         <>
           <h3 className="blink-loop">Please stop spamming before NFT mint</h3>

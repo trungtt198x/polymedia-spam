@@ -11,12 +11,26 @@ export const LeaderBoard: React.FC<{
   }
 
   const leaderList = [];
+
+  // Define columns
+  leaderList.push(
+    <div className="event" key="0" style={{ fontWeight: "bold" }}>
+      <span className="event-time">Rank</span>{" "}
+      <span className="event-msg">Address</span>{" "}
+      <span className="event-msg">$SPAM</span>
+    </div>,
+  );
+
+  let index = 1;
   for (const dataKey of Object.keys(data)) {
     const formattedAmount = formatNumber(data[dataKey], "compact");
     const addr = dataKey;
+
+    // Add data
     leaderList.push(
       <div className="event" key={dataKey}>
-        <span className="event-time">
+        <span className="event-time">{index++}</span>{" "}
+        <span className="event-msg">
           <HrefLink
             network={network}
             isOnlyExplorer={false}
@@ -24,8 +38,7 @@ export const LeaderBoard: React.FC<{
             hrefEndValue={addr}
             hrefDisplay={shortenStuff(addr)}
           />
-        </span>
-
+        </span>{" "}
         <span className="event-msg">{formattedAmount}</span>
       </div>,
     );
@@ -33,7 +46,7 @@ export const LeaderBoard: React.FC<{
 
   return (
     <div className="event-section">
-      <h2>$SPAM Leader Board</h2>
+      <h2>Spammer Leader Board</h2>
       <div id="event-log">{leaderList}</div>
     </div>
   );

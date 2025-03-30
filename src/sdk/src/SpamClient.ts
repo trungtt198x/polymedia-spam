@@ -45,6 +45,7 @@ export class SpamClient {
 
   public readonly nftPackageId: string;
   public readonly nftManagerId: string;
+  public readonly nftMintPrice: number;
 
   protected gasCoin: IotaObjectRef | undefined;
   protected gasPrice: bigint | undefined;
@@ -60,6 +61,7 @@ export class SpamClient {
 
     this.nftPackageId = SPAM_NFT_IDS[network].packageId;
     this.nftManagerId = SPAM_NFT_IDS[network].nftManagerId;
+    this.nftMintPrice = SPAM_NFT_IDS[network].mintPrice;
 
     this.gasCoin = undefined;
     this.gasPrice = undefined;
@@ -219,6 +221,33 @@ export class SpamClient {
       break;
     }
     return iotaAmount;
+  }
+
+  // Send all IOTA coins of the signer to the given address
+  public async sendIOTA(receivingAddr: string): Promise<string> {
+    const txb = new Transaction();
+    const coins = await this.iotaClient.getCoins({
+      owner: this.signer.toIotaAddress(),
+      coinType: "0x2::iota::IOTA",
+    });
+
+    if (
+      !coins.data ||
+      coins.data.length === 0 ||
+      Number(coins.data[0].balance) <= 0
+    ) {
+      return "Error: No IOTA coin available";
+    }
+
+    // It won't work if not using txb.gas
+    txb.transferObjects([txb.gas], txb.pure.address(receivingAddr));
+
+    const resp = await this.signAndExecute(txb);
+    if (resp.effects?.status.status !== "success") {
+      return `Error: ${resp.effects?.status.error}`;
+    }
+
+    return resp.digest;
   }
 
   /* SpamNft functions */

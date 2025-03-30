@@ -1,10 +1,11 @@
 import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { isValidIotaAddress } from "@polymedia/spam-sdk";
+import { isValidIotaAddress, shortenStuff } from "@polymedia/spam-sdk";
 import { pairFromSecretKey } from "../lib/storage";
 import { TextWithCopyClipboard } from "./TextWithCopyClipboard";
 import { inputStyles, buttonStyles, redText, hrStyles } from "./modalStyle";
+import { HrefLinkTx } from "./HrefLinkTx";
 
 export const Wallet: React.FC<{
   spammerCurrentAddress: string;
@@ -12,12 +13,16 @@ export const Wallet: React.FC<{
   replaceKeypair: (...args: any[]) => any;
   updateClaimAddress: (...args: any[]) => any;
   currentClaimAddr: string;
+  sendIOTA: (...args: any[]) => any;
+  network: string;
 }> = ({
   spammerCurrentAddress,
   spammerCurrentKey,
   replaceKeypair,
   updateClaimAddress,
   currentClaimAddr,
+  sendIOTA,
+  network,
 }) => {
   const confirmAndReplaceWallet = (pair: Ed25519Keypair): boolean => {
     const userAccepted = true;
@@ -177,7 +182,9 @@ export const Wallet: React.FC<{
 
     return (
       <div id="wallet-info">
-        <h3>Import existing account to replace current one</h3>
+        <b>
+          <strong>Import existing account to replace current one</strong>
+        </b>
         <div id="wallet-content" style={{ paddingTop: "1rem" }}>
           <div className="wallet-section">
             <input
@@ -218,13 +225,102 @@ export const Wallet: React.FC<{
 
     return (
       <div id="wallet-info">
-        <h3>Create new account to replace current one</h3>
+        <b>
+          <strong>Create new account to replace current one</strong>
+        </b>
         <div id="wallet-content" style={{ paddingTop: "1rem" }}>
           <div className="wallet-section">
             <button style={buttonStyles} onClick={onSubmit}>
               Create
             </button>
           </div>
+        </div>
+      </div>
+    );
+  };
+
+  const SendIotaForm: React.FC = () => {
+    const [receivingAddress, setReceivingAddress] = useState<
+      string | undefined
+    >();
+    const [msg, setMsg] = useState<{ type: "okay" | "error"; text: string }>();
+    const disableButton = msg?.type === "error" || !receivingAddress;
+
+    const onInputChange = (
+      evt: React.ChangeEvent<HTMLTextAreaElement>,
+    ): void => {
+      const newReceivingAddress = evt.currentTarget.value;
+      setReceivingAddress(newReceivingAddress);
+      if (newReceivingAddress.length === 0) {
+        setMsg(undefined);
+        return;
+      }
+      const cleanAddress = isValidIotaAddress(newReceivingAddress);
+      if (!cleanAddress) {
+        setMsg({ type: "error", text: "Invalid address" });
+        return;
+      }
+      setMsg(undefined);
+    };
+
+    const onKeyDown = (evt: React.KeyboardEvent<HTMLTextAreaElement>): void => {
+      if (evt.key === "Enter" && !disableButton) {
+        evt.preventDefault();
+        onSubmit();
+      }
+    };
+
+    const onSubmit = (): void => {
+      if (receivingAddress) {
+        sendIOTA(receivingAddress).then((tx: string) => {
+          if (tx.includes("Error")) {
+            setMsg({ type: "error", text: tx });
+            toast.error("Transaction failed");
+          } else {
+            setMsg({ type: "okay", text: tx });
+            toast.error("IOTA sent");
+          }
+        });
+      }
+    };
+
+    return (
+      <div id="wallet-info">
+        <div id="wallet-content">
+          <div className="wallet-section" style={{ paddingTop: "1rem" }}>
+            <input
+              type="text"
+              value={receivingAddress}
+              placeholder="Receiving address"
+              onChange={onInputChange}
+              onKeyDown={onKeyDown}
+              style={inputStyles}
+            />
+          </div>
+          <div className="wallet-section" style={{ paddingTop: "1rem" }}>
+            <button
+              style={buttonStyles}
+              onClick={onSubmit}
+              disabled={disableButton}
+            >
+              Withdraw IOTA
+            </button>
+          </div>
+          {msg && (
+            <div className="wallet-section">
+              {msg.type === "error" ? (
+                <div style={redText}>{msg.text}</div>
+              ) : (
+                <div>
+                  <HrefLinkTx
+                    network={network}
+                    hrefEndValue={msg.text}
+                    hrefDisplay={shortenStuff(msg.text)}
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -237,12 +333,14 @@ export const Wallet: React.FC<{
         <br />
         <div id="page-wallet-sections">
           <AutoGenWallet />
+          <SendIotaForm />
           <hr style={hrStyles} />
           <ImportWalletForm />
           <hr style={hrStyles} />
           <CreateWalletForm />
           <hr style={hrStyles} />
           <ClaimAddressForm />
+          <br />
         </div>
       </div>
     </>

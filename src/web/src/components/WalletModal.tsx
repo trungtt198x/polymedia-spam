@@ -14,12 +14,16 @@ export const WalletModal: React.FC<{
   replaceKeypair: (...args: any[]) => any;
   updateClaimAddress: (...args: any[]) => any;
   currentClaimAddr: string;
+  sendIOTA: (...args: any[]) => any;
+  network: string;
 }> = ({
   spammerCurrentAddress,
   spammerCurrentKey,
   replaceKeypair,
   updateClaimAddress,
   currentClaimAddr,
+  sendIOTA,
+  network,
 }) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
@@ -47,6 +51,8 @@ export const WalletModal: React.FC<{
           replaceKeypair={replaceKeypair}
           updateClaimAddress={updateClaimAddress}
           currentClaimAddr={currentClaimAddr}
+          sendIOTA={sendIOTA}
+          network={network}
         />{" "}
         <btn onClick={closeModal} style={{ cursor: "pointer" }}>
           <FontAwesomeIcon icon={faCircleXmark} size="xl" />

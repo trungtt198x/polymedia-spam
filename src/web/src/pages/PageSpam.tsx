@@ -141,11 +141,11 @@ export const PageSpam: React.FC = () => {
     const fundingMsg = "Fund your Spam bot account with IOTA tokens";
     if (counters.register?.registered === false) {
       message = (
-        <p className="text-orange">{fundingMsg} to register the counter!</p>
+        <p className="text-green">{fundingMsg} to register the counter!</p>
       );
     } else if (counters.claim.length) {
       message = (
-        <p className="text-orange">
+        <p className="text-green">
           {fundingMsg} to claim the counter
           {counters.claim.length > 1 ? "s" : ""}
         </p>
@@ -346,9 +346,10 @@ export const PageSpam: React.FC = () => {
           )}
         </p>
         <AddressAndBalances
-          address={shortenStuff(signerAddress)}
+          address={signerAddress}
           balances={balances}
           isLoading={isLoading}
+          network={network}
         />
         {/* <p>
           Claim address:

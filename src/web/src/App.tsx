@@ -230,6 +230,10 @@ export const App: React.FC = () => {
     saveClaimAddressToStorage(newClaimAddress);
   }
 
+  async function sendIOTA(receivingAddress: string): string {
+    return spammer.current.sendIOTA(receivingAddress);
+  }
+
   function acceptDisclaimer(): void {
     setDisclaimerAccepted(true);
     saveDisclaimerAcceptedToStorage();
@@ -260,6 +264,7 @@ export const App: React.FC = () => {
           rpcUrls={rpcUrls}
           updateRpcUrls={updateRpcUrls}
           spammerStatus={spammer.current.status}
+          sendIOTA={sendIOTA}
         />
         <div id="nav-and-page">
           <Nav

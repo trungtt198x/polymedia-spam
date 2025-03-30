@@ -1,4 +1,6 @@
 import { EXPLORER } from "@polymedia/spam-sdk";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 
 export const HrefLink: React.FC<{
   network: string;
@@ -23,6 +25,7 @@ export const HrefLink: React.FC<{
     >
       {" "}
       {hrefDisplay}{" "}
+      <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="xs" />{" "}
     </a>
   );
 };

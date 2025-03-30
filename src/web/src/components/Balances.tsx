@@ -4,6 +4,7 @@ import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { shortenStuff } from "@polymedia/spam-sdk";
 import { useEffect } from "react";
 import { UserBalances } from "../lib/types";
+import { HrefLink } from "./HrefLink";
 
 export const Balances: React.FC<{
   balances: UserBalances;
@@ -45,10 +46,19 @@ export const AddressAndBalances: React.FC<{
   address: string;
   balances: UserBalances;
   isLoading: boolean;
-}> = ({ address, balances, isLoading }) => {
+  network: string;
+}> = ({ address, balances, isLoading, network }) => {
   return (
     <>
-      <div>{shortenStuff(address)} </div>
+      <div>
+        <HrefLink
+          network={network}
+          isOnlyExplorer={false}
+          isAddress={true}
+          hrefEndValue={address}
+          hrefDisplay={shortenStuff(address)}
+        />
+      </div>
       <div className="tight">
         <Balances balances={balances} isLoading={isLoading} />
       </div>
