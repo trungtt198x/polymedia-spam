@@ -71,3 +71,25 @@ export type SpamEventHandler = (event: SpamEvent) => void;
 export type SpamStatus = "stopped" | "running" | "stopping";
 
 export type CounterOp = "register" | "claim" | "delete";
+
+export type ClaimData = {
+  address: string;
+  amount: number;
+};
+
+export type BalanceChangesData = {
+  owner: { AddressOwner: string };
+  coinType: string;
+  amount: string;
+};
+
+export type QueryTxBlockData = {
+  digest: string;
+  balanceChanges: BalanceChangesData[];
+};
+
+export type QueryTxBlocks = {
+  data: QueryTxBlockData[];
+  nextCursor: string;
+  hasNextPage: boolean;
+};

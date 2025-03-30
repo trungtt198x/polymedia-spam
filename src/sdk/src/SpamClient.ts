@@ -17,10 +17,19 @@ import {
   SPAM_MODULE,
   SPAM_NFT_IDS,
   SPAM_TX_FEE_INCREMENT_USER_COUNTER,
+  SPAM_DECIMALS,
 } from "./config.js";
 import * as pkgSpam from "./packageSpam.js";
 import * as pkgNft from "./packageNft.js";
-import { BcsStats, Stats, UserCounter, UserCounters } from "./types.js";
+import {
+  BcsStats,
+  Stats,
+  UserCounter,
+  UserCounters,
+  ClaimData,
+  QueryTxBlocks,
+} from "./types.js";
+import { sortJsonByNumericValuesDesc } from "./lib.js";
 
 const INCREMENT_TX_GAS_BUDGET = 3000000; // 0.003 IOTA
 const SLEEP_MS_AFTER_FINALITY_ERROR = 10000;
@@ -57,6 +66,58 @@ export class SpamClient {
   }
 
   /* Data fetching */
+
+  public async fetchLeaderClaimUsers(): Promise<ClaimData | null> {
+    try {
+      const { data } = (await this.iotaClient.queryTransactionBlocks({
+        filter: {
+          MoveFunction: {
+            package: this.spamPackageId,
+            module: SPAM_MODULE,
+            function: "claim_user_counter",
+          },
+        },
+        options: { showBalanceChanges: true },
+      })) as QueryTxBlocks;
+
+      let leaderClaimUsers: ClaimData | null = null;
+
+      for (const tx of data) {
+        if (!tx.balanceChanges || tx.balanceChanges.length === 0) {
+          continue;
+        }
+
+        const claimBalance = tx.balanceChanges.find((bc) => {
+          return (
+            Number(bc.amount) > 0 &&
+            bc.coinType === `${this.spamPackageId}::${SPAM_MODULE}::SPAM`
+          );
+        });
+
+        if (!claimBalance) {
+          continue;
+        }
+
+        const { amount, owner } = claimBalance;
+        const _amount = Math.floor(Number(amount) / 10 ** SPAM_DECIMALS);
+        const _address = owner.AddressOwner;
+
+        if (leaderClaimUsers && leaderClaimUsers[_address]) {
+          (leaderClaimUsers[_address] as number) += _amount;
+        } else {
+          leaderClaimUsers = Object.assign({}, leaderClaimUsers, {
+            [_address]: _amount,
+          });
+        }
+      }
+
+      leaderClaimUsers = sortJsonByNumericValuesDesc(leaderClaimUsers);
+      return leaderClaimUsers;
+    } catch (err) {
+      console.log("fetchLeaderClaimUsers - Error:", err);
+      return null;
+    }
+  }
 
   public async fetchUserCounters(): Promise<UserCounter[]> {
     const StructType = `${this.spamPackageId}::${SPAM_MODULE}::UserCounter`;

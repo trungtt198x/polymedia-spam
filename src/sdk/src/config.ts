@@ -98,5 +98,7 @@ export const IS_DISABLED = systemDisabled;
 // On Spam page, updating interval of the user's current counter
 export const UPDATE_INTERVAL_MS = 10_000;
 
+export const FETCH_LEADER_BOARD_INTERVAL_MS = 60_000;
+
 // "info" or "debug"
 export const SHOW_EVENT_TYPE = "info";

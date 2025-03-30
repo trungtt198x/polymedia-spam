@@ -4,8 +4,10 @@ import {
   SPAM_TX_LOW_BALANCE,
   IS_DISABLED,
   UPDATE_INTERVAL_MS,
+  FETCH_LEADER_BOARD_INTERVAL_MS,
   SPAM_IDS,
   shortenStuff,
+  ClaimData,
 } from "@polymedia/spam-sdk";
 import { LinkExternal } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
@@ -17,11 +19,14 @@ import { HrefLink } from "../components/HrefLink";
 import { EventLog } from "../components/EventLog";
 import { BalanceIOTA, AddressAndBalances } from "../components/Balances";
 import { EpochData, formatEpochPeriod, getEpochTimes } from "../lib/epochs";
+import { LeaderBoard } from "../components/LeaderBoard";
 
 export const PageSpam: React.FC = () => {
   const { network, balances, spammer, spamView, disclaimerAccepted } =
     useOutletContext<AppContext>();
   const [currEpoch, setCurrEpoch] = useState<EpochData>();
+
+  const [leaderBoard, setLeaderBoard] = useState<ClaimData | null>(null);
 
   const isLoading =
     spamView.counters.epoch === -1 || balances.iota === -1 || !currEpoch;
@@ -41,11 +46,20 @@ export const PageSpam: React.FC = () => {
   useEffect(() => {
     setCurrEpoch(undefined);
     updateCurrEpoch();
+    fetchLeaderBoard();
 
-    const updatePeriodically = setInterval(updateCurrEpoch, UPDATE_INTERVAL_MS);
+    const updateCurrEpochTimer = setInterval(
+      updateCurrEpoch,
+      UPDATE_INTERVAL_MS,
+    );
+    const fetchLeaderBoardTimer = setInterval(
+      fetchLeaderBoard,
+      FETCH_LEADER_BOARD_INTERVAL_MS,
+    );
 
     return () => {
-      clearInterval(updatePeriodically);
+      clearInterval(updateCurrEpochTimer);
+      clearInterval(fetchLeaderBoardTimer);
     };
   }, [spammer.current, network]);
 
@@ -81,6 +95,13 @@ export const PageSpam: React.FC = () => {
       });
     } catch (_err) {
       console.warn("epoch update failed");
+    }
+  };
+
+  const fetchLeaderBoard = async () => {
+    const res = await spammer.current.getSpamClient().fetchLeaderClaimUsers();
+    if (res) {
+      setLeaderBoard(res);
     }
   };
 
@@ -383,6 +404,8 @@ export const PageSpam: React.FC = () => {
             </div>
           </>
         )}
+
+        <LeaderBoard data={leaderBoard} network={network} />
 
         <EventLog spamView={spamView} msgFilter={"counter"} network={network} />
       </div>

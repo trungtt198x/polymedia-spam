@@ -23,10 +23,7 @@ export const TextWithCopyClipboard: React.FC<{
             }, 5000);
           }}
         >
-          <FontAwesomeIcon
-            icon={copiedState ? faCheckCircle : faCopy}
-            size="xs"
-          />
+          <FontAwesomeIcon icon={copiedState ? faCheckCircle : faCopy} />
         </CopyToClipboard>
       </span>
     </span>
