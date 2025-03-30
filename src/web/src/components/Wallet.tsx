@@ -278,7 +278,7 @@ export const Wallet: React.FC<{
             toast.error("Transaction failed");
           } else {
             setMsg({ type: "okay", text: tx });
-            toast.error("IOTA sent");
+            toast.success("IOTA sent");
           }
         });
       }
@@ -315,7 +315,7 @@ export const Wallet: React.FC<{
                   <HrefLinkTx
                     network={network}
                     hrefEndValue={msg.text}
-                    hrefDisplay={shortenStuff(msg.text)}
+                    hrefDisplay={`Transaction: ${shortenStuff(msg.text)}`}
                   />
                 </div>
               )}
