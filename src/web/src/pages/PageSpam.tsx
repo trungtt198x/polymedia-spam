@@ -388,8 +388,8 @@ export const PageSpam: React.FC = () => {
           <>
             <br />
             <br />
-            <h2>Your counter(s)</h2>
             <div className="counter-cards">
+              <h2>Your counter(s)</h2>
               {counters.current && (
                 <CounterCard type="current" counter={counters.current} />
               )}
