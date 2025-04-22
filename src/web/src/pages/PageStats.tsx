@@ -204,6 +204,7 @@ export const PageStats: React.FC = () => {
       {stats.epochs.length > 0 && (
         <>
           <div className="counter-cards">
+            <h2>Epochs</h2>
             {stats.epochs.map((epoch) => (
               <CounterCard
                 epoch={epoch}
