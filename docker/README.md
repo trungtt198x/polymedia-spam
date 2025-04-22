@@ -10,7 +10,7 @@ docker compose -f docker/docker-compose.yml build
 
 docker compose -f docker/docker-compose.yml up -d
 
-**Listenning port** is `8080`
+**Listenning port** is `80`
 
 # down
 
