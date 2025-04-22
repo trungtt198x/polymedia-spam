@@ -151,7 +151,7 @@ export const PageSpam: React.FC = () => {
         </p>
       );
     } else {
-      message = <p>{fundingMsg}</p>;
+      message = <p className="text-red">{fundingMsg}</p>;
     }
     return (
       <>
