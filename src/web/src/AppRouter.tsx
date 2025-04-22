@@ -12,7 +12,7 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path="/" element={<AppIotaProviders />}>
           <Route index element={<PageSpam />} />
-          <Route path="/nft" element={<PageNFT />} />
+          {/* <Route path="/nft" element={<PageNFT />} /> */}
           <Route path="/stats" element={<PageStats />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>

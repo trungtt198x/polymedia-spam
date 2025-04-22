@@ -30,9 +30,9 @@ export const Nav: React.FC<{
       <Link to="/stats" className={selected("/stats")} onClick={onClick}>
         Stats
       </Link>
-      <Link to="/nft" className={selected("/nft")} onClick={onClick}>
+      {/* <Link to="/nft" className={selected("/nft")} onClick={onClick}>
         NFT
-      </Link>
+      </Link> */}
 
       <div className="divider" />
 
