@@ -12,7 +12,7 @@ export const Footer: React.FC = () => (
         />
       </LinkExternal> */}
       <LinkExternal
-        href="https://github.com/trungtt198x/polymedia-spam"
+        href="https://github.com/trungtt198x/polymedia-spam/tree/dev"
         follow={true}
       >
         <GitHubLogo />

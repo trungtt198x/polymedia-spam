@@ -1,40 +1,57 @@
-# SPAM
+# Spam dApp
 
-"Spam to Earn" a.k.a. "Proof of Spam" on Iota.
+Spam dApp includes:
 
-![Polymedia SPAM](https://spamiota.com/img/open-graph.webp)
+- Move contracts of SPAM coin and NFT mint in folder `move`
+- ReactJS-based frontend in folder `web` and `sdk`
+- Docker-based deployment utils in folder `docker`
 
-## ELI5
+## Introduction
 
-One billion SPAM coins are minted every day.
+$SPAM is a token distributed daily to active participants who engage in spamming activities. A total of 1 million $SPAM coins are minted every 24 hours and allocated based on spam volume.
 
-Users earn SPAM simply by sending Iota transactions.
+No spam, no gain. Spam or be rekt.
 
-The more txs you send, the more SPAM you receive.
+### How it works
 
-There is no proof of work, only proof of spam.
+1. Start spamming.
+2. Register counter within the next day. Otherwise accrued $SPAM is forfeited.
+3. Claim $SPAM coins anytime after that.
+4. Redeem $SPAM for NFTs.
 
-## System overview
+### Getting started
 
-The SPAM system has two components:
+1. Fund your Spam Bot Wallet.
+2. Spam to Earn. The more you spam, the bigger your rewards.
+3. Claim your earned $SPAM anytime.
 
-1\) An onchain mechanism to track user transactions, calculate rewards per user, and let users mint SPAM in proportion to the number of txs they sent: [src/iota](./src/iota).
+## Configuration
 
-2\) A web miner for users to easily send lots of txs, as well as mint and claim SPAM coins: [src/web](./src/web). The web miner is built on top of the TypeScript SDK: [src/sdk](./src/sdk).
+Specified in the file `sdk/src/config.json`
 
-## Mining mechanism
+## Installation
 
-An Iota "epoch" is roughly equivalent to 1 day.
+In the root folder, run this cmd `pnpm i`
 
-Users send txs to increase their tx counters during epoch `N`, register their tx counters during epoch `N+1`, and mint SPAM anytime from epoch `N+2` based on the spamming they did in epoch `N`:
+## Build
 
-- Epoch 0: user spams UserCounter.0 (UC.0)
-- Epoch 1: user spams UC.1, registers UC.0
-- Epoch 2: user spams UC.2, registers UC.1, claims UC.0
-- Epoch 3: user spams UC.3, registers UC.2, claims UC.1
-- And so on
+In the root folder, run this cmd `pnpm build`
 
-## Iota implementation
+## Lint check or format
+
+In the root folder, run this cmd `pnpm lint` or `pnpm format`
+
+## Start frontend locally
+
+In the root folder, run this cmd `pnpm dev`
+
+## Deploy frontend with Docker
+
+[See here](./docker/README.md)
+
+## SPAM Move contract
+
+### Logic
 
 Single-writer `UserCounter` objects are used to track the number of txs sent by each user within one epoch.
 
@@ -48,3 +65,17 @@ Key functions in the order they get called for any given `UserCounter`:
 2. `increment_user_counter`: user sends txs to increase `UserCounter.tx_count`, until epoch N ends
 3. `register_user_counter`: during epoch N+1, user registers their `UserCounter` in an `EpochCounter` shared object, which counts all txs in the epoch
 4. `claim_user_counter`: from epoch N+2, users can mint SPAM coins in proportion to the number of txs they sent during epoch N
+
+### Build, test and deploy
+
+[See here](./src/move/spam/README.md)
+
+## NFT Move contract
+
+### Logic
+
+Enable to consume $SPAM coins for minting the NFTs.
+
+### Build, test and deploy
+
+[See here](./src/move/nft/README.md)

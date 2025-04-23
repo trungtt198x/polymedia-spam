@@ -24,6 +24,11 @@ const ERedeemDisabled: u64 = 3;
 /// Max supply reached.
 const EMaxSupplyReached: u64 = 4;
 
+// === Constants ===
+
+const MAX_SUPPLY: u64 = 5_000; // 5 thousands of NFTs
+const MINT_PRICE: u64 = 20_000 * 10_000; // 20 thousands of SPAM coins (4 decimals)
+
 // === structs ===
 
 public struct SpamNFT has key, store {
@@ -88,8 +93,8 @@ fun init(otw: NFT, ctx: &mut TxContext)
     let values = vector[
         utf8(b"Token #{token_id}"),
         utf8(b"SPAM NFT Collection"),
-        // utf8(b"{base_image_url}/{token_id}.png"),
-        utf8(b"{common_image_url}"),
+        utf8(b"{base_image_url}/{token_id}.png"),
+        // utf8(b"{common_image_url}"),
     ];
 
     // publisher
@@ -113,11 +118,11 @@ fun init(otw: NFT, ctx: &mut TxContext)
     let nft_manager = SpamNFTManager {
         id: object::new(ctx),
         total_supply: 0,
-        max_supply: 0, // zero means no max limit
+        max_supply: MAX_SUPPLY, // zero means no max limit
         current_token_id: 0,
         burnt_tokens: vector[],
-        mint_price: 1_000 * 10_000, // price in SPAM with 4 decimals
-        redeem_percentage: 80, // 80%
+        mint_price: MINT_PRICE,
+        redeem_percentage: 0, // 0 means disable or set to 80 for 80%
         base_image_url: utf8(b""),
         common_image_url: utf8(b""),
         paused: false,
@@ -247,7 +252,7 @@ public entry fun set_mint_price(
 public entry fun set_redeem_percentage(
     _: &AdminCap,
     nftManager: &mut SpamNFTManager,
-    redeem_percentage: u64, // e.g. 70 for 70%
+    redeem_percentage: u64, // e.g. 70 for 70% or set to 0 to disable
 ) {
     nftManager.redeem_percentage = redeem_percentage;
 }

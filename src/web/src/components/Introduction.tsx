@@ -17,7 +17,7 @@ export const Introduction: React.FC<{ explorerCoin: string }> = ({
           spamming activities.
         </p>
         <p>
-          A total of 1 billion $SPAM coins are minted every 24 hours and
+          A total of 1 million $SPAM coins are minted every 24 hours and
           allocated based on spam volume.
         </p>
 
