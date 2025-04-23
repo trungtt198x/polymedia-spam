@@ -16,7 +16,7 @@ module spam::spam
 
     // === Constants ===
 
-    const TOTAL_EPOCH_REWARD: u64 = 10_000_000_000_000; // 1 billion (4 decimals)
+    const TOTAL_EPOCH_REWARD: u64 = 1_000_000 * 10_000; // 1 million (4 decimals)
 
     // === Structs ===
 
@@ -33,6 +33,7 @@ module spam::spam
         tx_count: u64,
         treasury: TreasuryCap<SPAM>,
         epoch_counters: Table<u64, EpochCounter>, // keys are epochs
+        total_epoch_reward: u64,
     }
 
     /// Can only exist inside the Director.epoch_counters table.
@@ -141,7 +142,7 @@ module spam::spam
         // are no longer allowed to register() a UserCounter for this epoch
         let user_txs = epoch_counter.user_counts.remove(ctx.sender());
         let user_reward = (
-            ((TOTAL_EPOCH_REWARD as u128) * (user_txs as u128)) / (epoch_counter.tx_count as u128)
+            ((director.total_epoch_reward as u128) * (user_txs as u128)) / (epoch_counter.tx_count as u128)
         as u64);
 
         user_counter.destroy_user_counter();
@@ -229,6 +230,14 @@ module spam::spam
         id.delete();
     }
 
+    public fun admin_set_total_epoch_reward(
+        director: &mut Director,
+        total_epoch_reward: u64, // e.g. 1_000_000 * 10_000 for 1 million (4 decimals)
+        _: &AdminCap,
+    ) {
+        director.total_epoch_reward = total_epoch_reward;
+    }
+
     // === Private functions ===
 
     fun get_or_create_epoch_counter(
@@ -257,7 +266,7 @@ module spam::spam
             4, // decimals
             b"SPAM", // symbol
             b"SPAM", // name
-            b"The original Proof of Spam coin", // description
+            b"Proof of Spam now on IOTA", // description
             option::some(get_icon_url()), // icon_url
             ctx,
         );
@@ -272,6 +281,7 @@ module spam::spam
             epoch_counters: table::new(ctx),
             tx_count: 0,
             paused: false,
+            total_epoch_reward: TOTAL_EPOCH_REWARD,
         };
         transfer::share_object(director);
 

@@ -20,12 +20,14 @@ iota client publish
 
 ## Unpause
 
+Only needed if "paused" is set to true during init()
+
 ```
-iota client call --package 0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745 \
+iota client call --package 0xcec07f5d0e41a7c834a9559de98eeaabcc8f7fd57cbb178bcf676d9857879a7c \
                 --module spam \
                 --function admin_resume \
-                --args 0xc7dc8c06d28f77770bc4e84ac6fb14c82b4ac0cccd8198a59e71069dc1c3e418 0x7343bcdde0cbf6efbd48e5a7427530243e1bdaf1442e1e2249513f127147305c
+                --args 0x2bca86c4449546b851bfffe7a1ef5fcb68098142ba5f6e91314c3c350d1b2cd0 0x0348cf2b522892e1a0f1c38ec8a28ab00be39661375547a8f6cbc072b52f9894
 
 ```
 
-where: - Package ID: 0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745 - Director obj ID: 0xc7dc8c06d28f77770bc4e84ac6fb14c82b4ac0cccd8198a59e71069dc1c3e418 - AdminCap ID: 0x7343bcdde0cbf6efbd48e5a7427530243e1bdaf1442e1e2249513f127147305c
+where: - Package ID: 0xcec07f5d0e41a7c834a9559de98eeaabcc8f7fd57cbb178bcf676d9857879a7c - Director obj ID: 0x2bca86c4449546b851bfffe7a1ef5fcb68098142ba5f6e91314c3c350d1b2cd0 - AdminCap ID: 0x0348cf2b522892e1a0f1c38ec8a28ab00be39661375547a8f6cbc072b52f9894

@@ -185,7 +185,8 @@ export const PageStats: React.FC = () => {
     );
   }
 
-  const epochsCompleted = Number(stats.epoch) - 1 - firstEpoch[network];
+  let epochsCompleted = Number(stats.epoch) - 1 - firstEpoch[network];
+  epochsCompleted = epochsCompleted < 0 ? 0 : epochsCompleted;
   const totalTxs = Number(stats.tx_count);
   const totalGas = totalTxs * gasPerTx;
   // const claimableSupply = epochsCompleted * TOTAL_EPOCH_REWARD;
