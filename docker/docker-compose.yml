@@ -20,6 +20,6 @@ services:
       context: ..
       dockerfile: docker/web/Dockerfile
     labels:
-      - "traefik.http.routers.your-app.rule=Host(`ecosystem-dev.iota.cafe`)"
+      - "traefik.http.routers.your-app.rule=Host(`iotaspam.io`)"
       - "traefik.http.routers.your-app.entrypoints=websecure"
       - "traefik.http.routers.your-app.tls.certresolver=myresolver"
