@@ -8,6 +8,7 @@ import {
   SPAM_IDS,
   shortenStuff,
   ClaimData,
+  DEFAULT_NETWORK,
 } from "@polymedia/spam-sdk";
 import { LinkExternal } from "@polymedia/suitcase-react";
 import { useEffect, useState } from "react";
@@ -105,7 +106,7 @@ export const PageSpam: React.FC = () => {
     }
   };
 
-  if (!disclaimerAccepted) {
+  if (!disclaimerAccepted && DEFAULT_NETWORK === "mainnet") {
     return <PageDisclaimer />;
   }
 

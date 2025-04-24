@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
 import { loadClaimAddressFromStorage, pairFromSecretKey } from "../lib/storage";
+import { DEFAULT_NETWORK } from "@polymedia/spam-sdk";
 
 export const PageWallet: React.FC = () => {
   /* State */
@@ -47,7 +48,7 @@ export const PageWallet: React.FC = () => {
     return userAccepted;
   };
 
-  if (!disclaimerAccepted) {
+  if (!disclaimerAccepted && DEFAULT_NETWORK === "mainnet") {
     return <PageDisclaimer />;
   }
 

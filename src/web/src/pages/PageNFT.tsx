@@ -11,6 +11,7 @@ import {
   SPAM_SYMBOL,
   shortenStuff,
   isValidIotaAddress,
+  DEFAULT_NETWORK,
 } from "@polymedia/spam-sdk";
 import { LinkExternal } from "@polymedia/suitcase-react";
 import { formatNumber } from "@polymedia/suitcase-core";
@@ -126,7 +127,7 @@ export const PageNFT: React.FC = () => {
     }
   };
 
-  if (!disclaimerAccepted) {
+  if (!disclaimerAccepted && DEFAULT_NETWORK === "mainnet") {
     return <PageDisclaimer />;
   }
 
