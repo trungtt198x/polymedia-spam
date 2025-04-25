@@ -6,10 +6,10 @@ license = "Apache-2.0"
 published-at = "0x0"
 
 [dependencies]
-Iota = { git = "https://github.com/iotaledger/iota.git", subdir = "crates/iota-framework/packages/iota-framework", rev = "develop" }
+Iota = { git = "https://github.com/iotaledger/iota.git", subdir = "crates/iota-framework/packages/iota-framework", rev = "testnet" }
 Spam = { local = "../spam" }
 
 [addresses]
 nft = "0x0"
-spam = "0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745"
+spam = "0xcec07f5d0e41a7c834a9559de98eeaabcc8f7fd57cbb178bcf676d9857879a7c"
 

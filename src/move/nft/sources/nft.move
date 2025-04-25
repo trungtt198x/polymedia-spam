@@ -9,6 +9,7 @@ use iota::balance::{Self, Balance};
 use iota::coin::{Self, Coin};
 use iota::event;
 use spam::spam::{SPAM};
+use nft::custom_metadata_registry::{AdminCap, Attribute, CustomMetadataRegistry, CustomMetadata};
 
 // === errors ===
 
@@ -35,7 +36,9 @@ public struct SpamNFT has key, store {
     id: UID,
     token_id: u64,
     base_image_url: String,
-    common_image_url: String
+    common_image_url: String,
+    attributes: vector<Attribute>,
+    dna: String,
 }
 
 public struct SpamNFTManager has key {
@@ -54,10 +57,6 @@ public struct SpamNFTManager has key {
 
 /// Module one-time witness
 public struct NFT has drop {}
-
-public struct AdminCap has key {
-    id: UID
-}
 
 // === Events  ===
 
@@ -88,13 +87,17 @@ fun init(otw: NFT, ctx: &mut TxContext)
         utf8(b"name"),
         utf8(b"description"),
         utf8(b"image_url"),
+        utf8(b"edition"),
+        utf8(b"compiler"),
     ];
 
     let values = vector[
         utf8(b"Token #{token_id}"),
-        utf8(b"SPAM NFT Collection"),
-        utf8(b"{base_image_url}/{token_id}.png"),
-        // utf8(b"{common_image_url}"),
+        utf8(b"Spam NFT Collection"),
+        utf8(b"{base_image_url}/{token_id}.png"), // each NFT has its own image
+        // utf8(b"{common_image_url}"), // all NFTs have the same image
+        utf8(b"1"),
+        utf8(b"HashLips Art Engine"),
     ];
 
     // publisher
@@ -109,11 +112,6 @@ fun init(otw: NFT, ctx: &mut TxContext)
     // transfer objects to the sender
     transfer::public_transfer(publisher, ctx.sender());
     transfer::public_transfer(disp, ctx.sender());
-
-    let admin_cap = AdminCap {
-        id: object::new(ctx)
-    };
-    transfer::transfer(admin_cap, ctx.sender());
 
     let nft_manager = SpamNFTManager {
         id: object::new(ctx),
@@ -134,6 +132,7 @@ fun init(otw: NFT, ctx: &mut TxContext)
 #[allow(lint(self_transfer))]
 fun mint_and_transfer(
     nftManager: &mut SpamNFTManager,
+    customMetadataRegistry: &CustomMetadataRegistry,
     price: u64,
     to: address,
     ctx: &mut TxContext
@@ -143,11 +142,15 @@ fun mint_and_transfer(
 
     let token_id = nftManager.current_token_id + 1;
 
+    let custom_metadata: CustomMetadata = customMetadataRegistry.get_custom_metadata(token_id);
+
     let nft = SpamNFT {
         id: object::new(ctx),
         token_id: token_id,
         base_image_url: nftManager.base_image_url,
         common_image_url: nftManager.common_image_url,
+        attributes: custom_metadata.attributes(),
+        dna: custom_metadata.dna(),
     };
 
     // Transfer NFT to the sender
@@ -165,21 +168,23 @@ fun mint_and_transfer(
 public entry fun admin_mint(
     _: &AdminCap,
     nftManager: &mut SpamNFTManager,
+    customMetadataRegistry: &CustomMetadataRegistry,
     to: address,
     ctx: &mut TxContext
 ) {
-    mint_and_transfer(nftManager, 0, to, ctx);
+    mint_and_transfer(nftManager, customMetadataRegistry, 0, to, ctx);
 }
 
 /// Can be used for airdrops
 public entry fun admin_mint_many(
     _: &AdminCap,
     nftManager: &mut SpamNFTManager,
+    customMetadataRegistry: &CustomMetadataRegistry,
     to_list: vector<address>,
     ctx: &mut TxContext
 ) {
     to_list.do_ref!(|to| {
-        mint_and_transfer(nftManager, 0, *to, ctx);
+        mint_and_transfer(nftManager, customMetadataRegistry, 0, *to, ctx);
     });
 }
 
@@ -187,6 +192,7 @@ public entry fun admin_mint_many(
 public entry fun mint(
     payment: &mut Coin<SPAM>,
     nftManager: &mut SpamNFTManager,
+    customMetadataRegistry: &CustomMetadataRegistry,
     to: address,
     ctx: &mut TxContext
 ) {
@@ -197,7 +203,7 @@ public entry fun mint(
     let fee = coin::split(payment, mint_price, ctx);
     nftManager.balance.join(fee.into_balance());
 
-    mint_and_transfer(nftManager, mint_price, to, ctx);
+    mint_and_transfer(nftManager, customMetadataRegistry, mint_price, to, ctx);
 }
 
 fun burn(
