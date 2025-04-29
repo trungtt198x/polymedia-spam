@@ -20,7 +20,6 @@ import { useOutletContext, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { AppContext } from "../lib/types";
 import { PageDisclaimer } from "./PageDisclaimer";
-import { StatusSpan } from "./components/StatusSpan";
 import { ConnectButtonL1 } from "../components/ConnectButtonL1";
 import { HrefLinkTx } from "../components/HrefLinkTx";
 import { EventLog } from "../components/EventLog";
@@ -270,6 +269,17 @@ export const PageNFT: React.FC = () => {
       </div>
     );
   };
+
+  if (DEFAULT_NETWORK !== "mainnet") {
+    return (
+      <>
+        <h1>
+          <span className="rainbow">NFT</span>
+        </h1>
+        <h2>Coming on mainnet</h2>
+      </>
+    );
+  }
 
   return (
     <>
