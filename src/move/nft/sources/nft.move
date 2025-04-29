@@ -62,12 +62,14 @@ public struct NFT has drop {}
 
 public struct EventMint has copy, drop {
     token_id: u64,
-    mint_price: u64
+    mint_price: u64,
+    recipient: address
 }
 
 public struct EventRedeem has copy, drop {
     token_id: u64,
-    redeem_price: u64
+    redeem_price: u64,
+    recipient: address
 }
 
 public struct EventBurn has copy, drop {
@@ -154,14 +156,15 @@ fun mint_and_transfer(
     };
 
     // Transfer NFT to the sender
-    transfer::public_transfer(nft, to);
+    transfer::transfer(nft, to);
 
     nftManager.total_supply = nftManager.total_supply + 1;
-    nftManager.current_token_id = nftManager.current_token_id + 1;
+    nftManager.current_token_id = token_id;
 
     event::emit(EventMint {
         token_id: token_id,
         mint_price: price,
+        recipient: to,
     });
 }
 
@@ -242,6 +245,7 @@ public entry fun redeem(
     event::emit(EventRedeem {
         token_id: token_id,
         redeem_price: redeem_price,
+        recipient: to,
     });
 }
 
@@ -327,6 +331,62 @@ public entry fun withdraw_all(
         to: to,
         amount: amount,
     });
+}
+
+// === SpamNFT getters ===
+
+public fun token_id(self: &SpamNFT): u64 {
+    self.token_id
+}
+
+public fun base_image_url(self: &SpamNFT): String {
+    self.base_image_url
+}
+
+public fun common_image_url(self: &SpamNFT): String {
+    self.common_image_url
+}
+
+public fun attributes(self: &SpamNFT): vector<Attribute> {
+    self.attributes
+}
+
+public fun dna(self: &SpamNFT): String {
+    self.dna
+}
+
+// === SpamNFTManager getters ===
+
+public fun total_supply(self: &SpamNFTManager): u64 {
+    self.total_supply
+}
+
+public fun max_supply(self: &SpamNFTManager): u64 {
+    self.max_supply
+}
+
+public fun current_token_id(self: &SpamNFTManager): u64 {
+    self.current_token_id
+}
+
+public fun burnt_tokens(self: &SpamNFTManager): vector<u64> {
+    self.burnt_tokens
+}
+
+public fun mint_price(self: &SpamNFTManager): u64 {
+    self.mint_price
+}
+
+public fun redeem_percentage(self: &SpamNFTManager): u64 {
+    self.redeem_percentage
+}
+
+public fun paused(self: &SpamNFTManager): bool {
+    self.paused
+}
+
+public fun balance(self: &SpamNFTManager): &Balance<SPAM> {
+    &self.balance
 }
 
 #[test_only]

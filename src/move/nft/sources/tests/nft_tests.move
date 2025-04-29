@@ -8,4 +8,11 @@ module nft::nft_tests {
         runner.mint();
         runner.end();
     }
+
+    #[test]
+    fun test_mint_many_till_no_attrs() {
+        let mut runner = test_runner::start();
+        runner.mint_many_till_no_attrs();
+        runner.end();
+    }
 }

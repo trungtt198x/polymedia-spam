@@ -18,43 +18,48 @@ iota move test
 iota client publish
 ```
 
-## Set common image URL
+## Testnet
+
+### Set base image URL
+
+This is mandatory for the NFTs to have own image.
 
 ```
-iota client call --package 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f \
+iota client call --package 0xdda043377e261c6d2d4d1ffdb42454b8bb183690028954cc0acf82c424378e3c \
                 --module nft \
-                --function set_common_image_url \
-                --args 0x13fba29a4e50fef38d7da548a66638ae090b62d79d6dc70e9206b1c8e78d253e 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5 https://d315pvdvxi2gex.cloudfront.net/d96a337f84c5c900f31e08808.png
+                --function set_base_image_url \
+                --args 0x14018fc90d9069a98b66a42da5213eb83a4d58b603c2e61415ade488305d122b 0x196ce1ec9819e5f8e45a5a26d04ba01cc05f218540a8d8e97375df18b25ead2e https://some-base-url
 
 ```
 
-where: - Package ID: 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f - AdminCap ID: 0x13fba29a4e50fef38d7da548a66638ae090b62d79d6dc70e9206b1c8e78d253e - SpamNFTManager ID: 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5
+where: - Package ID: 0xdda043377e261c6d2d4d1ffdb42454b8bb183690028954cc0acf82c424378e3c - AdminCap ID: 0x14018fc90d9069a98b66a42da5213eb83a4d58b603c2e61415ade488305d122b - SpamNFTManager ID: 0x196ce1ec9819e5f8e45a5a26d04ba01cc05f218540a8d8e97375df18b25ead2e
 
-## admin_mint
+**Output:**
 
 ```
-iota client call --package 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f \
+2vhqWx8hDnGTpyDXvG1hokcmEWejfbUjXVdu463sHF2N
+```
+
+### admin_mint
+
+This is like the first mint as test
+
+```
+iota client call --package 0xdda043377e261c6d2d4d1ffdb42454b8bb183690028954cc0acf82c424378e3c \
                 --module nft \
                 --function admin_mint \
-                --args 0x13fba29a4e50fef38d7da548a66638ae090b62d79d6dc70e9206b1c8e78d253e 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5 0xcd1ee6ea1011666c16c043b64caabc2fea7e9dd37ac3667613cfbfb129f97574
+                --args 0x14018fc90d9069a98b66a42da5213eb83a4d58b603c2e61415ade488305d122b 0x196ce1ec9819e5f8e45a5a26d04ba01cc05f218540a8d8e97375df18b25ead2e 0x8873edc0be3e7dbfc33dc7487a9653f0b4cadad13259dada3995db7309458697 0xcd1ee6ea1011666c16c043b64caabc2fea7e9dd37ac3667613cfbfb129f97574
 
 ```
 
-    - Package ID: 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f
-    - AdminCap ID: 0x13fba29a4e50fef38d7da548a66638ae090b62d79d6dc70e9206b1c8e78d253e
-    - SpamNFTManager ID: 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5
+    - Package ID: 0xdda043377e261c6d2d4d1ffdb42454b8bb183690028954cc0acf82c424378e3c
+    - AdminCap ID: 0x14018fc90d9069a98b66a42da5213eb83a4d58b603c2e61415ade488305d122b
+    - SpamNFTManager ID: 0x196ce1ec9819e5f8e45a5a26d04ba01cc05f218540a8d8e97375df18b25ead2e
+    - CustomMetadataRegistry: 0x8873edc0be3e7dbfc33dc7487a9653f0b4cadad13259dada3995db7309458697
+    - Recipient: 0xcd1ee6ea1011666c16c043b64caabc2fea7e9dd37ac3667613cfbfb129f97574
 
-## mint
-
-```
-iota client call --package 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f --module nft --function mint --args 0xc0439a5c7119e86550e5069cff68c3c5abb075018be13f759decd61df86447aa 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5 0xcd1ee6ea1011666c16c043b64caabc2fea7e9dd37ac3667613cfbfb129f97574 --type-args "0x2::coin::Coin<0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745::spam::SPAM>"
-
-```
-
-always got the below error despite it works well on the explorer.rebased.iota.org
+**Output:**
 
 ```
-VMVerificationOrDeserializationError
+B7aEyodnMt5R2C9oQ69n9EFT83GAGiQ2Xu7Ei98iQh8Y
 ```
-
-where: - Package ID: 0xb13e7cd92ce960d2be8b617d8667e1534086846dae0f420f49cc5551f0d6da7f - SpamNFTManager ID: 0x6b4a953f5edf3ec68f62770e0409bbbffc6f14c88a4cd643dce7d34335cea7c5

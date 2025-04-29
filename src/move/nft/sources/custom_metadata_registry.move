@@ -3,7 +3,7 @@ module nft::custom_metadata_registry;
 // === imports ===
 
 use iota::table::{Self, Table};
-use std::string::{String};
+use std::string::{String, utf8};
 use iota::package::{Self};
 
 // === errors ===
@@ -19,7 +19,6 @@ public struct AdminCap has key {
     id: UID
 }
 
-#[allow(unused_field)]
 public struct Attribute has copy, drop, store {
     trait_type: String,
     value: String,
@@ -100,9 +99,18 @@ public fun get_custom_metadata(
     self: &CustomMetadataRegistry,
     token_id: u64,
 ): CustomMetadata {
-    // The borrow() will abort if the token_id is not found in the table
-    let meta = *table::borrow(&self.table, token_id);
-    meta
+    // Return empty metadata if the token_id is not associated with any metadata
+    if (!table::contains(&self.table, token_id)) {
+        let meta = CustomMetadata {
+            dna: utf8(b""),
+            attributes: vector::empty(),
+        };
+        meta
+    } else {
+        // The borrow() will abort if the token_id is not found in the table
+        let meta = *table::borrow(&self.table, token_id);
+        meta
+    }
 }
 
 public fun attributes(self: &CustomMetadata): vector<Attribute> {
@@ -111,6 +119,14 @@ public fun attributes(self: &CustomMetadata): vector<Attribute> {
 
 public fun dna(self: &CustomMetadata): String {
     self.dna
+}
+
+public fun trait_type(self: &Attribute): String {
+    self.trait_type
+}
+
+public fun value(self: &Attribute): String {
+    self.value
 }
 
 #[test_only]

@@ -1,7 +1,7 @@
 #[test_only]
 module nft::test_runner {
 
-    use iota::test_utils::{Self};
+    use iota::test_utils::{Self, assert_eq};
     use iota::test_scenario::{Self, Scenario};
     
     use iota::package::{Publisher};
@@ -142,13 +142,68 @@ module nft::test_runner {
         }
     }
 
+    fun do_mint(
+        self: &mut TestRunner,
+        recipient: address, // USER_1
+    ) {
+        self.scenario.next_tx(recipient);
+        let mut spam_coin = self.scenario.take_from_sender<Coin<SPAM>>();
+        nft::mint(&mut spam_coin, &mut self.spam_nft_data.nftManager, &self.custom_metadata_reg,  recipient, self.scenario.ctx());
+        self.scenario.next_tx(recipient);
+        self.scenario.return_to_sender(spam_coin);
+    }
+
     public fun mint(
         self: &mut TestRunner,
     ) {
-        self.scenario.next_tx(USER_1);
-        let mut spam_coin = self.scenario.take_from_sender<Coin<SPAM>>();
-        nft::mint(&mut spam_coin, &mut self.spam_nft_data.nftManager, &self.custom_metadata_reg,  USER_1, self.scenario.ctx());
-        self.scenario.return_to_sender(spam_coin);
+        self.do_mint(USER_1);
+
+        let minted_nft = self.scenario.take_from_sender<SpamNFT>();
+        let token_id = minted_nft.token_id();
+        let custom_metadata = self.custom_metadata_reg.get_custom_metadata(token_id);
+        let attributes = custom_metadata.attributes();
+        let dna = custom_metadata.dna();
+        
+        assert_eq(token_id, 1);
+        assert_eq(attributes[0].trait_type(), utf8(b"some_trait_1"));
+        assert_eq(attributes[0].value(), utf8(b"some_value_1"));
+        assert_eq(attributes[1].trait_type(), utf8(b"another_trait_1"));
+        assert_eq(attributes[1].value(), utf8(b"another_value_1"));
+        assert_eq(dna, utf8(b"dna_1"));
+        assert_eq(minted_nft.base_image_url(), utf8(b"https://somewhere.com"));
+        assert_eq(minted_nft.common_image_url(), utf8(b""));
+        assert_eq(self.spam_nft_data.nftManager.current_token_id(), 1);
+        assert_eq(self.spam_nft_data.nftManager.total_supply(), 1);
+        assert_eq(self.spam_nft_data.nftManager.max_supply(), 5_000);
+        assert_eq(self.spam_nft_data.nftManager.mint_price(), 20_000 * 10_000);
+        
+        self.scenario.return_to_sender(minted_nft);
+    }
+
+    public fun mint_many_till_no_attrs(
+        self: &mut TestRunner,
+    ) {
+        let count = 6;
+        let mut i = 0;
+        while (i < count) {
+            self.do_mint(USER_1);
+            i = i + 1;
+
+            let minted_nft = self.scenario.take_from_sender<SpamNFT>();
+            let token_id = minted_nft.token_id();
+            assert_eq(token_id, i);
+            self.scenario.return_to_sender(minted_nft);
+        };
+
+        let token_id = 5; // this token_id does not have custom metadata
+        let custom_metadata = self.custom_metadata_reg.get_custom_metadata(token_id);
+        let attributes = custom_metadata.attributes();
+        let dna = custom_metadata.dna();
+        
+        assert_eq(attributes, vector::empty<Attribute>());
+        assert_eq(dna, utf8(b""));
+        assert_eq(self.spam_nft_data.nftManager.current_token_id(), count);
+        assert_eq(self.spam_nft_data.nftManager.total_supply(), count);
     }
 
     public fun next_tx(self: &mut TestRunner): &mut TestRunner {
