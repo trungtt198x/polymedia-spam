@@ -5,11 +5,8 @@ const { Ed25519Keypair } = require("@iota/iota-sdk/keypairs/ed25519");
 const { readData } = require("./readData");
 const { bcs } = require("@iota/bcs");
 
-const Attribute = bcs.struct("Attribute", {
-  trait_type: bcs.string(),
-  value: bcs.string(),
-});
-
+// Convert the attribute list to 2 separate lists
+// one for trait_type and one for value
 function convertAttributeList(attributeList) {
   let trait_type_list = [];
   let value_list = [];
@@ -25,6 +22,24 @@ function convertAttributeList(attributeList) {
   };
 }
 
+// Same as above but for a list of attribute lists
+function convertAttributeListList(attributeListList) {
+  let trait_type_list_list = [];
+  let value_list_list = [];
+
+  for (const attributeList of attributeListList) {
+    const { trait_type_list, value_list } = convertAttributeList(attributeList);
+    trait_type_list_list.push(trait_type_list);
+    value_list_list.push(value_list);
+  }
+
+  return {
+    trait_type_list_list,
+    value_list_list,
+  };
+}
+
+// Set custom metadata for a list of NFTs from a data folder
 async function setCustomMetadata() {
   const {
     NETWORK,
@@ -33,7 +48,6 @@ async function setCustomMetadata() {
     ADMIN_CAP_OWNER_ACCOUNT_PRIV_KEY,
     MOVE_PACKAGE_ID,
     MOVE_MODULE,
-    MOVE_MODULE_FUNCTION,
     MOVE_FUNCTION_ARG_CUSTOM_METADATA_REGISTRY_ID,
     MOVE_FUNCTION_ARG_ADMIN_CAP_ID,
   } = process.env;
@@ -49,38 +63,33 @@ async function setCustomMetadata() {
     );
   }
 
-  let { token_id_list, dna_list, attributes_list } =
+  let { token_id_list, dna_list, attribute_list_list } =
     await readData(DATA_FOLDER);
 
-  attributes_list = [
-    { trait_type: "some_trait_1", value: "some_value_1" },
-    { trait_type: "another_trait_1", value: "another_value_1" },
-  ];
-
-  const { trait_type_list, value_list } = convertAttributeList(attributes_list);
-  ``;
+  const { trait_type_list_list, value_list_list } =
+    convertAttributeListList(attribute_list_list);
 
   const txb = new Transaction();
   txb.setSender(keypair.toIotaAddress());
-  console.log("sender:", keypair.toIotaAddress());
+  console.log("Sender:", keypair.toIotaAddress());
 
-  const [attr_list] = txb.moveCall({
-    target: `${MOVE_PACKAGE_ID}::${MOVE_MODULE}::make_attr_list`,
+  const [attr_list_list] = txb.moveCall({
+    target: `${MOVE_PACKAGE_ID}::${MOVE_MODULE}::make_attr_list_list`,
     arguments: [
-      txb.pure.vector("string", trait_type_list),
-      txb.pure.vector("string", value_list),
+      txb.pure.vector("vector<string>", trait_type_list_list),
+      txb.pure.vector("vector<string>", value_list_list),
     ],
   });
 
   // Set the moveCall to the target Move module function
   txb.moveCall({
-    target: `${MOVE_PACKAGE_ID}::${MOVE_MODULE}::${MOVE_MODULE_FUNCTION}`,
+    target: `${MOVE_PACKAGE_ID}::${MOVE_MODULE}::add_custom_metadata_many`,
     arguments: [
       txb.object(MOVE_FUNCTION_ARG_CUSTOM_METADATA_REGISTRY_ID),
       txb.object(MOVE_FUNCTION_ARG_ADMIN_CAP_ID),
-      txb.pure.u64(1),
-      txb.pure.string("dna_1"), // DNA list
-      attr_list,
+      txb.pure.vector("u64", token_id_list),
+      txb.pure.vector("string", dna_list),
+      attr_list_list,
     ],
   });
 

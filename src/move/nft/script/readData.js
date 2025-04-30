@@ -5,7 +5,7 @@ async function readData(folderPath) {
   try {
     let token_id_list = [];
     let dna_list = [];
-    let attributes_list = [];
+    let attribute_list_list = [];
 
     const files = await fs.readdir(folderPath);
     const jsonFiles = files.filter((file) => path.extname(file) === ".json");
@@ -18,17 +18,19 @@ async function readData(folderPath) {
 
         token_id_list.push(file.replace(".json", ""));
         dna_list.push(data.dna);
-        attributes_list.push(data.attributes);
+        attribute_list_list.push(data.attributes);
       }),
     );
 
     const result = {
       token_id_list,
       dna_list,
-      attributes_list,
+      attribute_list_list,
     };
 
-    console.log("readData - Result:", result);
+    // console.log("readData - Result:", JSON.stringify(result, null, 2));
+    console.log("readData - tokens: ", token_id_list.length);
+    console.log("readData - token_id_list: ", token_id_list);
 
     return result;
   } catch (err) {

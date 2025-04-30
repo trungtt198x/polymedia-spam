@@ -98,6 +98,7 @@ public fun make_attr_list_list(trait_type_list_list: vector<vector<String>>, val
     attr_list_list
 }
 
+/// Add custom metadata for a given token ID
 public fun add_custom_metadata(
     custom_metadata_registry: &mut CustomMetadataRegistry,
     _: &AdminCap,
@@ -112,6 +113,7 @@ public fun add_custom_metadata(
     table::add(&mut custom_metadata_registry.table, token_id, meta);
 }
 
+/// Add custom metadata for a list of token IDs
 public fun add_custom_metadata_many(
     custom_metadata_registry: &mut CustomMetadataRegistry,
     _: &AdminCap,
