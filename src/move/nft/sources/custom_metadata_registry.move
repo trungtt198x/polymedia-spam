@@ -99,24 +99,30 @@ public fun make_attr_list_list(trait_type_list_list: vector<vector<String>>, val
 }
 
 /// Add custom metadata for a given token ID
+/// If already exists, it will be removed and then set again with the new metadata
 public fun add_custom_metadata(
-    custom_metadata_registry: &mut CustomMetadataRegistry,
+    self: &mut CustomMetadataRegistry,
     _: &AdminCap,
     token_id: u64,
     dna: String,
     attributes: vector<Attribute>,
 ) {
-    let meta = CustomMetadata {
+    let metadata = CustomMetadata {
         dna,
         attributes,
     };
-    table::add(&mut custom_metadata_registry.table, token_id, meta);
+
+    if (table::contains(&self.table, token_id)) {
+        table::remove(&mut self.table, token_id);
+    };
+
+    table::add(&mut self.table, token_id, metadata);
 }
 
 /// Add custom metadata for a list of token IDs
 public fun add_custom_metadata_many(
-    custom_metadata_registry: &mut CustomMetadataRegistry,
-    _: &AdminCap,
+    self: &mut CustomMetadataRegistry,
+    admin_cap: &AdminCap,
     token_id_list: vector<u64>,
     dna_list: vector<String>,
     attributes_list: &vector<vector<Attribute>>,
@@ -127,11 +133,13 @@ public fun add_custom_metadata_many(
     let len = vector::length(&token_id_list);
     let mut i = 0;
     while (i < len) {
-        let meta = CustomMetadata {
-            dna: *vector::borrow(&dna_list, i),
-            attributes: *vector::borrow(attributes_list, i),
-        };
-        table::add(&mut custom_metadata_registry.table, *vector::borrow(&token_id_list, i), meta);
+        add_custom_metadata(
+            self,
+            admin_cap,
+            *vector::borrow(&token_id_list, i),
+            *vector::borrow(&dna_list, i),
+            *vector::borrow(attributes_list, i),
+        );
         i = i + 1;
     }
 }

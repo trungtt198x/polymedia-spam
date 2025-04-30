@@ -3,7 +3,6 @@ const { Transaction } = require("@iota/iota-sdk/transactions");
 const { IotaClient, getFullnodeUrl } = require("@iota/iota-sdk/client");
 const { Ed25519Keypair } = require("@iota/iota-sdk/keypairs/ed25519");
 const { readData } = require("./readData");
-const { bcs } = require("@iota/bcs");
 
 // Convert the attribute list to 2 separate lists
 // one for trait_type and one for value
@@ -103,4 +102,7 @@ async function setCustomMetadata() {
   console.log("Result:", result);
 }
 
-module.exports = { setCustomMetadata };
+setCustomMetadata().catch((error) => {
+  console.error("Error:", error);
+  process.exit(1);
+});
