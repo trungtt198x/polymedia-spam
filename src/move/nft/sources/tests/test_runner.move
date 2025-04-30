@@ -11,7 +11,7 @@ module nft::test_runner {
 
     use spam::spam::{SPAM, Director};
     use nft::nft::{Self, SpamNFT, SpamNFTManager};
-    use nft::custom_metadata_registry::{Self, AdminCap, Attribute, CustomMetadataRegistry, make_attr};
+    use nft::custom_metadata_registry::{Self, AdminCap, Attribute, CustomMetadataRegistry, make_attr_list_list};
 
     const ADMIN: address = @0x12;
     const USER_1: address = @0x23;
@@ -38,6 +38,48 @@ module nft::test_runner {
     /// Module one-time witness
     public struct TESTRUNNER has drop {}
 
+    fun get_test_data(): (vector<vector<String>>, vector<vector<String>>) {
+        let trait_type_list_list: vector<vector<String>> = vector[
+            vector[
+                utf8(b"some_trait_1"),
+                utf8(b"another_trait_1"),
+            ],
+            vector[
+                utf8(b"some_trait_2"),
+                utf8(b"another_trait_2"),
+            ],
+            vector[
+                utf8(b"some_trait_3"),
+                utf8(b"another_trait_3"),
+            ],
+            vector[
+                utf8(b"some_trait_4"),
+                utf8(b"another_trait_4"),
+            ]
+        ];
+
+        let value_list_list: vector<vector<String>> = vector[
+            vector[
+                utf8(b"some_value_1"),
+                utf8(b"another_value_1"),
+            ],
+            vector[
+                utf8(b"some_value_2"),
+                utf8(b"another_value_2"),
+            ],
+            vector[
+                utf8(b"some_value_3"),
+                utf8(b"another_value_3"),
+            ],
+            vector[
+                utf8(b"some_value_4"),
+                utf8(b"another_value_4"),
+            ]
+        ];
+
+        (trait_type_list_list, value_list_list)
+    }
+
     fun mint_spam_coin(scenario_mut: &mut Scenario, receiver: address, amount: u64): Director {
         spam::spam::init_for_testing(scenario_mut.ctx());
 
@@ -56,48 +98,53 @@ module nft::test_runner {
 
     fun set_custom_metadata(_: &mut Scenario, custom_metadata_registry: &mut CustomMetadataRegistry, admin: &AdminCap,) {
         let token_id_list: vector<u64> = vector[1, 2, 3, 4];
-        let attributes_list: vector<vector<Attribute>> = vector[
-            vector[
-                make_attr(
-                    utf8(b"some_trait_1"),
-                    utf8(b"some_value_1"),
-                ),
-                make_attr(
-                    utf8(b"another_trait_1"),
-                    utf8(b"another_value_1"),
-                ),
-            ],
-            vector[
-                make_attr(
-                    utf8(b"some_trait_2"),
-                    utf8(b"some_value_2"),
-                ),
-                make_attr(
-                    utf8(b"another_trait_2"),
-                    utf8(b"another_value_2"),
-                ),
-            ],
-            vector[
-                make_attr(
-                    utf8(b"some_trait_3"),
-                    utf8(b"some_value_3"),
-                ),
-                make_attr(
-                    utf8(b"another_trait_3"),
-                    utf8(b"another_value_3"),
-                ),
-            ],
-            vector[
-                make_attr(
-                    utf8(b"some_trait_4"),
-                    utf8(b"some_value_4"),
-                ),
-                make_attr(
-                    utf8(b"another_trait_4"),
-                    utf8(b"another_value_4"),
-                ),
-            ],
-        ];
+        // let attributes_list: vector<vector<Attribute>> = vector[
+        //     vector[
+        //         make_attr(
+        //             utf8(b"some_trait_1"),
+        //             utf8(b"some_value_1"),
+        //         ),
+        //         make_attr(
+        //             utf8(b"another_trait_1"),
+        //             utf8(b"another_value_1"),
+        //         ),
+        //     ],
+        //     vector[
+        //         make_attr(
+        //             utf8(b"some_trait_2"),
+        //             utf8(b"some_value_2"),
+        //         ),
+        //         make_attr(
+        //             utf8(b"another_trait_2"),
+        //             utf8(b"another_value_2"),
+        //         ),
+        //     ],
+        //     vector[
+        //         make_attr(
+        //             utf8(b"some_trait_3"),
+        //             utf8(b"some_value_3"),
+        //         ),
+        //         make_attr(
+        //             utf8(b"another_trait_3"),
+        //             utf8(b"another_value_3"),
+        //         ),
+        //     ],
+        //     vector[
+        //         make_attr(
+        //             utf8(b"some_trait_4"),
+        //             utf8(b"some_value_4"),
+        //         ),
+        //         make_attr(
+        //             utf8(b"another_trait_4"),
+        //             utf8(b"another_value_4"),
+        //         ),
+        //     ],
+        // ];
+
+        let (trait_type_list_list, value_list_list) = get_test_data();
+
+        let attributes_list: vector<vector<Attribute>> = make_attr_list_list(trait_type_list_list, value_list_list);
+
         let dna_list: vector<String> = vector[utf8(b"dna_1"), utf8(b"dna_2"), utf8(b"dna_3"), utf8(b"dna_4")];
 
         custom_metadata_registry.add_custom_metadata_many(admin, token_id_list, dna_list, &attributes_list);

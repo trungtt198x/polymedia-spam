@@ -58,6 +58,46 @@ public fun make_attr(trait_type: String, value: String): Attribute {
     Attribute { trait_type, value }
 }
 
+/// Make "attributes" for one NFT token
+public fun make_attr_list(trait_type_list: vector<String>, value_list: vector<String>): vector<Attribute> {
+    assert!(vector::length(&trait_type_list) == vector::length(&value_list), EInvalidLength);
+
+    let mut attr_list = vector::empty<Attribute>();
+
+    let len = vector::length(&trait_type_list);
+    let mut i = 0;
+    while (i < len) {
+        let attr = make_attr(
+            *vector::borrow(&trait_type_list, i),
+            *vector::borrow(&value_list, i),
+        );
+        vector::push_back(&mut attr_list, attr);
+        i = i + 1;
+    };
+
+    attr_list
+}
+
+/// Make "attributes" list for multiple NFT tokens
+public fun make_attr_list_list(trait_type_list_list: vector<vector<String>>, value_list_list: vector<vector<String>>): vector<vector<Attribute>> {
+    assert!(vector::length(&trait_type_list_list) == vector::length(&value_list_list), EInvalidLength);
+
+    let mut attr_list_list = vector::empty<vector<Attribute>>();
+
+    let len = vector::length(&trait_type_list_list);
+    let mut i = 0;
+    while (i < len) {
+        let attr_list = make_attr_list(
+            *vector::borrow(&trait_type_list_list, i),
+            *vector::borrow(&value_list_list, i),
+        );
+        vector::push_back(&mut attr_list_list, attr_list);
+        i = i + 1;
+    };
+
+    attr_list_list
+}
+
 public fun add_custom_metadata(
     custom_metadata_registry: &mut CustomMetadataRegistry,
     _: &AdminCap,

@@ -3,10 +3,9 @@ name = "Spam"
 version = "1.0.0"
 edition = "2024.beta"
 license = "Apache-2.0"
-#published-at = "0xec280f73ebbb360d74d965066cdfdf712ec9074d95340c99b5842bf28379f745"
 
 [dependencies]
 Iota = { git = "https://github.com/iotaledger/iota.git", subdir = "crates/iota-framework/packages/iota-framework", rev = "testnet" }
 
 [addresses]
-spam = "0x0"
+spam = "_"
