@@ -16,6 +16,7 @@ export type SpamNftConfig = {
   packageId: string;
   adminId: string;
   nftManagerId: string;
+  customMetadataRegistryId: string;
   epoch: number; // when the Move pkg was published
   mintPrice: number; // in $SPAM with 4 decimals
 };

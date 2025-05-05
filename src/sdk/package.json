@@ -24,8 +24,8 @@
     "typecheck": "tsc -p tsconfig.esm.json"
   },
   "dependencies": {
-    "@iota/bcs": "^0.2.1",
-    "@iota/iota-sdk": "^0.3.1",
+    "@iota/bcs": "^1.0.0",
+    "@iota/iota-sdk": "^1.0.0",
     "@polymedia/suitcase-core": "^0.0.32"
   },
   "type": "module",

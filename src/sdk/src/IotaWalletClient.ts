@@ -26,6 +26,7 @@ export class IotaWalletClient {
   public readonly signTx: SignTx;
   public readonly nftPackageId: string;
   public readonly nftManagerId: string;
+  public readonly customMetadataRegistryId: string;
   public readonly network: NetworkName;
   protected eventHandler: SpamEventHandler;
 
@@ -39,6 +40,8 @@ export class IotaWalletClient {
     this.signTx = signTx;
     this.nftPackageId = SPAM_NFT_IDS[network].packageId;
     this.nftManagerId = SPAM_NFT_IDS[network].nftManagerId;
+    this.customMetadataRegistryId =
+      SPAM_NFT_IDS[network].customMetadataRegistryId;
     this.eventHandler = eventHandler;
     this.network = network;
   }
@@ -60,7 +63,14 @@ export class IotaWalletClient {
     dryRun?: boolean,
   ): Promise<IotaTransactionBlockResponse> {
     const tx = new Transaction();
-    pkgNft.mint(tx, this.nftPackageId, spamCoinId, this.nftManagerId, to);
+    pkgNft.mint(
+      tx,
+      this.nftPackageId,
+      spamCoinId,
+      this.nftManagerId,
+      this.customMetadataRegistryId,
+      to,
+    );
     const resp = await this.signAndExecuteTx({
       tx,
       sender,

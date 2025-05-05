@@ -73,8 +73,8 @@ export class SpamClientRotator {
 }
 
 export const RPC_ENDPOINTS: Record<NetworkName, string[]> = {
-  mainnet: [getFullnodeUrl("mainnet")],
-  testnet: [getFullnodeUrl("testnet")],
+  mainnet: [getFullnodeUrl("mainnet") || "https://api.mainnet.iota.cafe"],
+  testnet: [getFullnodeUrl("testnet") || "https://api.testnet.iota.cafe"],
   devnet: [getFullnodeUrl("devnet")],
   localnet: [
     // to simulate multiple RPC endpoints locally

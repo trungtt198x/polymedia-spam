@@ -45,6 +45,7 @@ export class SpamClient {
 
   public readonly nftPackageId: string;
   public readonly nftManagerId: string;
+  public readonly customMetadataRegistryId: string;
   public readonly nftMintPrice: number;
 
   protected gasCoin: IotaObjectRef | undefined;
@@ -61,6 +62,8 @@ export class SpamClient {
 
     this.nftPackageId = SPAM_NFT_IDS[network].packageId;
     this.nftManagerId = SPAM_NFT_IDS[network].nftManagerId;
+    this.customMetadataRegistryId =
+      SPAM_NFT_IDS[network].customMetadataRegistryId;
     this.nftMintPrice = SPAM_NFT_IDS[network].mintPrice;
 
     this.gasCoin = undefined;
@@ -257,7 +260,14 @@ export class SpamClient {
     to: string,
   ): Promise<IotaTransactionBlockResponse> {
     const txb = new Transaction();
-    pkgNft.mint(txb, this.nftPackageId, spamCoinId, this.nftManagerId, to);
+    pkgNft.mint(
+      txb,
+      this.nftPackageId,
+      spamCoinId,
+      this.nftManagerId,
+      this.customMetadataRegistryId,
+      to,
+    );
     return this.signAndExecute(txb);
   }
 

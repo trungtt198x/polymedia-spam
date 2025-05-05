@@ -85,10 +85,19 @@ export const PageNFT: React.FC = () => {
       return;
     }
 
-    const coinResp = await _iotaClient.getCoins({
-      owner: coinOwner,
-      coinType: `${spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
-    });
+    let coinResp;
+    try {
+      coinResp = await _iotaClient.getCoins({
+        owner: coinOwner,
+        coinType: `${spamPackageId}::${SPAM_MODULE}::${SPAM_SYMBOL}`,
+      });
+
+      console.log("coinResp", coinResp);
+    } catch (err) {
+      console.error("Error fetching coins:", err);
+      toast.error("Error fetching coins");
+      return;
+    }
 
     if (coinResp.data.length === 0) {
       toast.error("No SPAM coins available");

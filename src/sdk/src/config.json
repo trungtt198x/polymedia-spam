@@ -6,11 +6,12 @@
       "epoch": 156
     },
     "NFT": {
-      "packageId": "",
-      "adminId": "",
-      "nftManagerId": "",
-      "epoch": 0,
-      "mintPrice": 0
+      "packageId": "0xdca358082725e951b887508b6a17faacbcd5c2bfd4982d2542d984c85435c07c",
+      "adminId": "0x9cb07d7ff339479e8aaf612892cbcf721ee12aa822e3d3637d70aeb93b2fa72a",
+      "nftManagerId": "0x6656e65116f2d636af8292168d34f6d4a6ec18c50f510cb711a7aabde7ae2d9b",
+      "customMetadataRegistryId": "0xc325cea7fa1a72ec000b3b336f33054eb3cbbee1b75d4b5f98008248dfc3ea05",
+      "epoch": 163,
+      "mintPrice": 20000
     },
     "explorer": "https://iotascan.com/testnet"
   },
@@ -24,6 +25,7 @@
       "packageId": "",
       "adminId": "",
       "nftManagerId": "",
+      "customMetadataRegistryId": "",
       "epoch": 0,
       "mintPrice": 0
     },

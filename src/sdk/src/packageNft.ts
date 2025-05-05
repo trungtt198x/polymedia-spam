@@ -8,6 +8,7 @@ export const mint = (
   packageId: string,
   spamCoinId: string,
   nftManagerId: string,
+  customMetadataRegistryId: string,
   to: string,
 ): TransactionResult => {
   return tx.moveCall({
@@ -16,6 +17,7 @@ export const mint = (
     arguments: [
       tx.object(spamCoinId),
       tx.object(nftManagerId),
+      tx.object(customMetadataRegistryId),
       tx.pure.address(to),
     ],
   });
