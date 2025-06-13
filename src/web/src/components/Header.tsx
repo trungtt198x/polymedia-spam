@@ -41,7 +41,11 @@ export const Header: React.FC<{
       >
         <h1>
           <span>
-            <img alt="" src="/img/spamclub.gif" style={{ width: "8rem" }} />
+            <img
+              alt=""
+              src="/img/spam-club-logo.svg"
+              style={{ width: "12rem" }}
+            />
           </span>
         </h1>
       </Link>
