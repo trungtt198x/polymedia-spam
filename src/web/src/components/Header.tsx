@@ -52,7 +52,7 @@ export const Header: React.FC<{
       </Link>
 
       <h1 className="section right" style={{ paddingTop: "1rem" }}>
-        <span>
+        <span style={{ paddingRight: "2rem" }}>
           <WalletModal
             spammerCurrentAddress={spammerCurrentAddress}
             spammerCurrentKey={spammerCurrentKey}
@@ -63,17 +63,17 @@ export const Header: React.FC<{
             network={network}
           />
         </span>
-        <span>
+        <span style={{ paddingRight: "2rem" }}>
           <InstructionModal explorerCoin={explorerCoin} />
         </span>
-        <span>
+        <span style={{ paddingRight: "2rem" }}>
           <RPCsModal
             network={network}
             rpcUrls={rpcUrls}
             updateRpcUrls={updateRpcUrls}
           />
         </span>
-        <span style={{ width: "3rem" }}>
+        <span style={{ paddingRight: "2rem", width: "2rem" }}>
           <StatusSpan status={spammerStatus} textOnly={false} />
         </span>
       </h1>
