@@ -194,13 +194,18 @@ export const PageStats: React.FC = () => {
 
   return (
     <>
-      {heading}
-      <div className="tight">
-        <p>Total transactions: {formatNumber(totalTxs)}</p>
-        <p>Total gas paid: {formatNumber(totalGas, "compact")} IOTA</p>
-        <p>Current epoch: {stats.epoch}</p>
-        <p>Epochs completed: {epochsCompleted}</p>
+      <div className="event-section">
+        <br />
+        {heading}
+        <div className="tight">
+          <p>Total transactions: {formatNumber(totalTxs)}</p>
+          <p>Total gas paid: {formatNumber(totalGas, "compact")} IOTA</p>
+          <p>Current epoch: {stats.epoch}</p>
+          <p>Epochs completed: {epochsCompleted}</p>
+        </div>
       </div>
+      <br />
+      <br />
       <br />
       {stats.epochs.length > 0 && (
         <>

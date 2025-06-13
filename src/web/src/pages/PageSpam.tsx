@@ -368,49 +368,52 @@ export const PageSpam: React.FC = () => {
 
   return (
     <>
-      <h1>
-        <span className="rainbow">Spam Club</span>
-      </h1>
-      <h2>
-        Spam the network and earn{" "}
-        <LinkExternal href={explorerCoin} follow={true}>
-          $SPAM
-        </LinkExternal>{" "}
-        token
-      </h2>
-      <div>
+      <div className="event-section">
+        <br />
+        <h1>
+          <span className="rainbow">Spam Club</span>
+        </h1>
+        <h2>
+          Spam the network and earn{" "}
+          <LinkExternal href={explorerCoin} follow={true}>
+            $SPAM
+          </LinkExternal>{" "}
+          token
+        </h2>
+
         <ExtraData />
 
         <TopUp />
 
         <SpamOrStopButton />
-
-        {hasCounters && (
-          <>
-            <br />
-            <br />
-            <div className="counter-cards">
-              <h2>Your counter(s)</h2>
-              {counters.current && (
-                <CounterCard type="current" counter={counters.current} />
-              )}
-              {counters.register && (
-                <CounterCard type="register" counter={counters.register} />
-              )}
-              {counters.claim.map((counter) => (
-                <CounterCard type="claim" counter={counter} key={counter.id} />
-              ))}
-              {counters.delete.map((counter) => (
-                <CounterCard type="delete" counter={counter} key={counter.id} />
-              ))}
-            </div>
-          </>
-        )}
-
-        <LeaderBoard data={leaderBoard} network={network} />
-
-        <EventLog spamView={spamView} msgFilter={"counter"} network={network} />
       </div>
+
+      {hasCounters && (
+        <>
+          <br />
+          <br />
+          <br />
+          <div className="counter-cards">
+            <h2>Your counter(s)</h2>
+            {counters.current && (
+              <CounterCard type="current" counter={counters.current} />
+            )}
+            {counters.register && (
+              <CounterCard type="register" counter={counters.register} />
+            )}
+            {counters.claim.map((counter) => (
+              <CounterCard type="claim" counter={counter} key={counter.id} />
+            ))}
+            {counters.delete.map((counter) => (
+              <CounterCard type="delete" counter={counter} key={counter.id} />
+            ))}
+          </div>
+        </>
+      )}
+
+      <LeaderBoard data={leaderBoard} network={network} />
+
+      <EventLog spamView={spamView} msgFilter={"counter"} network={network} />
     </>
   );
 };

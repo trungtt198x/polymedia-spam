@@ -10,11 +10,13 @@ export const StatusSpan: React.FC<{
   let className: string;
   let imageName: string;
   if (status === "stopped") {
-    className = "text-red";
-    imageName = "stopped.gif";
+    // className = "text-red";
+    // imageName = "stopped.gif";
+    return;
   } else if (status === "stopping") {
-    className = "text-orange";
-    imageName = "orange.gif";
+    // className = "text-orange";
+    // imageName = "orange.gif";
+    return;
   } else {
     className = "text-green";
     imageName = "running.gif";

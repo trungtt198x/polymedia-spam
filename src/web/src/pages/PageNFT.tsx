@@ -279,23 +279,28 @@ export const PageNFT: React.FC = () => {
     );
   };
 
-  if (DEFAULT_NETWORK !== "mainnet") {
-    return (
-      <>
-        <h1>
-          <span className="rainbow">NFT</span>
-        </h1>
-        <h2>Coming on mainnet</h2>
-      </>
-    );
-  }
+  // if (DEFAULT_NETWORK !== "mainnet") {
+  //   return (
+  //     <>
+  //       <h1>
+  //         <span className="rainbow">NFT</span>
+  //       </h1>
+  //       <h2>Coming on mainnet</h2>
+  //     </>
+  //   );
+  // }
 
   return (
     <>
-      <h1>
-        <span className="rainbow">NFT</span>
-      </h1>
-      <h2>{nftMintPrice} $SPAM tokens per NFT</h2>
+      <div className="event-section">
+        <br />
+        <h1>
+          <span className="rainbow">NFT</span>
+        </h1>
+        <h2>{nftMintPrice} $SPAM tokens per NFT</h2>
+      </div>
+      <br />
+      <br />
       <br />
       {spammer.current.status === "running" && (
         <>
