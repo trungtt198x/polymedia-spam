@@ -32,8 +32,9 @@ export const Header: React.FC<{
   sendIOTA,
 }) => {
   return (
-    <header>
+    <header className="header">
       <Link
+        className="section"
         to="/"
         onClick={(e) => {
           inProgress && e.preventDefault();
@@ -50,7 +51,7 @@ export const Header: React.FC<{
         </h1>
       </Link>
 
-      <h1 style={{ paddingTop: "1rem" }}>
+      <h1 className="section right" style={{ paddingTop: "1rem" }}>
         <span>
           <WalletModal
             spammerCurrentAddress={spammerCurrentAddress}

@@ -297,3 +297,35 @@ header {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section {
+  margin: 0px;
+}
+
+/* Right-most align */
+.right {
+  margin-left: auto;
+}
+
+/* Mobile: Stack divs vertically */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column; /* Stack sections */
+    align-items: center;
+  }
+
+  .right {
+    margin-left: 0; /* Reset alignment */
+    text-align: center;
+  }
+
+  .section {
+    margin: 20px;
+  }
+}
