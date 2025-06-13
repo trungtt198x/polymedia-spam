@@ -6,11 +6,11 @@
       "epoch": 156
     },
     "NFT": {
-      "packageId": "0xdca358082725e951b887508b6a17faacbcd5c2bfd4982d2542d984c85435c07c",
-      "adminId": "0x9cb07d7ff339479e8aaf612892cbcf721ee12aa822e3d3637d70aeb93b2fa72a",
-      "nftManagerId": "0x6656e65116f2d636af8292168d34f6d4a6ec18c50f510cb711a7aabde7ae2d9b",
-      "customMetadataRegistryId": "0xc325cea7fa1a72ec000b3b336f33054eb3cbbee1b75d4b5f98008248dfc3ea05",
-      "epoch": 163,
+      "packageId": "0x5704fcd6a5fba12b310d70ec906fa0384459bf460f9b14004160549b64595a3a",
+      "adminId": "0xb23d74ee432a58558d1f971ae7c201d1bab5568e80d6d1773c4a3cede28f4c16",
+      "nftManagerId": "0xe32c67c5fb2346d2a3f3352e5666e61e86c3f4587e25063ff2c967502603bad8",
+      "customMetadataRegistryId": "0x05c2dff223d6489b3a8c2f9a037b2b35074b6c3ea7a25e26dc0b8d588015cbfd",
+      "epoch": 171,
       "mintPrice": 20000
     },
     "explorer": "https://iotascan.com/testnet"

@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@iota/bcs": "^1.0.0",
-    "@iota/iota-sdk": "^1.0.0",
+    "@iota/iota-sdk": "^1.0.1",
     "@polymedia/suitcase-core": "^0.0.32"
   },
   "type": "module",

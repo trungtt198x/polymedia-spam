@@ -94,8 +94,8 @@ fun init(otw: NFT, ctx: &mut TxContext)
     ];
 
     let values = vector[
-        utf8(b"Token #{token_id}"),
-        utf8(b"Spam NFT Collection"),
+        utf8(b"Spamrus #{token_id}"),
+        utf8(b"Nuked walruses with nothing to lose. Spam IOTA. Stack SPAM. Mint the mayhem."),
         utf8(b"{base_image_url}/{token_id}.png"), // each NFT has its own image
         // utf8(b"{common_image_url}"), // all NFTs have the same image
         utf8(b"1"),
