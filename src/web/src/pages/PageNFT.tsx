@@ -298,21 +298,22 @@ export const PageNFT: React.FC = () => {
           <span className="rainbow">NFT</span>
         </h1>
         <h2>{nftMintPrice} $SPAM tokens per NFT</h2>
+
+        {spammer.current.status === "running" && (
+          <>
+            <h3 className="blink-loop">Please stop spamming before NFT mint</h3>
+            <span>
+              <Link className="btn-red" to="/">
+                <FontAwesomeIcon icon={faBackward} size="xs" /> Stop Spamming
+              </Link>
+            </span>
+            <br />
+          </>
+        )}
       </div>
       <br />
       <br />
       <br />
-      {spammer.current.status === "running" && (
-        <>
-          <h3 className="blink-loop">Please stop spamming before NFT mint</h3>
-          <span>
-            <Link className="btn-red" to="/">
-              <FontAwesomeIcon icon={faBackward} size="xs" /> Stop Spamming
-            </Link>
-          </span>
-          <br />
-        </>
-      )}
       <div
         className={spammer.current.status === "running" ? "div-disabled" : ""}
       >
