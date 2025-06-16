@@ -297,7 +297,7 @@ export const PageNFT: React.FC = () => {
         <h1>
           <span className="rainbow">NFT</span>
         </h1>
-        <h2>{nftMintPrice} $SPAM tokens per NFT</h2>
+        <h2>{new Intl.NumberFormat().format(nftMintPrice)} $SPAM tokens per NFT</h2>
 
         {spammer.current.status === "running" && (
           <>
