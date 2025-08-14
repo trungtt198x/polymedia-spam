@@ -25,6 +25,34 @@ iota client publish
 
 **After that**, must `Set base image URL` as below.
 
+## Mainnet
+
+### Set base image URL
+
+This is mandatory for the NFTs to have own image.
+
+**After that**, must upload metadata by following the `../script/README.md`.
+
+```
+iota client call --package 0xc76cfa070e7d78b247514f6b8180fe46edeb6a180d0357cb1b2cdea1c0bd5d3d \
+                --module nft \
+                --function set_base_image_url \
+                --args 0xa38897c4dfbd712c6191255749ee02dada34a65cba00f5bb8ac80c37b332470f 0xb7393b6604a78c83fa1b9613ce227d8abc4b34cb4ec4c5442f428048c7892083 https://images.iotaspam.io
+
+```
+
+where:
+
+- Package ID: 0xc76cfa070e7d78b247514f6b8180fe46edeb6a180d0357cb1b2cdea1c0bd5d3d
+- AdminCap ID: 0xa38897c4dfbd712c6191255749ee02dada34a65cba00f5bb8ac80c37b332470f
+- SpamNFTManager ID: 0xb7393b6604a78c83fa1b9613ce227d8abc4b34cb4ec4c5442f428048c7892083
+
+**Output:**
+
+```
+Bb6zxkhvC7CqDUrk86bjS6AnD6fqLq8sUziRmeFVuUFc
+```
+
 ## Testnet
 
 ### Set base image URL

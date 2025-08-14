@@ -8,13 +8,46 @@ Run this cmd: `npm i`
 
 ## Config
 
-Copy the `.env.example` to `.env` and edit accordingly
+ - Copy the `.env.example` to `.env` and edit accordingly
+
+ - Check the JSON files as data source in the folder `./data`. All those files will be taken into account. Max number of files per run should be `200`. After that, can replace with new files.
 
 ## Set metadata
 
 Run this cmd: `npm run set-metadata`
 
-**Example log output**
+**Example log output on mainnet**
+
+For the first `200` NFT tokens
+
+```
+> node setCustomMetadata.js
+
+readData - tokens:  200
+readData - token_id_list:  [
+  '1',   '10',  '101', '100', '102', '103', '104', '105',
+  '106', '107', '108', '109', '11',  '110', '111', '113',
+  '112', '114', '115', '116', '117', '118', '120', '12',
+  '122', '123', '119', '124', '121', '125', '126', '127',
+  '128', '13',  '130', '131', '129', '133', '132', '134',
+  '135', '136', '139', '137', '140', '141', '142', '143',
+  '144', '145', '146', '147', '148', '138', '149', '150',
+  '15',  '152', '153', '154', '155', '151', '156', '158',
+  '157', '159', '16',  '161', '160', '162', '163', '165',
+  '164', '166', '167', '168', '169', '17',  '170', '172',
+  '171', '173', '175', '174', '176', '177', '178', '179',
+  '18',  '182', '184', '183', '185', '186', '180', '187',
+  '188', '189', '19',  '190',
+  ... 100 more items
+]
+Sender: 0xd3906909a7bfc50ea9f4c0772a75bc99cd0da938c90ec05a556de1b5407bd639
+Result: {
+  digest: 'DM5hWW66uErvF2Hwvz1zVkNVWrNKfFam3mAzG3AvRSw2',
+  confirmedLocalExecution: false
+}
+```
+
+**Example log output on testnet**
 
 ```
 > node setCustomMetadata.js
@@ -47,7 +80,28 @@ Result: {
 
 Run this cmd: `npm run view-metadata`
 
-**Example output**
+**Example output on mainnet**
+
+```
+> node viewCustomMetadata.js
+
+tokenId: 200
+returnType: 0xc76cfa070e7d78b247514f6b8180fe46edeb6a180d0357cb1b2cdea1c0bd5d3d::custom_metadata_registry::CustomMetadata
+customMetadata: {
+  attributes: [
+    { trait_type: 'Background', value: 'Gradient' },
+    { trait_type: 'Skin', value: 'Marine' },
+    { trait_type: 'Clothes', value: 'Anchor' },
+    { trait_type: 'Tusks', value: 'Vampire' },
+    { trait_type: 'Mouth', value: 'Bone' },
+    { trait_type: 'Eyes', value: 'Squeezed' },
+    { trait_type: 'Head', value: 'Graduate' }
+  ],
+  dna: 'b5b80051405bff0a707cdfd4489377f6f8ce72cb'
+}
+```
+
+**Example output on testnet**
 
 ```
 tokenId: 2

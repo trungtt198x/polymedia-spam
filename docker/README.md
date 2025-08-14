@@ -2,6 +2,10 @@
 
 The following commands need to be run from root dir (not inside this folder!)
 
+## Configuration
+
+Specified in the file `sdk/src/config.json`
+
 ## build
 
 docker compose -f docker/docker-compose.yml build

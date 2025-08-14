@@ -15,4 +15,18 @@ module nft::nft_tests {
         runner.mint_many_till_no_attrs();
         runner.end();
     }
+
+    #[test]
+    fun test_withdraw() {
+        let mut runner = test_runner::start();
+        runner.withdraw();
+        runner.end();
+    }
+
+    #[test]
+    fun test_withdraw_all() {
+        let mut runner = test_runner::start();
+        runner.withdraw_all();
+        runner.end();
+    }
 }

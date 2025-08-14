@@ -1,5 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import { NetworkDropdownSelector } from "@polymedia/suitcase-react";
+// import { NetworkDropdownSelector } from "@polymedia/suitcase-react";
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 export const Nav: React.FC<{
   setShowMobileNav: () => void;
@@ -36,12 +38,12 @@ export const Nav: React.FC<{
 
       <div className="divider" />
 
-      <NetworkDropdownSelector
+      {/* <NetworkDropdownSelector
         currentNetwork={network}
         supportedNetworks={supportedNetworks}
         disabled={inProgress}
         onSwitch={updateNetwork}
-      />
+      /> */}
     </nav>
   );
 };

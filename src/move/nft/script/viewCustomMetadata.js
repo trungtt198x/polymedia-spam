@@ -33,7 +33,8 @@ async function viewCustomMetadata() {
     ],
   });
 
-  const client = new IotaClient({ url: getFullnodeUrl(NETWORK) });
+  // const client = new IotaClient({ url: getFullnodeUrl(NETWORK) });
+  const client = new IotaClient({ url: NETWORK === 'mainnet' ? 'https://api.mainnet.iota.cafe' : 'https://api.testnet.iota.cafe'});
 
   const result = await client.devInspectTransactionBlock({
     // Set a dummy sender address

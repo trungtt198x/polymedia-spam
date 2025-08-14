@@ -15,7 +15,9 @@ module nft::test_runner {
 
     const ADMIN: address = @0x12;
     const USER_1: address = @0x23;
-    const COIN_AMOUNT: u64 = 1_000_000 * 10_000;
+    const WITHDRAW_TO_ADDR: address = @0x45;
+    const WITHDRAW_TO_AMOUNT: u64 = 20_000 * 10_000; // 4 decimals
+    const COIN_AMOUNT: u64 = 1_000_000 * 10_000; // 4 decimals
 
     public struct SpamCoinData {
         publisher: Publisher,
@@ -251,6 +253,24 @@ module nft::test_runner {
         assert_eq(dna, utf8(b""));
         assert_eq(self.spam_nft_data.nftManager.current_token_id(), count);
         assert_eq(self.spam_nft_data.nftManager.total_supply(), count);
+    }
+
+    public fun withdraw(
+        self: &mut TestRunner,
+    ) {
+        self.do_mint(USER_1);
+
+        self.scenario.next_tx(ADMIN);
+        nft::withdraw(&self.spam_nft_data.admin, &mut self.spam_nft_data.nftManager, WITHDRAW_TO_ADDR, WITHDRAW_TO_AMOUNT, self.scenario.ctx());
+    }
+
+    public fun withdraw_all(
+        self: &mut TestRunner,
+    ) {
+        self.do_mint(USER_1);
+
+        self.scenario.next_tx(ADMIN);
+        nft::withdraw_all(&self.spam_nft_data.admin, &mut self.spam_nft_data.nftManager, WITHDRAW_TO_ADDR, self.scenario.ctx());
     }
 
     public fun next_tx(self: &mut TestRunner): &mut TestRunner {

@@ -3,13 +3,13 @@ name = "SpamNFT"
 version = "1.0.0"
 edition = "2024.beta"
 license = "Apache-2.0"
-published-at = "0x0"
 
 [dependencies]
-Iota = { git = "https://github.com/iotaledger/iota.git", subdir = "crates/iota-framework/packages/iota-framework", rev = "testnet" }
+Iota = { git = "https://github.com/iotaledger/iota.git", subdir = "crates/iota-framework/packages/iota-framework", rev = "mainnet" }
 Spam = { local = "../spam" }
 
 [addresses]
 nft = "0x0"
-spam = "0xcec07f5d0e41a7c834a9559de98eeaabcc8f7fd57cbb178bcf676d9857879a7c"
+#spam = "0xcec07f5d0e41a7c834a9559de98eeaabcc8f7fd57cbb178bcf676d9857879a7c"
+spam = "0x206501fb7068b78c2fe3c827a019a6490c9b2aa3dbcd80071b7813e7d56a05c7"
 
