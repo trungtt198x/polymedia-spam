@@ -27,7 +27,7 @@
       "nftManagerId": "0xb7393b6604a78c83fa1b9613ce227d8abc4b34cb4ec4c5442f428048c7892083",
       "customMetadataRegistryId": "0x2c5c438cc4944b5be9b6d40217430994e779058954acc173f74324cac2b0d5ff",
       "epoch": 101,
-      "mintPrice": 10000
+      "mintPrice": 20000
     },
     "explorer": "https://iotascan.com/mainnet"
   },
