@@ -106,8 +106,8 @@ export const PageNFT: React.FC = () => {
     const coinFound = coinResp.data.find(
       (coin) => Number(coin.balance) >= Number(nftMintPrice) * 10 ** SPAM_DECIMALS,
     );
-    if (coinFound.length === 0) {
-      toast.error("No SPAM coins available");
+    if (!coinFound || coinFound.length === 0) {
+      toast.error("No SPAM coins sufficient");
       return;
     }
 
